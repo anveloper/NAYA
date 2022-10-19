@@ -8,10 +8,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.youme.naya.ui.theme.PrimaryBlue
 
 @Composable
 fun MainScreen() {
@@ -35,7 +37,7 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation(backgroundColor = Color.White) {
+    BottomNavigation {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
@@ -64,5 +66,13 @@ fun RowScope.AddItem(
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
-        } == true, onClick = { navController.navigate(screen.route) })
+        } == true,
+        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        onClick = {
+            navController.navigate(screen.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            } // 홈에서 뒤로가기 누르면 앱 밖으로 이동
+        }
+    )
 }
