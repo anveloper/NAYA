@@ -3,6 +3,8 @@ package com.youme.naya
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.youme.naya.ui.theme.AndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,4 +16,14 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Preview(
+    name = "Naya Project",
+    showBackground = true,
+    showSystemUi = true
+)
+@Composable
+fun MainPreview() {
+    MainScreen()
 }

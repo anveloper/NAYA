@@ -20,7 +20,7 @@
     <color name="system_color_light_purple">#F2EFFF</color>
     <color name="system_color_purple">#7B61FE</color>
     <!--  neutral  -->
-    <color name="neutral_white">#FAFAFC</color>
+    <color name="neutral_white">#FAFAFCFF</color>
     <color name="neutral_lightness">#F2F5F9</color>
     <color name="neutral_light">#CED3D6</color>
     <color name="neutral_medium">#BDC5CA</color>
