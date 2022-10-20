@@ -1,7 +1,3 @@
-Readme
-
-
-
 ## 백엔드 폴더구조
 
 root
@@ -71,32 +67,31 @@ root
 ## 패키지 설명
 
 1. exception : 예외 처리 자바 파일 저장
-
-   ![advice](/uploads/57e38cb21b564725c417d6cc7ef14e03/advice.PNG)
+   ![exception](/uploads/1e23028b151d48e238d9cda138d9f25e/exception.PNG)
 
 2. advice :  예외 처리 자바 파일 저장( exception 내 자바 파일을 연결)
 
-   ![api](/uploads/31e34add2afcee4b83515d7be0b01820/api.PNG)
+   ![advice](/uploads/57e38cb21b564725c417d6cc7ef14e03/advice.PNG)
 
 3. api : 외부 api 연동 자바 파일 저장
 
-   ![config](/uploads/792cd0ab63d315e0dda6be6aa68925c8/config.PNG)
+   ![api](/uploads/31e34add2afcee4b83515d7be0b01820/api.PNG)
 
 4. config : 환경 설정 파일 저장
 
-   ![controller](/uploads/5954528e95c42bc316b99364fa6c2429/controller.PNG)
+   ![config](/uploads/792cd0ab63d315e0dda6be6aa68925c8/config.PNG)
 
 5. controller :  요청을 처리하는 파일 저장
 
-   ![dto](/uploads/b4a02e4cc87e6c79e0cd2581ea83b99e/dto.PNG)
+   ![controller](/uploads/5954528e95c42bc316b99364fa6c2429/controller.PNG)
 
 6. dto : DB에서 원하는 형태로 데이터를 CRUD하는 객체 파일 저장
 
-   ![entity](/uploads/e6fbfe4d36a65cf338a09dcfd7ece965/entity.PNG)
+   ![dto](/uploads/b4a02e4cc87e6c79e0cd2581ea83b99e/dto.PNG)
 
 7. entity : DB 테이블과 매칭되는 객체 파일 저장
 
-   ![exception](/uploads/1e23028b151d48e238d9cda138d9f25e/exception.PNG)
+   ![entity](/uploads/e6fbfe4d36a65cf338a09dcfd7ece965/entity.PNG)
 
 8. repository : Jpa 기본 메서드를 extends 하는 인터페이스 파일 저장
 
