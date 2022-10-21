@@ -7,7 +7,7 @@ import androidx.navigation.compose.composable
 import com.youme.naya.screens.*
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+fun BottomNacGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route
