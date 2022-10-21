@@ -21,7 +21,7 @@ fun MainScreen() {
     Scaffold(
         bottomBar = { BottomBar(navController = navController)}
     ) {
-        BottomNacGraph(navController = navController)
+        BottomNavGraph(navController = navController)
     }
 }
 
