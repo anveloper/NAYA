@@ -1,7 +1,5 @@
 package com.youme.naya
 
-import android.net.Uri
-import androidx.camera.core.ImageCaptureException
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -13,27 +11,15 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import java.io.File
-import java.util.concurrent.Executor
 
 @Composable
-fun MainScreen(
-    outputDirectory: File,
-    executor: Executor,
-    onImageCaptured: (Uri) -> Unit,
-    onError: (ImageCaptureException) -> Unit
-) {
+fun MainScreen() {
     val navController = rememberNavController()
 
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(
-            navController = navController, outputDirectory = outputDirectory,
-            executor = executor,
-            onImageCaptured = onImageCaptured,
-            onError = onError
-        )
+        BottomNavGraph(navController = navController)
     }
 }
 

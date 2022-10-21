@@ -1,4 +1,4 @@
-package com.youme.naya.view
+package com.youme.naya.camera
 
 
 import android.content.Context
@@ -78,7 +78,7 @@ fun CameraView(
         IconButton(
             modifier = Modifier.padding(bottom = 20.dp),
             onClick = {
-                Log.i("Naya", "ON CLICK")
+                Log.i("naya", "ON CLICK")
                 takePhoto(
                     filenameFormat = "yyyy-MM-dd-HH-mm-ss-SSS",
                     imageCapture = imageCapture,
@@ -116,12 +116,12 @@ private fun takePhoto(
         outputDirectory,
         SimpleDateFormat(filenameFormat, Locale.US).format(System.currentTimeMillis()) + ".jpg"
     )
-    Log.i("Naya","take photo $outputDirectory")
+    Log.i("naya","take photo $outputDirectory")
     val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
     imageCapture.takePicture(outputOptions, executor, object: ImageCapture.OnImageSavedCallback {
         override fun onError(exception: ImageCaptureException) {
-            Log.e("Naya", "Take photo error:", exception)
+            Log.e("naya", "Take photo error:", exception)
             onError(exception)
         }
 
