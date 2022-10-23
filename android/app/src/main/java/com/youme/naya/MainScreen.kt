@@ -1,27 +1,25 @@
 package com.youme.naya
 
+import android.content.Context
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.youme.naya.ui.theme.PrimaryBlue
+import com.youme.naya.camera.CameraX
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
+fun MainScreen(navController: NavHostController, context: Context, cameraX: CameraX) {
     Scaffold(
-        bottomBar = { BottomBar(navController = navController)}
+        bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController = navController)
+        BottomNavGraph(navController, context, cameraX)
     }
 }
 
@@ -37,7 +35,7 @@ fun BottomBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation {
+    BottomNavigation(backgroundColor = Color.LightGray) {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
