@@ -5,21 +5,20 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.youme.naya.camera.CameraX
 import com.youme.naya.ui.theme.AndroidTheme
 
 class MainActivity : ComponentActivity() {
     private var cameraX: CameraX = CameraX(this, this)
+    private lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidTheme {
-                MainScreen()
-//                CameraCompose(this, cameraX = cameraX) {
-//                    if (allPermissionsGranted(this)) {
-//                        cameraX.capturePhoto()
-//                    }
-//                }
+                navController = rememberNavController()
+                MainScreen(navController, context = this, cameraX = cameraX)
             }
         }
     }
@@ -33,5 +32,5 @@ class MainActivity : ComponentActivity() {
 )
 @Composable
 fun MainPreview() {
-//    MainScreen(changeActivity=changeActivity())
+//    MainScreen()
 }
