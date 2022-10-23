@@ -19,7 +19,7 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Ima
 
     object NayaCard : BottomBarScreen(
         route = "naya",
-        title = "Naya",
+        title = "naya",
         icon = Icons.Default.Star
     )
 
