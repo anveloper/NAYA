@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 
 enum class MultiFabState {
@@ -43,12 +45,12 @@ class MultiFabItem(
     val identifier: String,
     val icon: ImageBitmap,
 //    val icon: ImageVector,
-    val label: String
+    val label: String,
+    val action: (() -> Unit)?
 )
 
 @Composable
-fun NuyaCardHolderScreen() {
-    val scrollState = rememberScrollState()
+fun NuyaCardHolderScreen(navController: NavHostController) {
     var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
     val ctx = LocalContext.current
 
@@ -67,29 +69,27 @@ fun NuyaCardHolderScreen() {
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        CardList(scrollState = scrollState)
+        CardList()
         MultiFloatingActionButton(
             listOf(
                 MultiFabItem(
                     "camera",
                     ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
                         .toBitmap().asImageBitmap(),
-//                    Icons.Outlined,
                     "카메라 열기"
-                ),
+                ) { },
                 MultiFabItem(
                     "write",
                     ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
                         .toBitmap().asImageBitmap(),
-//                    Icons.Filled.Star,
                     "직접 입력"
-                )
+                ) { navController.navigate("nuyaCreate") }
             ),
             toState,
             true,
             { state -> toState = state }
         ) {
-
+//            Toast.makeText(ctx, "Hello world!", Toast.LENGTH_SHORT).show()
         }
     }
 }
@@ -100,8 +100,7 @@ fun NuyaCardHolderScreen() {
  * @author Sckroll
  */
 @Composable
-fun CardList(scrollState: ScrollState) {
-
+fun CardList() {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = Modifier
@@ -179,16 +178,19 @@ fun MultiFloatingActionButton(
     val backgroundAlpha = if (toState == MultiFabState.EXPANDED) 0.4f else 0f
 
     Box(
-        modifier = Modifier.alpha(animateFloatAsState(backgroundAlpha).value).background(
-            Color(ContextCompat.getColor(LocalContext.current, R.color.neutral_dark_gray))
-        ).fillMaxSize()
+        modifier = Modifier
+            .alpha(animateFloatAsState(backgroundAlpha).value)
+            .background(
+                Color.DarkGray
+            )
+            .fillMaxSize()
     )
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
         Column(
             horizontalAlignment = Alignment.End
         ) {
             items.forEach { item ->
-                MiniFabItem(item, alpha, shadow, scale, showLabel, onFabItemClicked)
+                MiniFabItem(item, alpha, shadow, scale, showLabel)
                 Spacer(modifier = Modifier.height(24.dp))
             }
             FloatingActionButton(
@@ -218,7 +220,6 @@ private fun MiniFabItem(
     shadow: Dp,
     scale: Float,
     showLabel: Boolean,
-    onFabItemClicked: (item: MultiFabItem) -> Unit
 ) {
     val buttonColor = MaterialTheme.colors.secondary
 //    val shadowColor = ContextCompat.getColor(LocalContext.current, R.color.neutral_dark_gray)
@@ -249,14 +250,15 @@ private fun MiniFabItem(
             modifier = Modifier
                 .size(32.dp)
                 .clickable(
-                    onClick = { onFabItemClicked(item) },
                     interactionSource = interactionSource,
                     indication = rememberRipple(
                         bounded = false,
                         radius = 20.dp,
                         color = MaterialTheme.colors.onSecondary
                     )
-                )
+                ) {
+                    item.action?.let { it() }
+                }
         ) {
 //            drawCircle(
 //                Color(shadowColor),
@@ -287,5 +289,5 @@ private fun MiniFabItem(
 @Composable
 @Preview
 fun NuyaCardHolderScreenPreview() {
-    NuyaCardHolderScreen()
+    NuyaCardHolderScreen(rememberNavController())
 }
