@@ -5,14 +5,19 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.sharp.Lens
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.youme.naya.utils.Commons.REQUIRED_PERMISSIONS
@@ -55,12 +60,22 @@ fun CameraCompose(
         }
     }
     Column(
-        modifier = Modifier.fillMaxSize(), Arrangement.Bottom, Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize().padding(bottom = 60.dp),
+        Arrangement.Bottom,
+        Alignment.CenterHorizontally
     ) {
         Button(
             onClick = onCaptureClick
         ) {
-            Text(text = "Capture")
+            Icon(
+                imageVector = Icons.Sharp.Lens,
+                contentDescription = "Take picture",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(1.dp)
+                    .border(1.dp, Color.White, CircleShape)
+            )
         }
     }
 }

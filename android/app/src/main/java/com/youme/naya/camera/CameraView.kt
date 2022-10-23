@@ -39,7 +39,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @Composable
-fun CameraView(
+fun CameraView( // 미사용
     outputDirectory: File,
     executor: Executor,
     onImageCaptured: (Uri) -> Unit,
