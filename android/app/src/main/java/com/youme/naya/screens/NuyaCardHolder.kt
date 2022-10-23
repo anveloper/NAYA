@@ -60,11 +60,10 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
             .background(
                 brush = Brush.verticalGradient(
                     listOf(
-                        Color.White,
-                        Color.Blue
+                        Color(R.color.neutral_white),
+                        Color(R.color.neutral_light)
                     )
                 ),
-                alpha = 0.4f
             )
             .padding(16.dp),
         contentAlignment = Alignment.Center
@@ -88,9 +87,7 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
             toState,
             true,
             { state -> toState = state }
-        ) {
-//            Toast.makeText(ctx, "Hello world!", Toast.LENGTH_SHORT).show()
-        }
+        )
     }
 }
 
@@ -146,7 +143,6 @@ fun MultiFloatingActionButton(
     toState: MultiFabState,
     showLabel: Boolean = true,
     stateChanged: (fabState: MultiFabState) -> Unit,
-    onFabItemClicked: (item: MultiFabItem) -> Unit
 ) {
     val transition = updateTransition(targetState = toState, label = "transition")
     val rotation by transition.animateFloat(
@@ -157,7 +153,7 @@ fun MultiFloatingActionButton(
     val scale by transition.animateFloat(
         label = "scale"
     ) { state ->
-        if (state == MultiFabState.EXPANDED) 64f else 0f
+        if (state == MultiFabState.EXPANDED) 56f else 0f
     }
     val alpha by transition.animateFloat(
         transitionSpec = {
@@ -175,22 +171,29 @@ fun MultiFloatingActionButton(
     ) { state ->
         if (state == MultiFabState.EXPANDED) 2.dp else 0.dp
     }
-    val backgroundAlpha = if (toState == MultiFabState.EXPANDED) 0.4f else 0f
+//    val backgroundAlpha = if (toState == MultiFabState.EXPANDED) 0.4f else 0f
 
-    Box(
-        modifier = Modifier
-            .alpha(animateFloatAsState(backgroundAlpha).value)
-            .background(
-                Color.DarkGray
-            )
-            .fillMaxSize()
-    )
+    /**
+     * FAB 터치 시 반투명 오버레이 화면
+     */
+//    Box(
+//        modifier = Modifier
+//            .alpha(animateFloatAsState(backgroundAlpha).value)
+//            .background(
+//                Color.Black
+//            )
+//            .fillMaxSize()
+//    )
+    /**
+     * 실제 FAB 부분
+     */
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
         Column(
-            horizontalAlignment = Alignment.End
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier.padding(bottom = 64.dp)
         ) {
             items.forEach { item ->
-                MiniFabItem(item, alpha, shadow, scale, showLabel)
+                MiniFabItem(item, alpha, shadow, scale, showLabel, transition)
                 Spacer(modifier = Modifier.height(24.dp))
             }
             FloatingActionButton(
@@ -201,6 +204,7 @@ fun MultiFloatingActionButton(
                         } else MultiFabState.EXPANDED
                     )
                 },
+                backgroundColor = Color(R.color.primary_color_blue)
             ) {
                 Icon(Icons.Filled.Add, "", modifier = Modifier.rotate(rotation))
             }
@@ -220,11 +224,13 @@ private fun MiniFabItem(
     shadow: Dp,
     scale: Float,
     showLabel: Boolean,
+    transition: Transition<MultiFabState>
 ) {
-    val buttonColor = MaterialTheme.colors.secondary
+    val buttonColor = Color(R.color.primary_color_blue)
 //    val shadowColor = ContextCompat.getColor(LocalContext.current, R.color.neutral_dark_gray)
     val interactionSource = MutableInteractionSource();
 //    val painter = rememberVectorPainter(image = item.icon)
+    var isExpanded = transition.currentState == MultiFabState.EXPANDED
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -247,7 +253,7 @@ private fun MiniFabItem(
             Spacer(modifier = Modifier.width(16.dp))
         }
         Canvas(
-            modifier = Modifier
+            modifier = if (isExpanded) Modifier
                 .size(32.dp)
                 .clickable(
                     interactionSource = interactionSource,
@@ -257,8 +263,10 @@ private fun MiniFabItem(
                         color = MaterialTheme.colors.onSecondary
                     )
                 ) {
-                    item.action?.let { it() }
-                }
+                    if (isExpanded) {
+                        item.action?.let { it() }
+                    }
+                } else Modifier.size(32.dp)
         ) {
 //            drawCircle(
 //                Color(shadowColor),
