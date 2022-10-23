@@ -13,10 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun NayaCardScreen() {
-
+fun NayaCardScreen(
+    navController: NavHostController
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -37,7 +39,7 @@ fun NayaCardScreen() {
             color = Color.White
         )
         Button(onClick = {
-           
+           navController.navigate(route = "camera")
         }) {
             Text(text = "카메라", fontSize = 16.sp)
         }
