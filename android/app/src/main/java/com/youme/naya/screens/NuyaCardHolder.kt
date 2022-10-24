@@ -1,11 +1,14 @@
 package com.youme.naya.screens
 
+import android.widget.EditText
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -27,6 +30,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -55,20 +59,20 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
     var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
     val ctx = LocalContext.current
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
                     listOf(
-                        NeutralLight,
-                        NeutralMedium
+                        NeutralWhite,
+                        NeutralLight
                     )
                 ),
             )
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
+            .padding(32.dp),
     ) {
+        SearchInput()
         CardList()
         MultiFloatingActionButton(
             listOf(
@@ -90,6 +94,29 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
             { state -> toState = state }
         )
     }
+}
+
+@Composable
+fun SearchInput() {
+    var textState by remember {
+        mutableStateOf(TextFieldValue())
+    }
+
+    BasicTextField(
+        value = textState, onValueChange = { textState = it }, decorationBox = { innerTextField ->
+            Row(
+                Modifier.background(NeutralLight, RoundedCornerShape(percent = 30))
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                if (textState.text.isEmpty()) {
+                    Text("Enter Something...")
+                }
+                // <-- Add this
+                innerTextField()
+            }
+        }
+    )
 }
 
 /**
