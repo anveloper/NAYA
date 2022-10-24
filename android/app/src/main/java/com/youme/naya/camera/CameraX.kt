@@ -16,6 +16,7 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +61,6 @@ class CameraX(
 
     fun capturePhoto() = owner.lifecycleScope.launch {
         val imageCapture = imageCapture ?: return@launch
-
         imageCapture.takePicture(ContextCompat.getMainExecutor(context), object :
             ImageCapture.OnImageCapturedCallback(), ImageCapture.OnImageSavedCallback {
             override fun onCaptureSuccess(image: ImageProxy) {
@@ -75,6 +75,7 @@ class CameraX(
 
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 Log.i("CameraX", "onCaptureSuccess: Uri  ${outputFileResults.savedUri}")
+
             }
 
             override fun onError(exception: ImageCaptureException) {
@@ -82,8 +83,6 @@ class CameraX(
                 Log.i("CameraX", "onCaptureSuccess: onError")
             }
         })
-
-
     }
 
     private suspend fun imageProxyToBitmap(image: ImageProxy): Bitmap =
@@ -113,8 +112,9 @@ class CameraX(
                     }
                     val imageUri: Uri? =
                         resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-
+                    Log.i("CameraX Uri", imageUri.toString())
                     fos = imageUri?.let { with(resolver) { openOutputStream(it) } }
+                    Log.i("CameraX fos", fos.toString())
                 }
             } else {
                 val imagesDir =
@@ -132,7 +132,7 @@ class CameraX(
                 }
                 if (success.await()) {
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(context, "Saved Successfully", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "성공적으로 저장되었습니다.", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }

@@ -3,6 +3,7 @@ package com.youme.naya.camera
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
@@ -17,6 +18,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -37,10 +40,11 @@ fun CameraCompose(
     }
 
 
+
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { granted ->
-            hasCamPermission =granted.size == 2
+            hasCamPermission = granted.size == 2
         }
     )
     LaunchedEffect(key1 = true) {
@@ -60,7 +64,9 @@ fun CameraCompose(
         }
     }
     Column(
-        modifier = Modifier.fillMaxSize().padding(bottom = 60.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 60.dp),
         Arrangement.Bottom,
         Alignment.CenterHorizontally
     ) {
