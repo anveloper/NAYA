@@ -36,6 +36,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
+import com.youme.naya.ui.theme.*
 
 enum class MultiFabState {
     COLLAPSED, EXPANDED
@@ -60,8 +61,8 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
             .background(
                 brush = Brush.verticalGradient(
                     listOf(
-                        Color(R.color.neutral_white),
-                        Color(R.color.neutral_light)
+                        NeutralLight,
+                        NeutralMedium
                     )
                 ),
             )
@@ -122,7 +123,7 @@ fun CardContainer(item: String) {
         modifier = Modifier
             .aspectRatio(9 / 5f)
             .width(300.dp),
-        backgroundColor = Color.White
+        backgroundColor = NeutralWhite
     ) {
         Box(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -204,7 +205,8 @@ fun MultiFloatingActionButton(
                         } else MultiFabState.EXPANDED
                     )
                 },
-                backgroundColor = Color(R.color.primary_color_blue)
+                backgroundColor = PrimaryBlue,
+                contentColor = NeutralWhite
             ) {
                 Icon(Icons.Filled.Add, "", modifier = Modifier.rotate(rotation))
             }
@@ -226,7 +228,7 @@ private fun MiniFabItem(
     showLabel: Boolean,
     transition: Transition<MultiFabState>
 ) {
-    val buttonColor = Color(R.color.primary_color_blue)
+    val buttonColor = SecondaryLightBlue
 //    val shadowColor = ContextCompat.getColor(LocalContext.current, R.color.neutral_dark_gray)
     val interactionSource = MutableInteractionSource();
 //    val painter = rememberVectorPainter(image = item.icon)
@@ -260,7 +262,7 @@ private fun MiniFabItem(
                     indication = rememberRipple(
                         bounded = false,
                         radius = 20.dp,
-                        color = MaterialTheme.colors.onSecondary
+                        color = NeutralDarkGray
                     )
                 ) {
                     if (isExpanded) {
