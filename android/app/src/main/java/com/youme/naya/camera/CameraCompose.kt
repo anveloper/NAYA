@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Lens
 import androidx.compose.runtime.*
@@ -40,7 +39,7 @@ fun CameraCompose(
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { granted ->
-            hasCamPermission =granted.size == 2
+            hasCamPermission = granted.size == 2
         }
     )
     LaunchedEffect(key1 = true) {
@@ -60,7 +59,9 @@ fun CameraCompose(
         }
     }
     Column(
-        modifier = Modifier.fillMaxSize().padding(bottom = 60.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 60.dp),
         Arrangement.Bottom,
         Alignment.CenterHorizontally
     ) {
