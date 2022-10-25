@@ -15,11 +15,11 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.camera.CameraX
 
 @Composable
-fun MainScreen(navController: NavHostController, context: Context, cameraX: CameraX) {
+fun MainScreen(navController: NavHostController) {
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController, context, cameraX)
+        BottomNavGraph(navController)
     }
 }
 
