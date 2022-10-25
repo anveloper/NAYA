@@ -11,14 +11,13 @@ import com.youme.naya.camera.CameraX
 import com.youme.naya.ui.theme.AndroidTheme
 
 class MainActivity : ComponentActivity() {
-    private var cameraX: CameraX = CameraX(this, this)
     private lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidTheme {
                 navController = rememberNavController()
-                MainScreen(navController, context = this, cameraX = cameraX)
+                MainScreen(navController)
             }
         }
     }
