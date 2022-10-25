@@ -1,8 +1,8 @@
 package com.youme.naya.screens
 
-import android.widget.EditText
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +12,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -23,12 +24,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,9 +62,10 @@ class MultiFabItem(
 fun NuyaCardHolderScreen(navController: NavHostController) {
     var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
     val ctx = LocalContext.current
+    val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = Modifier
+        Modifier
             .fillMaxSize()
             .background(
                 brush = Brush.verticalGradient(
@@ -70,53 +75,122 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
                     )
                 ),
             )
-            .padding(32.dp),
+            .padding(32.dp)
+            .addFocusCleaner(focusManager)
     ) {
         SearchInput()
-        CardList()
-        MultiFloatingActionButton(
-            listOf(
-                MultiFabItem(
-                    "camera",
-                    ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
-                        .toBitmap().asImageBitmap(),
-                    "카메라 열기"
-                ) { },
-                MultiFabItem(
-                    "write",
-                    ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
-                        .toBitmap().asImageBitmap(),
-                    "직접 입력"
-                ) { navController.navigate("nuyaCreate") }
-            ),
-            toState,
-            true,
-            { state -> toState = state }
-        )
+        NayaBcardSwitchButtons()
+        Box(Modifier.fillMaxSize()) {
+            CardList()
+            MultiFloatingActionButton(
+                listOf(
+                    MultiFabItem(
+                        "camera",
+                        ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
+                            .toBitmap().asImageBitmap(),
+                        "카메라 열기"
+                    ) { },
+                    MultiFabItem(
+                        "write",
+                        ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
+                            .toBitmap().asImageBitmap(),
+                        "직접 입력"
+                    ) { navController.navigate("nuyaCreate") }
+                ),
+                toState,
+                true
+            ) { state -> toState = state }
+        }
     }
 }
 
+fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit = {}): Modifier {
+    return this.pointerInput(Unit) {
+        detectTapGestures(onTap = {
+            doOnClear()
+            focusManager.clearFocus()
+        })
+    }
+}
+
+/**
+ * 검색 창 컴포저블
+ *
+ * @author Sckroll
+ */
 @Composable
 fun SearchInput() {
     var textState by remember {
         mutableStateOf(TextFieldValue())
     }
+    val source = remember {
+        MutableInteractionSource()
+    }
+    var focused by remember {
+        mutableStateOf(false)
+    }
+    val focusRequester by remember {
+        mutableStateOf(FocusRequester())
+    }
 
     BasicTextField(
-        value = textState, onValueChange = { textState = it }, decorationBox = { innerTextField ->
-            Row(
-                Modifier.background(NeutralLight, RoundedCornerShape(percent = 30))
-                    .padding(16.dp)
-                    .fillMaxWidth()
-            ) {
-                if (textState.text.isEmpty()) {
-                    Text("Enter Something...")
-                }
-                // <-- Add this
-                innerTextField()
+        value = textState, onValueChange = { textState = it },
+        singleLine = true,
+        interactionSource = source,
+        modifier = Modifier
+            .padding(bottom = 24.dp)
+            .shadow(8.dp)
+            .focusRequester(focusRequester)
+            .onFocusChanged { focused = it.isFocused }
+    ) { innerTextField ->
+        Row(
+            Modifier
+                .background(NeutralLightness, RoundedCornerShape(percent = 20))
+                .padding(16.dp)
+                .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Search,
+                contentDescription = Icons.Outlined.Search.name,
+                modifier = Modifier.padding(end = 16.dp)
+            )
+
+            if (!focused && textState.text.isEmpty()) {
+                Text("이름, 전화번호, 회사명, 직책으로 검색", color = NeutralMedium)
             }
+            innerTextField()
         }
-    )
+    }
+}
+
+/**
+ * NAYA 카드 / 명함 전환 버튼 컴포저블
+ *
+ * @author Sckroll
+ */
+@Composable
+fun NayaBcardSwitchButtons() {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .padding(bottom = 24.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TextButton(onClick = { /*TODO*/ }) {
+            Text("NAYA")
+        }
+        Divider(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(34.dp)
+                .padding(horizontal = 16.dp)
+        )
+        TextButton(onClick = { /*TODO*/ }) {
+            Text("BUSINESS")
+        }
+    }
 }
 
 /**
@@ -133,7 +207,7 @@ fun CardList() {
     ) {
         itemsIndexed(
             listOf("Test 1", "Test 2", "Test 3", "Test 4")
-        ) { index, item ->
+        ) { _, item ->
             CardContainer(item = item)
         }
     }
