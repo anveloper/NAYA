@@ -13,8 +13,7 @@ import com.youme.naya.utils.Commons.allPermissionsGranted
 
 @Composable
 fun BottomNavGraph(
-    navController: NavHostController,
-    context: Context, cameraX: CameraX
+    navController: NavHostController
 ) {
     NavHost(
         navController = navController,
