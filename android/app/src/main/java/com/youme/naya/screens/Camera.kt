@@ -18,7 +18,7 @@ fun CameraScreen() {
     // compose lifecycle을 위한 겉 레이아웃 역할
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    var tmpBitmap by rememberSaveable{
+    var tmpBitmap by rememberSaveable {
         mutableStateOf<Bitmap?>(null)
     }
     val cameraX = CameraX(context, lifecycleOwner)
@@ -32,6 +32,6 @@ fun CameraScreen() {
             }
         }
     } else {
-       ImageCompose(tmpBitmap!!)
+        ImageCompose(tmpBitmap!!)
     }
 }
