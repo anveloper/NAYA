@@ -31,7 +31,7 @@ fun BottomNavGraph(
         }
         // camera
         composable(route = "camera") {
-            CameraScreen(setCameraOn(false))
+//            CameraScreen()
         }
     }
 }

@@ -9,13 +9,18 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.youme.naya.camera.ImageCompose
 
@@ -27,20 +32,30 @@ fun GalleryScreen() {
     var tmpBitmap by rememberSaveable {
         mutableStateOf<Bitmap?>(null)
     }
-    rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.data?.let { uri ->
-                tmpBitmap = uri.parseBitmap(context)
+
+    val takePhotoFromAlbumLauncher = // 갤러리에서 사진 가져오기
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { uri ->
+                    tmpBitmap = uri.parseBitmap(context)
+                } ?: run {
+                        Toast(context).show()
+                    }
+            } else if (result.resultCode != Activity.RESULT_CANCELED) {
+                Toast(context).show()
             }
         }
-    }
     if (tmpBitmap != null) {
         ImageCompose(tmpBitmap!!)
     } else {
+        Box(modifier = Modifier.fillMaxSize()){
+            IconButton(onClick = { /*TODO*/ }) {
+                
+            }
+        }
         Log.i("gallery", "why..")
     }
 }
-
 
 private val takePhotoFromAlbumIntent =
     Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
