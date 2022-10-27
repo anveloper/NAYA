@@ -8,7 +8,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -21,8 +21,8 @@ import androidx.navigation.NavHostController
 fun NayaCardScreen(
     navController: NavHostController
 ) {
-    val (cameraOn, setCameraOn) = remember { mutableStateOf(false) }
-    val (galleryOn, setGalleryOn) = remember { mutableStateOf(false) }
+    val (cameraOn, setCameraOn) = rememberSaveable { mutableStateOf(false) }
+    val (galleryOn, setGalleryOn) = rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
