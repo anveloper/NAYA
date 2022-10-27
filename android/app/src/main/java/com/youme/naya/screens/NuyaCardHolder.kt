@@ -40,16 +40,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
+import com.youme.naya.constant.MultiFabState
 import com.youme.naya.ui.theme.*
-
-enum class MultiFabState {
-    COLLAPSED, EXPANDED
-}
 
 class MultiFabItem(
     val identifier: String,
     val icon: ImageBitmap,
-//    val icon: ImageVector,
     val label: String,
     val action: (() -> Unit)?
 )
@@ -327,10 +323,8 @@ private fun MiniFabItem(
     transition: Transition<MultiFabState>
 ) {
     val buttonColor = SecondaryLightBlue
-//    val shadowColor = ContextCompat.getColor(LocalContext.current, R.color.neutral_dark_gray)
     val interactionSource = MutableInteractionSource();
-//    val painter = rememberVectorPainter(image = item.icon)
-    var isExpanded = transition.currentState == MultiFabState.EXPANDED
+    val isExpanded = transition.currentState == MultiFabState.EXPANDED
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -368,11 +362,6 @@ private fun MiniFabItem(
                     }
                 } else Modifier.size(32.dp)
         ) {
-//            drawCircle(
-//                Color(shadowColor),
-//                center = Offset(this.center.x + 2f, this.center.y + 7f),
-//                radius = scale
-//            )
             drawCircle(color = buttonColor, scale)
             drawImage(
                 item.icon,
@@ -382,14 +371,6 @@ private fun MiniFabItem(
                 ),
                 alpha = alpha
             )
-//            translate(left = 10f, top = 10f) {
-//                with(painter) {
-//                    draw(
-//                        alpha = alpha,
-//                        size = painter.intrinsicSize
-//                    )
-//                }
-//            }
         }
     }
 }
