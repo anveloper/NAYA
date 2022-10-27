@@ -7,6 +7,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -19,6 +21,8 @@ import androidx.navigation.NavHostController
 fun NayaCardScreen(
     navController: NavHostController
 ) {
+    val (cameraOn, setCameraOn) = rememberSaveable { mutableStateOf(false) }
+    val (galleryOn, setGalleryOn) = rememberSaveable { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -32,17 +36,30 @@ fun NayaCardScreen(
                 alpha = 0.4f
             ),
     ) {
-        Text(
-            text = "NAYA CARD",
-            fontSize = MaterialTheme.typography.h3.fontSize,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-        Button(onClick = {
-           navController.navigate(route = "camera")
-        }) {
-            Text(text = "카메라", fontSize = 16.sp)
+        if (cameraOn) {
+            CameraScreen()
+        } else if (galleryOn) {
+            GalleryScreen() // 현재 실행 안됨
+        } else {
+            Text(
+                text = "NAYA CARD",
+                fontSize = MaterialTheme.typography.h3.fontSize,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+            Button(onClick = {
+//                navController.navigate(route = "camera")
+                setCameraOn(true)
+            }) {
+                Text(text = "카메라", fontSize = 16.sp)
+            }
+            Button(onClick = {
+                setGalleryOn(true)
+            }) {
+                Text(text = "갤러리", fontSize = 16.sp)
+            }
         }
+
     }
 }
 
