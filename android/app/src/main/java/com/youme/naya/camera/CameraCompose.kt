@@ -8,8 +8,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Lens
 import androidx.compose.runtime.*
@@ -50,33 +50,31 @@ fun CameraCompose(
             )
         )
     }
-    Column(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         if (hasCamPermission) {
             AndroidView(
                 modifier = Modifier.fillMaxSize(),
                 factory = { cameraX.startCameraPreviewView() }
             )
         }
-    }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(bottom = 60.dp),
-        Arrangement.Bottom,
-        Alignment.CenterHorizontally
-    ) {
-        Button(
-            onClick = onCaptureClick
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Icon(
-                imageVector = Icons.Sharp.Lens,
-                contentDescription = "Take picture",
-                tint = Color.White,
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(1.dp)
-                    .border(1.dp, Color.White, CircleShape)
-            )
+            IconButton(
+                onClick = onCaptureClick
+            ) {
+                Icon(
+                    imageVector = Icons.Sharp.Lens,
+                    contentDescription = "Take picture",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .padding(1.dp)
+                        .border(1.dp, Color.White, CircleShape)
+                )
+            }
         }
+
     }
 }
