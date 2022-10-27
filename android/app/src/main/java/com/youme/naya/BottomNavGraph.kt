@@ -18,7 +18,7 @@ fun BottomNavGraph(
             HomeScreen()
         }
         composable(route = BottomBarScreen.NuyaCardHolder.route) {
-            NuyaCardHolderScreen()
+            NuyaCardHolderScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NayaCard.route) {
             NayaCardScreen(navController = navController)
@@ -32,6 +32,10 @@ fun BottomNavGraph(
         // camera
         composable(route = "camera") {
 //            CameraScreen()
+        }
+        // Nuya 카드 생성 (직접 입력)
+        composable(route = "nuyaCreate") {
+            NuyaCardCreateScreen()
         }
     }
 }
