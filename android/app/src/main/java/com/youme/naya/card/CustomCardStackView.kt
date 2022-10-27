@@ -25,8 +25,8 @@ fun CustomCardStackView() {
     AndroidViewBinding({ inflater, parent, _ ->
         CardStackViewMainBinding.inflate(inflater, parent)
     }, Modifier.fillMaxSize()) {
-        val mTestStackAdapter = TestStackAdapter(context);
-        stackviewMain.setAdapter(mTestStackAdapter)
-        mTestStackAdapter.updateData(testData)
+        val mCardStackAdapter = CardStackAdapter(context);
+        stackviewMain.setAdapter(mCardStackAdapter)
+        mCardStackAdapter.updateData(testData)
     }
 }
