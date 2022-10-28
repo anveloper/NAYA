@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
@@ -34,76 +35,75 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
-import com.youme.naya.card.TestStackAdapter
-import com.youme.naya.databinding.CardStackViewMainBinding
+import com.youme.naya.constant.MultiFabState
+import com.youme.naya.widgets.common.HeaderBar
+import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.ui.theme.*
-
-enum class MultiFabState {
-    COLLAPSED, EXPANDED
-}
 
 class MultiFabItem(
     val identifier: String,
     val icon: ImageBitmap,
-//    val icon: ImageVector,
     val label: String,
     val action: (() -> Unit)?
 )
 
 @Composable
 fun NuyaCardHolderScreen(navController: NavHostController) {
-    var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
-    val ctx = LocalContext.current
     val focusManager = LocalFocusManager.current
 
     Column(
         Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    listOf(
-                        NeutralWhite,
-                        NeutralLight
-                    )
-                ),
-            )
-            .padding(32.dp)
+            .background(Color.White)
             .addFocusCleaner(focusManager)
     ) {
+        HeaderBar()
         SearchInput()
-        NayaBcardSwitchButtons()
-        Box(Modifier.fillMaxSize()) {
-//            CardList()
-            CustomCardStackView()
-            MultiFloatingActionButton(
-                listOf(
-                    MultiFabItem(
-                        "camera",
-                        ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
-                            .toBitmap().asImageBitmap(),
-                        "카메라 열기"
-                    ) { },
-                    MultiFabItem(
-                        "write",
-                        ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
-                            .toBitmap().asImageBitmap(),
-                        "직접 입력"
-                    ) { navController.navigate("nuyaCreate") }
-                ),
-                toState,
-                true
-            ) { state -> toState = state }
-        }
+        NayaBcardSwitchButtons(
+            nayaTab = { MyNuyaCardList(navController) },
+            bCardTab = {  }
+        )
     }
 }
 
+@Composable
+fun MyNuyaCardList(navController: NavHostController) {
+    var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
+    val ctx = LocalContext.current
+
+    Box(Modifier.fillMaxSize()) {
+//            CardList()
+        CustomCardStackView()
+        MultiFloatingActionButton(
+            listOf(
+                MultiFabItem(
+                    "camera",
+                    ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
+                        .toBitmap().asImageBitmap(),
+                    "카메라 열기"
+                ) { },
+                MultiFabItem(
+                    "write",
+                    ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
+                        .toBitmap().asImageBitmap(),
+                    "직접 입력"
+                ) { navController.navigate("nuyaCreate") }
+            ),
+            toState,
+            true
+        ) { state -> toState = state }
+    }
+}
+
+/**
+ * 입력 창 포커스 상태에서 다른 곳을 터치할 경우 포커스를 잃게 하는 함수
+ */
 fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit = {}): Modifier {
     return this.pointerInput(Unit) {
         detectTapGestures(onTap = {
@@ -138,8 +138,7 @@ fun SearchInput() {
         singleLine = true,
         interactionSource = source,
         modifier = Modifier
-            .padding(bottom = 24.dp)
-            .shadow(8.dp)
+            .padding(horizontal = 16.dp)
             .focusRequester(focusRequester)
             .onFocusChanged { focused = it.isFocused }
     ) { innerTextField ->
@@ -159,36 +158,6 @@ fun SearchInput() {
                 Text("이름, 전화번호, 회사명, 직책으로 검색", color = NeutralMedium)
             }
             innerTextField()
-        }
-    }
-}
-
-/**
- * NAYA 카드 / 명함 전환 버튼 컴포저블
- *
- * @author Sckroll
- */
-@Composable
-fun NayaBcardSwitchButtons() {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .padding(bottom = 24.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TextButton(onClick = { /*TODO*/ }) {
-            Text("NAYA")
-        }
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(34.dp)
-                .padding(horizontal = 16.dp)
-        )
-        TextButton(onClick = { /*TODO*/ }) {
-            Text("BUSINESS")
         }
     }
 }
@@ -289,7 +258,9 @@ fun MultiFloatingActionButton(
     /**
      * 실제 FAB 부분
      */
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp), contentAlignment = Alignment.BottomEnd) {
         Column(
             horizontalAlignment = Alignment.End,
             modifier = Modifier.padding(bottom = 64.dp)
@@ -330,10 +301,8 @@ private fun MiniFabItem(
     transition: Transition<MultiFabState>
 ) {
     val buttonColor = SecondaryLightBlue
-//    val shadowColor = ContextCompat.getColor(LocalContext.current, R.color.neutral_dark_gray)
     val interactionSource = MutableInteractionSource();
-//    val painter = rememberVectorPainter(image = item.icon)
-    var isExpanded = transition.currentState == MultiFabState.EXPANDED
+    val isExpanded = transition.currentState == MultiFabState.EXPANDED
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -371,11 +340,6 @@ private fun MiniFabItem(
                     }
                 } else Modifier.size(32.dp)
         ) {
-//            drawCircle(
-//                Color(shadowColor),
-//                center = Offset(this.center.x + 2f, this.center.y + 7f),
-//                radius = scale
-//            )
             drawCircle(color = buttonColor, scale)
             drawImage(
                 item.icon,
@@ -385,14 +349,6 @@ private fun MiniFabItem(
                 ),
                 alpha = alpha
             )
-//            translate(left = 10f, top = 10f) {
-//                with(painter) {
-//                    draw(
-//                        alpha = alpha,
-//                        size = painter.intrinsicSize
-//                    )
-//                }
-//            }
         }
     }
 }
