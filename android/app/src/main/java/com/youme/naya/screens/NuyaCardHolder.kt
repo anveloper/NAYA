@@ -42,7 +42,8 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
 import com.youme.naya.constant.MultiFabState
-import com.youme.naya.ui.common.HeaderBar
+import com.youme.naya.widgets.common.HeaderBar
+import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.ui.theme.*
 
 class MultiFabItem(
@@ -54,8 +55,6 @@ class MultiFabItem(
 
 @Composable
 fun NuyaCardHolderScreen(navController: NavHostController) {
-    var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
-    val ctx = LocalContext.current
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -66,29 +65,39 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
     ) {
         HeaderBar()
         SearchInput()
-        NayaBcardSwitchButtons()
-        Box(Modifier.fillMaxSize()) {
+        NayaBcardSwitchButtons(
+            nayaTab = { MyNuyaCardList(navController) },
+            bCardTab = {  }
+        )
+    }
+}
+
+@Composable
+fun MyNuyaCardList(navController: NavHostController) {
+    var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
+    val ctx = LocalContext.current
+
+    Box(Modifier.fillMaxSize()) {
 //            CardList()
-            CustomCardStackView()
-            MultiFloatingActionButton(
-                listOf(
-                    MultiFabItem(
-                        "camera",
-                        ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
-                            .toBitmap().asImageBitmap(),
-                        "카메라 열기"
-                    ) { },
-                    MultiFabItem(
-                        "write",
-                        ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
-                            .toBitmap().asImageBitmap(),
-                        "직접 입력"
-                    ) { navController.navigate("nuyaCreate") }
-                ),
-                toState,
-                true
-            ) { state -> toState = state }
-        }
+        CustomCardStackView()
+        MultiFloatingActionButton(
+            listOf(
+                MultiFabItem(
+                    "camera",
+                    ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
+                        .toBitmap().asImageBitmap(),
+                    "카메라 열기"
+                ) { },
+                MultiFabItem(
+                    "write",
+                    ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
+                        .toBitmap().asImageBitmap(),
+                    "직접 입력"
+                ) { navController.navigate("nuyaCreate") }
+            ),
+            toState,
+            true
+        ) { state -> toState = state }
     }
 }
 
@@ -149,36 +158,6 @@ fun SearchInput() {
                 Text("이름, 전화번호, 회사명, 직책으로 검색", color = NeutralMedium)
             }
             innerTextField()
-        }
-    }
-}
-
-/**
- * NAYA 카드 / 명함 전환 버튼 컴포저블
- *
- * @author Sckroll
- */
-@Composable
-fun NayaBcardSwitchButtons() {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .padding(bottom = 24.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TextButton(onClick = { /*TODO*/ }) {
-            Text("NAYA")
-        }
-        Divider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(34.dp)
-                .padding(horizontal = 16.dp)
-        )
-        TextButton(onClick = { /*TODO*/ }) {
-            Text("BUSINESS")
         }
     }
 }

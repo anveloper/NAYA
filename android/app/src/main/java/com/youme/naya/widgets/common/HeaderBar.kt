@@ -1,4 +1,4 @@
-package com.youme.naya.ui.common
+package com.youme.naya.widgets.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
