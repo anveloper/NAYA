@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -13,13 +15,18 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.camera.CameraX
+import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
 
 @Composable
 fun MainScreen(navController: NavHostController) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         topBar = { HeaderBar(navController = navController) },
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navController) },
+        modifier = Modifier
+            .addFocusCleaner(focusManager)
     ) {
         BottomNavGraph(navController)
     }

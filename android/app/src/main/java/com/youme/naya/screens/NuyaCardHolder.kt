@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -53,30 +54,23 @@ class MultiFabItem(
 
 @Composable
 fun NuyaCardHolderScreen(navController: NavHostController) {
-    val focusManager = LocalFocusManager.current
+    val ctx = LocalContext.current
+    var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
 
-    Column(
+    Box(
         Modifier
             .fillMaxSize()
             .background(Color.White)
-            .addFocusCleaner(focusManager)
     ) {
-        SearchInput()
-        NayaBcardSwitchButtons(
-            nayaTab = { MyNuyaCardList(navController) },
-            bCardTab = {  }
-        )
-    }
-}
-
-@Composable
-fun MyNuyaCardList(navController: NavHostController) {
-    var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
-    val ctx = LocalContext.current
-
-    Box(Modifier.fillMaxSize()) {
-//            CardList()
-        CustomCardStackView()
+        Column(
+            Modifier.fillMaxSize()
+        ) {
+            SearchInput()
+            NayaBcardSwitchButtons(
+                nayaTab = { MyNuyaCardList() },
+                bCardTab = { MyBusinessCardList() }
+            )
+        }
         MultiFloatingActionButton(
             listOf(
                 MultiFabItem(
@@ -98,16 +92,33 @@ fun MyNuyaCardList(navController: NavHostController) {
     }
 }
 
-/**
- * 입력 창 포커스 상태에서 다른 곳을 터치할 경우 포커스를 잃게 하는 함수
- */
-fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit = {}): Modifier {
-    return this.pointerInput(Unit) {
-        detectTapGestures(onTap = {
-            doOnClear()
-            focusManager.clearFocus()
-        })
-    }
+@Composable
+fun MyNuyaCardList() {
+    val testData = listOf<String>(
+        "Naya Card 1",
+        "Naya Card 2",
+        "Naya Card 3",
+        "Naya Card 4",
+        "Naya Card 5",
+        "Naya Card 6",
+        "Naya Card 7",
+        "Naya Card 8",
+        "Naya Card 9",
+    )
+    CustomCardStackView(testData)
+}
+
+@Composable
+fun MyBusinessCardList() {
+    val testData = listOf<String>(
+        "Business Card 1",
+        "Business Card 2",
+        "Business Card 3",
+        "Business Card 4",
+        "Business Card 5",
+        "Business Card 6"
+    )
+    CustomCardStackView(testData)
 }
 
 /**
@@ -129,6 +140,7 @@ fun SearchInput() {
     val focusRequester by remember {
         mutableStateOf(FocusRequester())
     }
+    val focusManager = LocalFocusManager.current
 
     BasicTextField(
         value = textState, onValueChange = { textState = it },
@@ -137,7 +149,9 @@ fun SearchInput() {
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .focusRequester(focusRequester)
-            .onFocusChanged { focused = it.isFocused }
+            .onFocusChanged { focused = it.isFocused },
+        keyboardActions = KeyboardActions(
+            onDone = { focusManager.clearFocus() }),
     ) { innerTextField ->
         Row(
             Modifier
@@ -255,9 +269,11 @@ fun MultiFloatingActionButton(
     /**
      * 실제 FAB 부분
      */
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp), contentAlignment = Alignment.BottomEnd) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp), contentAlignment = Alignment.BottomEnd
+    ) {
         Column(
             horizontalAlignment = Alignment.End,
             modifier = Modifier.padding(bottom = 64.dp)
