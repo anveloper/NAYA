@@ -80,7 +80,7 @@ fun MyNayaCardList() {
                 }
             }
         }
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(16.dp))
         Row {
             if (listSize == 0) {
                 Text(text = "명함을 등록해 보세요", color = Color(0xFFCED3D6))
@@ -96,6 +96,15 @@ fun MyNayaCardList() {
                     }
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = {
+                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize) }
+                    }) {
+                        Icon(
+                            Icons.Outlined.Add,
+                            "plus"
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = {
                         coroutineScope.launch { currentCardId.animateScrollToItem(listSize - 1) }
                     }) {
                         Icon(
@@ -104,14 +113,15 @@ fun MyNayaCardList() {
                         )
                     }
                     Spacer(Modifier.width(8.dp))
-                }
-                IconButton(onClick = {
-                    coroutineScope.launch { currentCardId.animateScrollToItem(listSize) }
-                }) {
-                    Icon(
-                        Icons.Outlined.Add,
-                        "plus"
-                    )
+                } else {
+                    IconButton(onClick = {
+                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize) }
+                    }) {
+                        Icon(
+                            Icons.Outlined.Add,
+                            "plus"
+                        )
+                    }
                 }
             }
         }
