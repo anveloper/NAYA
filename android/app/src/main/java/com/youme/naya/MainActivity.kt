@@ -2,7 +2,6 @@ package com.youme.naya
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material.Surface
@@ -20,8 +19,7 @@ import com.youme.naya.login.LoginActivity
 import com.youme.naya.login.LoginViewModel
 import com.youme.naya.ui.theme.AndroidTheme
 
-class MainActivity : ComponentActivity() {
-
+class MainActivity : BaseActivity() {
     // Firebase
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val viewModel by viewModels<LoginViewModel>()
@@ -41,9 +39,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
         setContent {
-
             Surface(color = Color.White) {
                 Text(text = "로그인 확인중", fontSize = 30.sp)
             }
@@ -54,7 +50,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 }
 
 @Preview(
@@ -64,5 +59,5 @@ class MainActivity : ComponentActivity() {
 )
 @Composable
 fun MainPreview() {
-//    MainScreen()
+    MainScreen(rememberNavController())
 }
