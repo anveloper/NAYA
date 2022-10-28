@@ -14,9 +14,9 @@ import com.youme.naya.R
 
 private val HomeTitleModifier = Modifier
     .fillMaxWidth()
-    .height(60.dp)
+    .height(64.dp)
     .background(Color.White)
-    .padding(20.dp)
+    .padding(top = 16.dp, bottom = 16.dp, start = 16.dp, end = 8.dp)
 
 private val HomeLogoModifier = Modifier
     .height(24.dp)
@@ -25,7 +25,7 @@ private val HomeSettingBtnGroupModifier = Modifier
     .height(24.dp)
 
 @Composable
-fun Headerbar() {
+fun HeaderBar() {
     Row(
         HomeTitleModifier,
         verticalAlignment = Alignment.CenterVertically,

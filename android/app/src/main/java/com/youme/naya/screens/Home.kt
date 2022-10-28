@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.youme.naya.R
 import com.youme.naya.constant.HomeConstant
-import com.youme.naya.ui.common.Headerbar
+import com.youme.naya.ui.common.HeaderBar
 import com.youme.naya.widgets.home.MyBCardList
 import com.youme.naya.widgets.home.MyNayaCardList
 
@@ -48,7 +48,7 @@ fun HomeScreen() {
         mutableStateOf(1)
     }
     Column(HomeModifier) {
-        Headerbar()
+        HeaderBar()
         Column(HomeContentModifier) {
             Row(
                 HomeTabModifier,

@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
@@ -41,6 +42,7 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
 import com.youme.naya.constant.MultiFabState
+import com.youme.naya.ui.common.HeaderBar
 import com.youme.naya.ui.theme.*
 
 class MultiFabItem(
@@ -59,17 +61,10 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    listOf(
-                        NeutralWhite,
-                        NeutralLight
-                    )
-                ),
-            )
-            .padding(32.dp)
+            .background(Color.White)
             .addFocusCleaner(focusManager)
     ) {
+        HeaderBar()
         SearchInput()
         NayaBcardSwitchButtons()
         Box(Modifier.fillMaxSize()) {
@@ -134,8 +129,7 @@ fun SearchInput() {
         singleLine = true,
         interactionSource = source,
         modifier = Modifier
-            .padding(bottom = 24.dp)
-            .shadow(8.dp)
+            .padding(horizontal = 16.dp)
             .focusRequester(focusRequester)
             .onFocusChanged { focused = it.isFocused }
     ) { innerTextField ->
@@ -285,7 +279,9 @@ fun MultiFloatingActionButton(
     /**
      * 실제 FAB 부분
      */
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp), contentAlignment = Alignment.BottomEnd) {
         Column(
             horizontalAlignment = Alignment.End,
             modifier = Modifier.padding(bottom = 64.dp)
