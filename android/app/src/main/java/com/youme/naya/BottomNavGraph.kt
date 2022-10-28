@@ -37,5 +37,9 @@ fun BottomNavGraph(
         composable(route = "nuyaCreate") {
             NuyaCardCreateScreen()
         }
+        // Nuya 카드 상세 정보
+        composable(route = "nuyaDetails") {
+            NuyaCardDetailsScreen()
+        }
     }
 }

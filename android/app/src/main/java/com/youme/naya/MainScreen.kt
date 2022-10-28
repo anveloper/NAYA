@@ -13,10 +13,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.camera.CameraX
+import com.youme.naya.widgets.common.HeaderBar
 
 @Composable
 fun MainScreen(navController: NavHostController) {
     Scaffold(
+        topBar = { HeaderBar(navController = navController) },
         bottomBar = { BottomBar(navController = navController) }
     ) {
         BottomNavGraph(navController)
