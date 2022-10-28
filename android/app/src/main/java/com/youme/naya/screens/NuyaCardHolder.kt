@@ -97,6 +97,9 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
     }
 }
 
+/**
+ * 입력 창 포커스 상태에서 다른 곳을 터치할 경우 포커스를 잃게 하는 함수
+ */
 fun Modifier.addFocusCleaner(focusManager: FocusManager, doOnClear: () -> Unit = {}): Modifier {
     return this.pointerInput(Unit) {
         detectTapGestures(onTap = {
