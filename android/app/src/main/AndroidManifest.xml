@@ -87,6 +87,7 @@
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
 
+        <activity android:name=".login.LoginActivity"></activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"
