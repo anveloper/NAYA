@@ -11,9 +11,9 @@ import com.loopeer.cardstack.CardStackView;
 import com.loopeer.cardstack.StackAdapter;
 import com.youme.naya.R;
 
-public class TestStackAdapter extends StackAdapter<String> {
+public class CardStackAdapter extends StackAdapter<String> {
 
-    public TestStackAdapter(Context context) {
+    public CardStackAdapter(Context context) {
         super(context);
     }
 
