@@ -55,13 +55,18 @@ private val ShareTitleModifier = Modifier
     .fillMaxWidth()
     .height(64.dp)
 
-private val PrimaryGradientBrush = Brush.verticalGradient(
+val PrimaryGradientBrush = Brush.verticalGradient(
     listOf(
         Color(0xFF055EEA),
         Color(0xFF0891F2)
     )
 )
-
+val PrimaryGradientBrushH = Brush.horizontalGradient(
+    listOf(
+        Color(0xFF055EEA),
+        Color(0xFF0891F2)
+    )
+)
 
 @Composable
 fun ShareScreen(
@@ -76,7 +81,6 @@ fun ShareScreen(
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
                 IconButton(
                     onClick = {
-//                        context.startActivity(Intent(context, MainActivity::class.java))
                         onFinish()
                     }) {
                     Icon(
