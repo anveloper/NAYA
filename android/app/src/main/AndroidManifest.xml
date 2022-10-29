@@ -58,11 +58,18 @@
                 android:value="" />
 
         </activity>
-
-        <!--  로그인을 위한 액티비티  -->
         <activity
-            android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name=".share.NfcActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/nfc_tech_filter" />
+        </activity>
 
         <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
@@ -79,21 +86,8 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
-        <!--  NFC 기능 사용을 위한 별도의 액티비티  -->
-        <activity
-            android:name=".share.NfcActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:mimeType="text/plain" />
-            </intent-filter>
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
-        </activity>
 
+        <activity android:name=".login.LoginActivity"></activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"
