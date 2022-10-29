@@ -60,8 +60,7 @@
         </activity>
         <activity
             android:name=".share.NfcActivity"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -88,10 +87,7 @@
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
 
-        <activity
-            android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
-
+        <activity android:name=".login.LoginActivity"></activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"
