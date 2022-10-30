@@ -2,7 +2,6 @@ package com.youme.naya.screens
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,6 +40,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
+import com.youme.naya.card.TempNayaCardListAdapter
 import com.youme.naya.constant.MultiFabState
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.ui.theme.*
@@ -94,18 +94,21 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
 
 @Composable
 fun MyNuyaCardList() {
-    val testData = listOf<String>(
-        "Naya Card 1",
-        "Naya Card 2",
-        "Naya Card 3",
-        "Naya Card 4",
-        "Naya Card 5",
-        "Naya Card 6",
-        "Naya Card 7",
-        "Naya Card 8",
-        "Naya Card 9",
-    )
-    CustomCardStackView(testData)
+//    val testData = listOf<String>(
+//        "Naya Card 1",
+//        "Naya Card 2",
+//        "Naya Card 3",
+//        "Naya Card 4",
+//        "Naya Card 5",
+//        "Naya Card 6",
+//        "Naya Card 7",
+//        "Naya Card 8",
+//        "Naya Card 9",
+//    )
+//    CustomCardStackView(testData)
+
+    val adapter = TempNayaCardListAdapter()
+
 }
 
 @Composable

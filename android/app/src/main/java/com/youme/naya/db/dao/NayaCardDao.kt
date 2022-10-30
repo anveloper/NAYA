@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NayaCardDao {
+
     @Query("SELECT * FROM naya_card")
     fun getAllCards(): Flow<List<NayaCard>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(card: NayaCard)
+    suspend fun insert(nayaCard: NayaCard)
 
     @Query("DELETE FROM naya_card")
     suspend fun deleteAll()
+
 }

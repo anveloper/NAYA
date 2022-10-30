@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "naya_card")
 data class NayaCard(
+
     @PrimaryKey val NayaCardId: Int,
     @PrimaryKey val UserId: Int,
     @ColumnInfo(name = "name") val name: String,
@@ -24,6 +25,6 @@ data class NayaCard(
     @ColumnInfo(name = "memo1") val memo1: String,
     @ColumnInfo(name = "memo2") val memo2: String,
     @ColumnInfo(name = "memo3") val memo3: String,
-    @ColumnInfo(name = "memo_content") val memo_content: String,
+    @ColumnInfo(name = "memo_content") val memo_content: String
 
 )
