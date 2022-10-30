@@ -4,31 +4,26 @@ import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.youme.naya.BaseActivity
-import com.youme.naya.R
-import com.youme.naya.ui.theme.AndroidTheme
-import com.youme.naya.ui.theme.NeutralGray
+import com.youme.naya.ui.theme.*
+import com.youme.naya.widgets.share.CircleWaveComp
+import com.youme.naya.widgets.share.ShareCard
+import com.youme.naya.widgets.share.ShareHeader
+import com.youme.naya.widgets.share.nfc.NfcSendingResult
+import com.youme.naya.widgets.share.nfc.SendingResult
+import com.youme.naya.widgets.share.nfc.ShareNfcContent
+import com.youme.naya.widgets.share.nfc.ShareNfcSearchFail
+import kotlinx.coroutines.launch
 
 class NfcActivity : BaseActivity(TransitionMode.HORIZON) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,62 +40,81 @@ class NfcActivity : BaseActivity(TransitionMode.HORIZON) {
 }
 
 
-
-
-
 // view
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NfcShareScreen(
     onFinish: () -> Unit
 ) {
     val context = LocalContext.current
-    Box(Modifier.fillMaxSize()) {
-        CircleWaveComp()
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-            IconButton(onClick = {
-                onFinish()
-            }) {
-                Icon(
-                    Icons.Outlined.Close, "move to share", tint = Color(0xFFCED3D6)
-                )
-            }
-        }
-        Box(Modifier.matchParentSize(), Alignment.Center) {
-            Box(
-                Modifier
-                    .width(155.dp)
-                    .height(280.dp)
-                    .shadow(4.dp)
-                    .background(PrimaryGradientBrushH), Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.home_logo_text),
-                    null,
-                    Modifier.rotate(270f),
-                    colorFilter = ColorFilter.tint(Color.White)
-                )
-            }
-        }
-        Column(
-            Modifier
-                .matchParentSize(), Arrangement.SpaceEvenly, Alignment.CenterHorizontally
-        ) {
-            Column(
-                Modifier
-                    .fillMaxWidth(), Arrangement.Top, Alignment.CenterHorizontally
-            ) {
-                Image(painter = painterResource(R.drawable.ic_share_nfc), null)
-                Text(
-                    text = "NFC로 카드를 전송 할게요\n근처의 상대방을 찾고 있어요",
-                    textAlign = TextAlign.Center,
-                    fontSize = 16.sp,
-                    color = NeutralGray
-                )
-            }
-            Spacer(Modifier.height(280.dp))
-            Spacer(Modifier.height(60.dp))
-        }
+    val (isSearchFail, setIsSearchFail) = remember { mutableStateOf(false) }
+    val (sendingResult, setSendingResult) = remember { mutableStateOf(SendingResult.Idle) }
 
+
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed),
+    )
+
+    val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = sendingResult) {
+        if (sendingResult != SendingResult.Idle) {
+            bottomSheetScaffoldState.bottomSheetState.expand()
+        }
+    }
+
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetScaffoldState,
+        sheetContent = {
+            NfcSendingResult(sendingResult, { onFinish() }) {
+                coroutineScope.launch {
+                    bottomSheetScaffoldState.bottomSheetState.collapse()
+                    setSendingResult(SendingResult.Idle)
+                }
+            }
+        },
+        sheetShape = RoundedCornerShape(20.dp, 20.dp),
+        sheetPeekHeight = 0.dp
+    ) {
+        Box(Modifier.fillMaxSize()) {
+            // 배경 컴포넌트
+            CircleWaveComp()
+            ShareCard()
+            // 헤더
+            ShareHeader { onFinish() }
+            // 컨텐츠
+            ShareNfcContent()
+            // 탐색 실패 시 다이얼로그
+            if (isSearchFail) {
+                ShareNfcSearchFail(onFinish = { onFinish() }) {
+                    setIsSearchFail(false)
+                }
+            }
+
+            // 화면 이동 테스트 버튼
+            Row(
+                Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 24.dp), Arrangement.SpaceAround, Alignment.Bottom
+            ) {
+                TextButton(
+                    onClick = { setIsSearchFail(true) },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = SystemYellow)
+                ) {
+                    Text(text = "Not Found")
+                }
+                TextButton(onClick = {
+                    setSendingResult(SendingResult.Fail)
+                }, colors = ButtonDefaults.buttonColors(backgroundColor = SystemRed)) {
+                    Text(text = "Fail", color = Color.White)
+                }
+                TextButton(onClick = {
+                    setSendingResult(SendingResult.Success)
+                }, colors = ButtonDefaults.buttonColors(backgroundColor = SystemGreen)) {
+                    Text(text = "Success", color = Color.White)
+                }
+            }
+        }
     }
 }
 
