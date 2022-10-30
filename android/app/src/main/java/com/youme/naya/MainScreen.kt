@@ -1,6 +1,5 @@
 package com.youme.naya
 
-import android.content.Context
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -12,14 +11,15 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.youme.naya.camera.CameraX
+import com.youme.naya.graphs.BottomNavGraph
 
 @Composable
-fun MainScreen(navController: NavHostController) {
+fun MainScreen(navController: NavHostController = rememberNavController()) {
+//    SetupNavGraph(navController)
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController)
+        BottomNavGraph(navController = navController)
     }
 }
 
