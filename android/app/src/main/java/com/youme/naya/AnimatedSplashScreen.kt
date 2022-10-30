@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.youme.naya.graphs.Graph
+import com.youme.naya.ui.theme.SecondaryBasicBlue
+import com.youme.naya.ui.theme.SecondarySystemBlue
 import kotlinx.coroutines.delay
 
 @Composable
@@ -47,8 +49,8 @@ fun Splash(alpha : Float) {
         .background(
             brush = Brush.verticalGradient(
                 listOf(
-                    Color(0xFF055EEA),
-                    Color(0xFF0891F2)
+                    SecondaryBasicBlue,
+                    SecondarySystemBlue
                 )
             )
         )
