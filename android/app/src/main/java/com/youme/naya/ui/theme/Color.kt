@@ -1,9 +1,11 @@
 package com.youme.naya.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val PrimaryBlue = Color(0xFF2C67FF)
 val PrimaryDark = Color(0xFF122045)
+val PrimaryLight = Color(0xFFF4F7F9)
 val SecondaryLightBlue = Color(0xFFDFE6FB)
 val SecondaryMediumBlue = Color(0xFF5C8AFF)
 val SecondarySystemBlue = Color(0xFF0891F2)
@@ -26,3 +28,23 @@ val NeutralMedium = Color(0xFFBDC5CA)
 val NeutralGray = Color(0xFFA1ACB3)
 val NeutralMetal = Color(0xFF88929F)
 val NeutralDarkGray = Color(0xFF444657)
+
+val PrimaryGradientBrush = Brush.verticalGradient(
+    listOf(
+        Color(0xFF055EEA),
+        Color(0xFF0891F2)
+    )
+)
+val PrimaryGradientBrushH = Brush.horizontalGradient(
+    listOf(
+        Color(0xFF055EEA),
+        Color(0xFF0891F2)
+    )
+)
+
+val SystemRedGradientBrush = Brush.verticalGradient(
+    listOf(
+        SystemRed,
+        SystemPink
+    )
+)
