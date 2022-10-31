@@ -1,4 +1,4 @@
-package com.youme.naya.widgets.share.nfc
+package com.youme.naya.widgets.share
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -10,11 +10,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.youme.naya.R
-import com.youme.naya.ui.theme.NeutralGray
+import com.youme.naya.ui.theme.NeutralMedium
 
 @Composable
-fun ShareNfcContent() {
+fun ShareInfo(
+    id: Int,
+    content: String
+) {
     Column(
         Modifier
             .fillMaxSize(), Arrangement.SpaceEvenly, Alignment.CenterHorizontally
@@ -23,12 +25,12 @@ fun ShareNfcContent() {
             Modifier
                 .fillMaxWidth(), Arrangement.Top, Alignment.CenterHorizontally
         ) {
-            Image(painter = painterResource(R.drawable.ic_share_nfc), null)
+            Image(painter = painterResource(id), null)
             Text(
-                text = "NFC로 카드를 전송 할게요\n근처의 상대방을 찾고 있어요",
+                text = content,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
-                color = NeutralGray
+                color = NeutralMedium
             )
         }
         Spacer(Modifier.height(280.dp))

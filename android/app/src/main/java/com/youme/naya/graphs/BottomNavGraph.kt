@@ -1,9 +1,10 @@
-package com.youme.naya
+package com.youme.naya.graphs
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.youme.naya.BottomBarScreen
 import com.youme.naya.screens.*
 
 @Composable
@@ -12,6 +13,7 @@ fun BottomNavGraph(
 ) {
     NavHost(
         navController = navController,
+        route = Graph.Bottom,
         startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route) {
@@ -31,7 +33,7 @@ fun BottomNavGraph(
         }
         // camera
         composable(route = "camera") {
-//            CameraScreen()
+            // CameraScreen()
         }
         // Nuya 카드 생성 (직접 입력)
         composable(route = "nuyaCreate") {
