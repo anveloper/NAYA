@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.youme.naya.BaseActivity
 import com.youme.naya.R
 import com.youme.naya.ui.theme.*
+import com.youme.naya.widgets.share.ShareExtra
 
 
 class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
@@ -122,7 +123,7 @@ fun ShareScreen(
             "NFC를 이용하여 근처 사용자에게 카드를 보내세요"
         ) {
 //            context.startActivity(Intent(context, NfcActivity::class.java))
-            var intent = Intent(context, NfcActivity::class.java)
+            var intent = Intent(activity, NfcActivity::class.java)
             intent.putExtra("userId", 123)
             intent.putExtra("cardId", cardId)
             launcher.launch(intent)
@@ -140,48 +141,13 @@ fun ShareScreen(
             "Naya 카드 고유의 QR코드를 생성해서 공유하세요"
         ) {
             // QR코드 생성
+            var intent = Intent(activity, QrActivity::class.java)
+            intent.putExtra("userId", 123)
+            intent.putExtra("cardId", cardId)
+            intent.putExtra("contentUrl", "testUrl")
+            launcher.launch(intent)
         }
-        Column(
-            Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterHorizontally
-        ) {
-            Text(
-                color = PrimaryDark,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                text = "SNS 공유",
-                fontFamily = fonts
-            )
-            Spacer(Modifier.height(8.dp))
-            Row() {
-                ShareIconButton(R.drawable.ic_share_sns_kakao, "카카오톡") {
-                    // 카카오톡 공유로직
-                }
-                ShareIconButton(R.drawable.ic_share_sns_twitter, "트위터") {
-                    // 트위터 공유로직
-                }
-                ShareIconButton(R.drawable.ic_share_sns_facebook, "페이스북") {
-                    // 페이스북 공유로직
-                }
-                ShareIconButton(R.drawable.ic_share_sns_mail, "메일") {
-                    // 메일 공유로직
-                }
-            }
-        }
-        TextButton(
-            modifier = Modifier
-                .width(280.dp)
-                .height(48.dp)
-                .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-                .background(color = PrimaryLight, shape = RoundedCornerShape(12.dp)),
-            onClick = { /*TODO*/ }) {
-            Text(
-                color = PrimaryBlue,
-                fontWeight = FontWeight.Bold,
-                fontFamily = fonts,
-                fontSize = 14.sp, text = "이미지 다운로드"
-            )
-        }
-        Spacer(Modifier.height(4.dp))
+        ShareExtra()
     }
 }
 
