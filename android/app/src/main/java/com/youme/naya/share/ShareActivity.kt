@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -55,18 +54,18 @@ private val ShareTitleModifier = Modifier
     .fillMaxWidth()
     .height(64.dp)
 
-val PrimaryGradientBrush = Brush.verticalGradient(
-    listOf(
-        Color(0xFF055EEA),
-        Color(0xFF0891F2)
-    )
-)
-val PrimaryGradientBrushH = Brush.horizontalGradient(
-    listOf(
-        Color(0xFF055EEA),
-        Color(0xFF0891F2)
-    )
-)
+//val PrimaryGradientBrush = Brush.verticalGradient(
+//    listOf(
+//        Color(0xFF055EEA),
+//        Color(0xFF0891F2)
+//    )
+//)
+//val PrimaryGradientBrushH = Brush.horizontalGradient(
+//    listOf(
+//        Color(0xFF055EEA),
+//        Color(0xFF0891F2)
+//    )
+//)
 
 @Composable
 fun ShareScreen(
