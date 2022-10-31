@@ -93,6 +93,10 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+        <!--  QR 기능 사용을 위한 별도의 액티비티  -->
+        <activity
+            android:name=".share.QrActivity"
+            android:screenOrientation="portrait"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
