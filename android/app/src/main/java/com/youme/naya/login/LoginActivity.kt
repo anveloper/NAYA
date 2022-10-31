@@ -1,4 +1,4 @@
-package com.youme.naya.graphs.login
+package com.youme.naya.login
 
 import android.content.Intent
 import android.os.Bundle
