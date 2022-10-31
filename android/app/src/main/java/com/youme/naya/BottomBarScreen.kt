@@ -1,13 +1,6 @@
 package com.youme.naya
 
-import androidx.compose.foundation.Image
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-
-sealed class BottomBarScreen(val route: String, val title: String, val icon: Int) {
+sealed class BottomBarScreen(val route: String, val title: String, val icon: Int?) {
     object Home : BottomBarScreen(
         route = "home",
         title = "Home",
@@ -17,6 +10,11 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Int
         route = "nuya",
         title = "Nuya",
         icon = R.drawable.nav_nuya_icon
+    )
+    object Spacer : BottomBarScreen(
+        route = "",
+        title = "",
+        icon = null
     )
 
     object NayaCard : BottomBarScreen(

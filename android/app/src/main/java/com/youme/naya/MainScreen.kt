@@ -1,16 +1,17 @@
 package com.youme.naya
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,10 +25,41 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.graphs.BottomNavGraph
 import com.youme.naya.ui.theme.*
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { /* TODO */ },
+                backgroundColor = PrimaryBlue,
+                shape = RoundedCornerShape(50.dp),
+//                modifier = Modifier
+//                    .background(
+//                        brush = Brush.verticalGradient(
+//                            colors =  listOf(
+//                                SecondaryBasicBlue,
+//                                SecondarySystemBlue
+//                            ),
+//
+//                        ),
+//                        shape = RoundedCornerShape(30.dp)
+//                    )
+                ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.nav_send_icon),
+                    contentDescription = "send",
+                    modifier = Modifier
+                        .width(40.dp)
+                        .height(40.dp),
+                    tint = NeutralWhite
+                )
+
+            }
+        },
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center,
         bottomBar = { BottomBar(navController = navController) }
     ) {
         BottomNavGraph(navController = navController)
@@ -40,6 +72,7 @@ fun BottomBar(
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.NuyaCardHolder,
+        BottomBarScreen.Spacer,
         BottomBarScreen.NayaCard,
         BottomBarScreen.Calendar,
 //        BottomBarScreen.Settings
@@ -47,7 +80,8 @@ fun BottomBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation(
+    BottomAppBar(
+        cutoutShape = CircleShape,
         backgroundColor = PrimaryLight,
         modifier = Modifier
             .background(
@@ -64,8 +98,6 @@ fun BottomBar(
                 )
                 clip = true
             }
-
-
     ) {
         screens.forEach { screen ->
             AddItem(
@@ -94,11 +126,13 @@ fun RowScope.AddItem(
             )
         },
         icon = {
-            Icon(
-                painter = painterResource(id = screen.icon),
-                contentDescription = screen.title,
-                modifier = Modifier.width(24.dp).height(24.dp)
-            )
+            screen.icon?.let { painterResource(id = it) }?.let {
+                Icon(
+                    painter = it,
+                    contentDescription = screen.title,
+                    modifier = Modifier.width(24.dp).height(24.dp)
+                )
+            }
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
