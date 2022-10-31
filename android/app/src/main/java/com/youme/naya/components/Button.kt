@@ -18,6 +18,7 @@ import com.youme.naya.ui.theme.*
 @Composable
 fun PrimaryBigButton(
     text: String,
+    // 클릭 가능 / 불가능 여부
     enabled: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -175,11 +176,12 @@ fun SecondaryIconButton(
 }
 
 @Composable
-fun SecondaryclickIconButton(
+fun SecondarySelectIconButton(
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit,
     icon: Int,
+    // 선택 상태인지
     selected: Boolean = false,
 ) {
     Button(
