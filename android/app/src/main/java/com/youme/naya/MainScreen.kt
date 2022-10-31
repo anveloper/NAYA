@@ -1,18 +1,22 @@
 package com.youme.naya
 
+import android.content.Intent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,37 +28,40 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.graphs.BottomNavGraph
+import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
+    val context = LocalContext.current
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* TODO */ },
-                backgroundColor = PrimaryBlue,
-                shape = RoundedCornerShape(50.dp),
-//                modifier = Modifier
-//                    .background(
-//                        brush = Brush.verticalGradient(
-//                            colors =  listOf(
-//                                SecondaryBasicBlue,
-//                                SecondarySystemBlue
-//                            ),
-//
-//                        ),
-//                        shape = RoundedCornerShape(30.dp)
-//                    )
+                onClick = {
+                    context.startActivity(Intent(context, ShareActivity::class.java))
+                },
+                backgroundColor = Color.Transparent,
+                shape = CircleShape,
+            ) {
+                Box(
+                    Modifier
+                        .width(60.dp)
+                        .height(
+                            60.dp
+                        )
+                        .background(SecondaryGradientBrush,
+                            CircleShape
+                        ), Alignment.Center
                 ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.nav_send_icon),
-                    contentDescription = "send",
-                    modifier = Modifier
-                        .width(40.dp)
-                        .height(40.dp),
-                    tint = NeutralWhite
-                )
+                    Icon(
+                        painter = painterResource(R.drawable.nav_send_icon),
+                        contentDescription = "send",
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(40.dp),
+                        tint = NeutralWhite
+                    )
+                }
 
             }
         },
@@ -68,7 +75,8 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
 @Composable
 fun BottomBar(
-    navController: NavHostController) {
+    navController: NavHostController
+) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.NuyaCardHolder,
@@ -120,7 +128,7 @@ fun RowScope.AddItem(
             .height(72.dp),
         label = {
             Text(
-               screen.title,
+                screen.title,
                 fontSize = 10.sp,
                 fontFamily = pico,
             )
@@ -130,7 +138,9 @@ fun RowScope.AddItem(
                 Icon(
                     painter = it,
                     contentDescription = screen.title,
-                    modifier = Modifier.width(24.dp).height(24.dp)
+                    modifier = Modifier
+                        .width(24.dp)
+                        .height(24.dp)
                 )
             }
         },
