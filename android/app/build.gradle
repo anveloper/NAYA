@@ -104,4 +104,7 @@ dependencies {
     implementation 'com.github.loopeer:CardStackView:1.0.0'
 
 
+    // QR 코드 생성
+    implementation ('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 }

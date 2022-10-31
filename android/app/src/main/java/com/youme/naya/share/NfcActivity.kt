@@ -15,13 +15,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.youme.naya.BaseActivity
+import com.youme.naya.R
 import com.youme.naya.ui.theme.*
 import com.youme.naya.widgets.share.CircleWaveComp
 import com.youme.naya.widgets.share.ShareCard
 import com.youme.naya.widgets.share.ShareHeader
+import com.youme.naya.widgets.share.ShareInfo
 import com.youme.naya.widgets.share.nfc.NfcSendingResult
 import com.youme.naya.widgets.share.nfc.SendingResult
-import com.youme.naya.widgets.share.nfc.ShareNfcContent
 import com.youme.naya.widgets.share.nfc.ShareNfcSearchFail
 import kotlinx.coroutines.launch
 
@@ -83,7 +84,7 @@ fun NfcShareScreen(
             // 헤더
             ShareHeader { onFinish() }
             // 컨텐츠
-            ShareNfcContent()
+            ShareInfo(R.drawable.ic_share_nfc, "NFC로 카드를 전송 할게요\n근처의 상대방을 찾고 있어요")
             // 탐색 실패 시 다이얼로그
             if (isSearchFail) {
                 ShareNfcSearchFail(onFinish = { onFinish() }) {
