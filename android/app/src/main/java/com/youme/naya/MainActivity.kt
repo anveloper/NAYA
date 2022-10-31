@@ -22,9 +22,9 @@ private var mainContext: Context? = null
 
 class MainActivity : ComponentActivity() {
     private lateinit var navController: NavHostController
-    private val nayaCardViewModel: NayaCardViewModel by viewModels {
-        NayaCardViewModelFactory((application as NayaApplication).repository)
-    }
+//    private val nayaCardViewModel: NayaCardViewModel by viewModels {
+//        NayaCardViewModelFactory((application as NayaApplication).repository)
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,14 +36,14 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        val adapter = TempNayaCardListAdapter()
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        nayaCardViewModel.allCards.observe(this, Observer { cards ->
-            cards?.let { adapter.submitList(it) }
-        })
+//        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
+//        val adapter = TempNayaCardListAdapter()
+//        recyclerView.adapter = adapter
+//        recyclerView.layoutManager = LinearLayoutManager(this)
+//
+//        nayaCardViewModel.allCards.observe(this, Observer { cards ->
+//            cards?.let { adapter.submitList(it) }
+//        })
     }
 
 }
