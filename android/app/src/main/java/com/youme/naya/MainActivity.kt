@@ -57,6 +57,7 @@ class MainActivity : BaseActivity() {
     showBackground = true,
     showSystemUi = true
 )
+
 @Composable
 fun MainPreview() {
     RootNavigationGraph(rememberNavController())
