@@ -7,7 +7,9 @@ import androidx.navigation.compose.composable
 import com.youme.naya.screens.*
 
 @Composable
-fun BottomNacGraph(navController: NavHostController) {
+fun BottomNavGraph(
+    navController: NavHostController
+) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route
@@ -16,16 +18,24 @@ fun BottomNacGraph(navController: NavHostController) {
             HomeScreen()
         }
         composable(route = BottomBarScreen.NuyaCardHolder.route) {
-            NuyaCardHolderScreen()
+            NuyaCardHolderScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NayaCard.route) {
-            NayaCardScreen()
+            NayaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Calendar.route) {
             CalendarScreen()
         }
         composable(route = BottomBarScreen.Settings.route) {
             SettingsScreen()
+        }
+        // camera
+        composable(route = "camera") {
+//            CameraScreen()
+        }
+        // Nuya 카드 생성 (직접 입력)
+        composable(route = "nuyaCreate") {
+            NuyaCardCreateScreen()
         }
     }
 }
