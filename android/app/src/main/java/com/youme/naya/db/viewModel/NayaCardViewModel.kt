@@ -5,7 +5,7 @@ import com.youme.naya.db.entity.NayaCard
 import com.youme.naya.db.repository.NayaCardRepository
 import kotlinx.coroutines.launch
 
-class NayaCardViewModel(private val repository: NayaCardRepository): ViewModel() {
+class NayaCardViewModel(private val repository: NayaCardRepository) : ViewModel() {
 
     val allCards: LiveData<List<NayaCard>> = repository.allCards.asLiveData()
 
@@ -15,7 +15,8 @@ class NayaCardViewModel(private val repository: NayaCardRepository): ViewModel()
 
 }
 
-class NayaCardViewModelFactory(private val repository: NayaCardRepository): ViewModelProvider.Factory {
+class NayaCardViewModelFactory(private val repository: NayaCardRepository) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NayaCardViewModel::class.java)) {

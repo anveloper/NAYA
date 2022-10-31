@@ -1,19 +1,19 @@
-package com.youme.naya.db.entity
+package com.youme.naya.model.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "naya_card")
-data class NayaCard(
+//@Entity(tableName = "naya_card")
+data class Card(
 
-    @PrimaryKey val NayaCardId: Int,
+//    @PrimaryKey val NayaCardId: Int,
 //    @PrimaryKey val UserId: Int,
-    @ColumnInfo(name = "name") val name: String,
+//    @ColumnInfo(name = "name") val name: String,
 //    @ColumnInfo(name = "eng_name") val engName: String,
 //    @ColumnInfo(name = "kind") val kind: Int,
 //    @ColumnInfo(name = "email") val email: String,
-    @ColumnInfo(name = "mobile") val mobile: String,
+//    @ColumnInfo(name = "mobile") val mobile: String,
 //    @ColumnInfo(name = "address") val address: String,
 //    @ColumnInfo(name = "company") val company: String,
 //    @ColumnInfo(name = "team") val team: String,
@@ -26,5 +26,9 @@ data class NayaCard(
 //    @ColumnInfo(name = "memo2") val memo2: String,
 //    @ColumnInfo(name = "memo3") val memo3: String,
 //    @ColumnInfo(name = "memo_content") val memo_content: String
+
+    val NayaCardId: Int,
+    val name: String,
+    val mobile: String
 
 )
