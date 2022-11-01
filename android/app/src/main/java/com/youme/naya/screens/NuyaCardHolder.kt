@@ -38,7 +38,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +46,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
 import com.youme.naya.constant.MultiFabState
@@ -106,17 +104,13 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
 
 @Composable
 fun MyNuyaCardList() {
-//    val cardViewModel: CardViewModel =
-//        ViewModelProvider(this).get(CardViewModel::class.java)
-//    val cardViewModel: CardViewModel = viewModel(factory = CardViewModelFactory())
     val cardViewModel: CardViewModel = hiltViewModel()
-//    val cardViewModel: CardViewModel by viewModels()
-    getNuyaCardList(cardViewModel)
+    NuyaCardList(cardViewModel)
 }
 
 @Composable
-fun getNuyaCardList(cardViewModel: CardViewModel = viewModel()) {
-    val cards = cardViewModel.getAllCards()
+fun NuyaCardList(cardViewModel: CardViewModel = viewModel()) {
+    val cards = cardViewModel.cardList.collectAsState().value
 
     var name by remember { mutableStateOf("") }
     var mobile by remember { mutableStateOf("") }
@@ -138,9 +132,7 @@ fun getNuyaCardList(cardViewModel: CardViewModel = viewModel()) {
             })
         }
         LazyColumn {
-            items(cards) { card ->
-                CardRow(card = card) { cardViewModel.removeCard(it) }
-            }
+            items(cards) { card -> CardRow(card) { cardViewModel.removeCard(it) } }
         }
     }
 }
@@ -472,8 +464,8 @@ private fun MiniFabItem(
     }
 }
 
-@Composable
-@Preview
-fun NuyaCardHolderScreenPreview() {
-    NuyaCardHolderScreen(rememberNavController())
-}
+//@Composable
+//@Preview
+//fun NuyaCardHolderScreenPreview() {
+//    NuyaCardHolderScreen(rememberNavController())
+//}

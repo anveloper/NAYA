@@ -27,6 +27,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.youme.naya.graphs.BottomNavGraph
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
