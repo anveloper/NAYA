@@ -1,5 +1,6 @@
 package com.youme.naya
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -14,18 +15,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.youme.naya.camera.CameraX
 import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.login.LoginActivity
 import com.youme.naya.login.LoginViewModel
 import com.youme.naya.ui.theme.AndroidTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
     // Firebase
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val viewModel by viewModels<LoginViewModel>()
 
     private lateinit var navController: NavHostController
+    private var mainContext: Context? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
