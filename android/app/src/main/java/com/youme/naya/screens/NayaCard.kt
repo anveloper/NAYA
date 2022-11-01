@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.youme.naya.share.NfcActivityTest
+import com.youme.naya.share.NfcActivity
 import com.youme.naya.share.ShareActivity
 
 @Composable
@@ -68,7 +68,7 @@ fun NayaCardScreen(
                 Text(text = "갤러리", fontSize = 16.sp)
             }
             Button(onClick = {
-                context.startActivity(Intent(context, NfcActivityTest::class.java))
+                context.startActivity(Intent(context, NfcActivity::class.java))
             }) {
                 Text(text = "nfc", fontSize = 16.sp)
             }
@@ -78,7 +78,6 @@ fun NayaCardScreen(
                 Text(text = "share", fontSize = 16.sp)
             }
         }
-
     }
 }
 

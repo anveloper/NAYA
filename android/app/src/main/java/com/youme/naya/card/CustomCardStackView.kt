@@ -24,6 +24,7 @@ fun CustomCardStackView() {
         "Card 9",
     )
 
+
     AndroidViewBinding({ inflater, parent, _ ->
         CardStackViewMainBinding.inflate(inflater, parent)
     },

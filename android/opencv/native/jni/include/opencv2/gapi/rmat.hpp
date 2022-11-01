@@ -14,8 +14,8 @@
 namespace cv {
 namespace gapi {
 namespace s11n {
-struct IOStream;
-struct IIStream;
+    struct IOStream;
+    struct IIStream;
 } // namespace s11n
 } // namespace gapi
 } // namespace cv
@@ -25,11 +25,11 @@ namespace cv {
 // "Remote Mat", a general class which provides an abstraction layer over the data
 // storage and placement (host, remote device etc) and allows to access this data.
 //
-// The device specific implementation is hidden in the RMat::IAdapter class
+// The device specific implementation is hidden in the RMat::Adapter class
 //
 // The basic flow is the following:
 // * Backend which is aware of the remote device:
-//   - Implements own AdapterT class which is derived from RMat::IAdapter
+//   - Implements own AdapterT class which is derived from RMat::Adapter
 //   - Wraps device memory into RMat via make_rmat utility function:
 //         cv::RMat rmat = cv::make_rmat<AdapterT>(args);
 //
@@ -42,9 +42,6 @@ namespace cv {
 //         performCalculations(in_view, out_view);
 //         // data from out_view is transferred to the device when out_view is destroyed
 //     }
-/** \addtogroup gapi_data_structures
- * @{
- */
 class GAPI_EXPORTS RMat
 {
 public:
@@ -101,27 +98,23 @@ public:
     };
 
     enum class Access { R, W };
-    class IAdapter
-    // Adapter class is going to be deleted and renamed as IAdapter
+    class Adapter
     {
     public:
-        virtual ~IAdapter() = default;
+        virtual ~Adapter() = default;
         virtual GMatDesc desc() const = 0;
         // Implementation is responsible for setting the appropriate callback to
         // the view when accessed for writing, to ensure that the data from the view
         // is transferred to the device when the view is destroyed
         virtual View access(Access) = 0;
         virtual void serialize(cv::gapi::s11n::IOStream&) {
-            GAPI_Assert(false && "Generic serialize method of RMat::IAdapter does nothing by default. "
-                                 "Please, implement it in derived class to properly serialize the object.");
+            GAPI_Assert(false && "Generic serialize method should never be called for RMat adapter");
         }
         virtual void deserialize(cv::gapi::s11n::IIStream&) {
-            GAPI_Assert(false && "Generic deserialize method of RMat::IAdapter does nothing by default. "
-                                 "Please, implement it in derived class to properly deserialize the object.");
+            GAPI_Assert(false && "Generic deserialize method should never be called for RMat adapter");
         }
     };
-    using Adapter = IAdapter; // Keep backward compatibility
-    using AdapterP = std::shared_ptr<IAdapter>;
+    using AdapterP = std::shared_ptr<Adapter>;
 
     RMat() = default;
     RMat(AdapterP&& a) : m_adapter(std::move(a)) {}
@@ -138,7 +131,7 @@ public:
     // return nullptr if underlying type is different
     template<typename T> T* get() const
     {
-        static_assert(std::is_base_of<IAdapter, T>::value, "T is not derived from IAdapter!");
+        static_assert(std::is_base_of<Adapter, T>::value, "T is not derived from Adapter!");
         GAPI_Assert(m_adapter != nullptr);
         return dynamic_cast<T*>(m_adapter.get());
     }
@@ -153,7 +146,6 @@ private:
 
 template<typename T, typename... Ts>
 RMat make_rmat(Ts&&... args) { return { std::make_shared<T>(std::forward<Ts>(args)...) }; }
-/** @} */
 
 } //namespace cv
 
