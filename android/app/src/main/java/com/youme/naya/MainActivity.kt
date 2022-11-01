@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ui.theme.AndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 

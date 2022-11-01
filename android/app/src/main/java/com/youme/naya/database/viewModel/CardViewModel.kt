@@ -1,7 +1,7 @@
 package com.youme.naya.database.viewModel
 
-import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.repository.CardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
