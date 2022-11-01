@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import com.youme.naya.BaseActivity
 import com.youme.naya.R
 import com.youme.naya.ui.theme.*
-import com.youme.naya.widgets.share.ShareExtra
 
 
 class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
@@ -148,7 +147,15 @@ fun ShareScreen(
             intent.putExtra("contentUrl", "testUrl")
             launcher.launch(intent)
         }
-        ShareExtra()
+        ShareTextButton(
+            R.drawable.ic_share_sns,
+            "어플/SNS 공유",
+            "Naya 외 다양한 어플/SNS로 프로필 카드를 공유해보세요"
+        ) {
+            // SNS 공유
+        }
+        Spacer(Modifier.height(8.dp))
+//        ShareExtra()
     }
 }
 
