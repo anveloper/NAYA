@@ -49,7 +49,6 @@ val SecondaryGradientBrush = Brush.verticalGradient(
     )
 )
 
-
 val SystemRedGradientBrush = Brush.verticalGradient(
     listOf(
         SystemRed,

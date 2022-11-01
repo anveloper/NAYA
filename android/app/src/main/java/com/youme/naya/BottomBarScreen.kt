@@ -6,11 +6,13 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Int
         title = "Home",
         icon = R.drawable.nav_home_icon
     )
+
     object NuyaCardHolder : BottomBarScreen(
         route = "nuya",
         title = "Nuya",
         icon = R.drawable.nav_nuya_icon
     )
+
     object Spacer : BottomBarScreen(
         route = "",
         title = "",
@@ -34,4 +36,5 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Int
         title = "Settings",
         icon = R.drawable.home_icon_setting
     )
+
 }

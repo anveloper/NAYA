@@ -60,7 +60,9 @@ fun NfcSendingResult(
                 }
                 Spacer(Modifier.width(12.dp))
                 TextButton(
-                    onClick = { reSearch() },
+                    onClick = {
+                        reSearch()
+                    },
                     Modifier
                         .width(120.dp)
                         .height(48.dp)

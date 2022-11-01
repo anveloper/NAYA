@@ -20,4 +20,5 @@ fun ImageCompose(bitmap: Bitmap) {
         contentDescription = null,
         modifier = Modifier.fillMaxSize()
     )
+
 }

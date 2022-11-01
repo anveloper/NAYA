@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.youme.naya.AnimatedSplashScreen
 import com.youme.naya.MainScreen
-import com.youme.naya.splash.SplashScreen
+import com.youme.naya.SplashScreen
 
 @Composable
 fun RootNavigationGraph(navController: NavHostController) {

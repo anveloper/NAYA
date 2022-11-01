@@ -39,6 +39,7 @@ class QrActivity : BaseActivity(TransitionMode.HORIZON) {
             val contentUrl = intent.getStringExtra("contentUrl") ?: ""
             val contents = "https://k7b104.p.ssafy.io/$contentUrl"
             val bitmap = generateBitmapQRCode(contents)
+
             AndroidTheme() {
                 QrShareScreen(contents.toUri(), bitmap) {
                     activity?.finish()

@@ -1,4 +1,4 @@
-package com.youme.naya.splash
+package com.youme.naya
 
 sealed class SplashScreen(val route : String) {
     object Splash : SplashScreen(

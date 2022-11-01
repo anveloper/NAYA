@@ -10,6 +10,7 @@ abstract class BaseActivity(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         when (transitionMode) {
             TransitionMode.HORIZON -> overridePendingTransition(R.anim.horizon_enter, R.anim.none)
             TransitionMode.VERTICAL -> overridePendingTransition(R.anim.vertical_enter, R.anim.none)

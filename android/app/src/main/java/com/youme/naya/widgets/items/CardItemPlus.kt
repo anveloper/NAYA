@@ -25,6 +25,7 @@ fun CardItemPlus() {
                 painter = painterResource(R.drawable.card_icon_plus),
                 contentDescription = "import naya card",
             )
+
         }
     }
 }

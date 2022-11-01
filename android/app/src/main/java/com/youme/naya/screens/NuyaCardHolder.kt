@@ -56,7 +56,6 @@ class MultiFabItem(
 @Composable
 fun NuyaCardHolderScreen(navController: NavHostController) {
     val focusManager = LocalFocusManager.current
-
     Column(
         Modifier
             .fillMaxSize()

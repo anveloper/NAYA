@@ -66,6 +66,7 @@ fun MyNayaCardList() {
             items((1..listSize).toList()) { value ->
                 CardItem(value)
             }
+
             item() {
                 CardItemPlus()
             }

@@ -31,6 +31,7 @@ fun CameraScreen() {
                 }
             }
         }
+
     } else {
         ImageCompose(tmpBitmap!!)
     }
