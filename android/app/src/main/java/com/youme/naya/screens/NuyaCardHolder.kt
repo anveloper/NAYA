@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.*
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -42,7 +41,6 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
 import com.youme.naya.constant.MultiFabState
-import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.ui.theme.*
 
@@ -62,7 +60,6 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
             .background(Color.White)
             .addFocusCleaner(focusManager)
     ) {
-        HeaderBar()
         SearchInput()
         NayaBcardSwitchButtons(
             nayaTab = { MyNuyaCardList(navController) },
@@ -86,7 +83,7 @@ fun MyNuyaCardList(navController: NavHostController) {
                     ContextCompat.getDrawable(ctx, R.drawable.ic_outline_add_a_photo_24)!!
                         .toBitmap().asImageBitmap(),
                     "카메라 열기"
-                ) { },
+                ) { navController.navigate("nuyaDetails") },
                 MultiFabItem(
                     "write",
                     ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!

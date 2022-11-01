@@ -28,6 +28,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
+import com.youme.naya.camera.CameraX
+import com.youme.naya.widgets.common.HeaderBar
 
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
@@ -65,6 +67,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         },
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
+        topBar = { HeaderBar(navController = navController) },
         bottomBar = { BottomBar(navController = navController) }
     ) {
         BottomNavGraph(navController = navController)
