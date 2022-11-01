@@ -13,8 +13,6 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.youme.naya.camera.CameraX
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
 
