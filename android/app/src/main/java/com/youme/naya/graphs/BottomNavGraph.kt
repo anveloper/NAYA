@@ -11,6 +11,7 @@ import com.youme.naya.screens.*
 fun BottomNavGraph(
     navController: NavHostController
 ) {
+
     NavHost(
         navController = navController,
         route = Graph.Bottom,

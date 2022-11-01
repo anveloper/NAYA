@@ -44,7 +44,6 @@ class MainActivity : BaseActivity() {
             Surface(color = Color.White) {
                 Text(text = "로그인 확인중", fontSize = 30.sp)
             }
-
             AndroidTheme {
                 RootNavigationGraph(navController = rememberNavController())
             }

@@ -34,6 +34,7 @@ fun ShareExtra() {
             fontWeight = FontWeight.Bold,
             text = "SNS 공유",
             fontFamily = fonts
+
         )
         Spacer(Modifier.height(8.dp))
         Row() {

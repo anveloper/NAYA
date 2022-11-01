@@ -83,6 +83,7 @@ fun ShareScreen(
         }
     }
 
+
     Column(ShareContainerModifier, Arrangement.SpaceBetween, Alignment.CenterHorizontally) {
         Box(
             ShareTitleModifier,

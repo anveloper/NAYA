@@ -33,6 +33,7 @@ fun CardItem(cardId: Int) {
     val activity = context as? Activity
     var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
 
+
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { it ->

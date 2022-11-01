@@ -40,7 +40,6 @@ class NfcActivityTest : BaseActivity(TransitionMode.HORIZON) {
     }
 }
 
-
 // view
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

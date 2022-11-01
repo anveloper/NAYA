@@ -28,7 +28,6 @@ class LoginActivity : BaseActivity(TransitionMode.VERTICAL) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             AndroidTheme {
                 LoginScreen() { googleLogin() }
