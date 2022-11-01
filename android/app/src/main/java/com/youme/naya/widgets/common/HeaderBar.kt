@@ -1,5 +1,6 @@
 package com.youme.naya.widgets.common
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
@@ -16,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.youme.naya.R
-
 
 @Composable
 fun HeaderBar(
