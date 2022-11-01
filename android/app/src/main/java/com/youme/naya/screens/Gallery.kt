@@ -45,6 +45,7 @@ fun GalleryScreen() {
                 Toast(context).show()
             }
         }
+
     if (tmpBitmap != null) {
         ImageCompose(tmpBitmap!!)
     } else {

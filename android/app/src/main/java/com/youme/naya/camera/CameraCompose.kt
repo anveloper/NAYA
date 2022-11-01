@@ -35,7 +35,6 @@ fun CameraCompose(
             })
     }
 
-
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { granted ->
