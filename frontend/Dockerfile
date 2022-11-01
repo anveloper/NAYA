@@ -22,5 +22,5 @@ FROM nginx:stable-alpine as production-stage
 COPY --from=build-stage /var/jenkins_home/workspace/main/frontend/build /usr/share/nginx/html
 COPY --from=build-stage /var/jenkins_home/workspace/main/frontend/nginx_conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 3000
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 80
+CMD ["node", "nginx", "-g", "daemon off;"]
