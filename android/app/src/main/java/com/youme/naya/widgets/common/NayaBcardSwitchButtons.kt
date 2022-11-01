@@ -25,6 +25,7 @@ private val cardTabModifier = Modifier
 private val CardListModifier = Modifier
     .fillMaxSize()
 
+
 @Composable
 fun NayaBcardSwitchButtons(
     nayaTab: @Composable (() -> Unit),

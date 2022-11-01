@@ -78,7 +78,6 @@ fun NayaCardScreen(
                 Text(text = "share", fontSize = 16.sp)
             }
         }
-
     }
 }
 

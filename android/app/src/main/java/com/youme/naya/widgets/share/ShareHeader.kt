@@ -21,5 +21,6 @@ fun ShareHeader(onFinish: () -> Unit) {
                 Icons.Outlined.Close, "move to share", tint = Color(0xFFCED3D6)
             )
         }
+
     }
 }

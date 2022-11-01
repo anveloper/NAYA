@@ -57,6 +57,7 @@ fun CameraView( // 미사용
         .requireLensFacing(lensFacing)
         .build()
 
+
     // 2
     LaunchedEffect(lensFacing) {
         val cameraProvider = context.getCameraProvider()

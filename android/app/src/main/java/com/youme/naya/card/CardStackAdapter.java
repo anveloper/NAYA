@@ -17,6 +17,7 @@ public class CardStackAdapter extends StackAdapter<String> {
         super(context);
     }
 
+
     @Override
     public void bindView(String data, int position, CardStackView.ViewHolder holder) {
 //        if (holder instanceof ColorItemLargeHeaderViewHolder) {

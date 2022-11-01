@@ -9,10 +9,10 @@
 #define OPENCV_GAPI_CORE_HPP
 
 #include <math.h>
+
 #include <utility> // std::tuple
 
 #include <opencv2/imgproc.hpp>
-#include <opencv2/gapi/imgproc.hpp>
 
 #include <opencv2/gapi/gmat.hpp>
 #include <opencv2/gapi/gscalar.hpp>
@@ -29,14 +29,7 @@
  */
 
 namespace cv { namespace gapi {
-/**
- * @brief This namespace contains G-API Operation Types for OpenCV
- * Core module functionality.
- */
 namespace core {
-    using GResize = cv::gapi::imgproc::GResize;
-    using GResizeP = cv::gapi::imgproc::GResizeP;
-
     using GMat2 = std::tuple<GMat,GMat>;
     using GMat3 = std::tuple<GMat,GMat,GMat>; // FIXME: how to avoid this?
     using GMat4 = std::tuple<GMat,GMat,GMat,GMat>;
@@ -60,7 +53,6 @@ namespace core {
 
     G_TYPED_KERNEL(GAddC, <GMat(GMat, GScalar, int)>, "org.opencv.core.math.addC") {
         static GMatDesc outMeta(GMatDesc a, GScalarDesc, int ddepth) {
-            GAPI_Assert(a.chan <= 4);
             return a.withDepth(ddepth);
         }
     };
@@ -103,7 +95,7 @@ namespace core {
         }
     };
 
-    G_TYPED_KERNEL(GMulC, <GMat(GMat, GScalar, int)>, "org.opencv.core.math.mulC") {
+    G_TYPED_KERNEL(GMulC, <GMat(GMat, GScalar, int)>, "org.opencv.core.math.mulC"){
         static GMatDesc outMeta(GMatDesc a, GScalarDesc, int ddepth) {
             return a.withDepth(ddepth);
         }
@@ -204,37 +196,37 @@ namespace core {
         }
     };
 
-    G_TYPED_KERNEL(GCmpGTScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpGTScalar") {
+    G_TYPED_KERNEL(GCmpGTScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpGTScalar"){
         static GMatDesc outMeta(GMatDesc a, GScalarDesc) {
             return a.withDepth(CV_8U);
         }
     };
 
-    G_TYPED_KERNEL(GCmpGEScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpGEScalar") {
+    G_TYPED_KERNEL(GCmpGEScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpGEScalar"){
         static GMatDesc outMeta(GMatDesc a, GScalarDesc) {
             return a.withDepth(CV_8U);
         }
     };
 
-    G_TYPED_KERNEL(GCmpLEScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpLEScalar") {
+    G_TYPED_KERNEL(GCmpLEScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpLEScalar"){
         static GMatDesc outMeta(GMatDesc a, GScalarDesc) {
             return a.withDepth(CV_8U);
         }
     };
 
-    G_TYPED_KERNEL(GCmpLTScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpLTScalar") {
+    G_TYPED_KERNEL(GCmpLTScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpLTScalar"){
     static GMatDesc outMeta(GMatDesc a, GScalarDesc) {
             return a.withDepth(CV_8U);
         }
     };
 
-    G_TYPED_KERNEL(GCmpEQScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpEQScalar") {
+    G_TYPED_KERNEL(GCmpEQScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpEQScalar"){
         static GMatDesc outMeta(GMatDesc a, GScalarDesc) {
             return a.withDepth(CV_8U);
         }
     };
 
-    G_TYPED_KERNEL(GCmpNEScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpNEScalar") {
+    G_TYPED_KERNEL(GCmpNEScalar, <GMat(GMat, GScalar)>, "org.opencv.core.pixelwise.compare.cmpNEScalar"){
         static GMatDesc outMeta(GMatDesc a, GScalarDesc) {
             return a.withDepth(CV_8U);
         }
@@ -306,8 +298,8 @@ namespace core {
         }
     };
 
-    G_TYPED_KERNEL(GAbsDiffC, <GMat(GMat,GScalar)>, "org.opencv.core.matrixop.absdiffC") {
-        static GMatDesc outMeta(const GMatDesc& a, const GScalarDesc&) {
+    G_TYPED_KERNEL(GAbsDiffC, <GMat(GMat, GScalar)>, "org.opencv.core.matrixop.absdiffC") {
+        static GMatDesc outMeta(GMatDesc a, GScalarDesc) {
             return a;
         }
     };
@@ -398,6 +390,32 @@ namespace core {
             const auto out_depth = in.depth;
             const auto out_desc = in.withType(out_depth, 1);
             return std::make_tuple(out_desc, out_desc, out_desc, out_desc);
+        }
+    };
+
+    G_TYPED_KERNEL(GResize, <GMat(GMat,Size,double,double,int)>, "org.opencv.core.transform.resize") {
+        static GMatDesc outMeta(GMatDesc in, Size sz, double fx, double fy, int) {
+            if (sz.width != 0 && sz.height != 0)
+            {
+                return in.withSize(sz);
+            }
+            else
+            {
+                int outSz_w = static_cast<int>(round(in.size.width  * fx));
+                int outSz_h = static_cast<int>(round(in.size.height * fy));
+                GAPI_Assert(outSz_w > 0 && outSz_h > 0);
+                return in.withSize(Size(outSz_w, outSz_h));
+            }
+        }
+    };
+
+    G_TYPED_KERNEL(GResizeP, <GMatP(GMatP,Size,int)>, "org.opencv.core.transform.resizeP") {
+        static GMatDesc outMeta(GMatDesc in, Size sz, int interp) {
+            GAPI_Assert(in.depth == CV_8U);
+            GAPI_Assert(in.chan == 3);
+            GAPI_Assert(in.planar);
+            GAPI_Assert(interp == cv::INTER_LINEAR);
+            return in.withSize(sz);
         }
     };
 
@@ -557,12 +575,6 @@ namespace core {
             return std::make_tuple(empty_gopaque_desc(), empty_array_desc(), empty_array_desc());
         }
     };
-
-    G_TYPED_KERNEL(GTranspose, <GMat(GMat)>, "org.opencv.core.transpose") {
-        static GMatDesc outMeta(GMatDesc in) {
-            return in.withSize({in.size.height, in.size.width});
-        }
-    };
 } // namespace core
 
 namespace streaming {
@@ -576,12 +588,6 @@ G_TYPED_KERNEL(GSize, <GOpaque<Size>(GMat)>, "org.opencv.streaming.size") {
 
 G_TYPED_KERNEL(GSizeR, <GOpaque<Size>(GOpaque<Rect>)>, "org.opencv.streaming.sizeR") {
     static GOpaqueDesc outMeta(const GOpaqueDesc&) {
-        return empty_gopaque_desc();
-    }
-};
-
-G_TYPED_KERNEL(GSizeMF, <GOpaque<Size>(GFrame)>, "org.opencv.streaming.sizeMF") {
-    static GOpaqueDesc outMeta(const GFrameDesc&) {
         return empty_gopaque_desc();
     }
 };
@@ -633,7 +639,7 @@ Supported matrix data types are @ref CV_8UC1, @ref CV_8UC3, @ref CV_16UC1, @ref 
 @param ddepth optional depth of the output matrix.
 @sa sub, addWeighted
 */
-GAPI_EXPORTS_W GMat addC(const GMat& src1, const GScalar& c, int ddepth = -1);
+GAPI_EXPORTS GMat addC(const GMat& src1, const GScalar& c, int ddepth = -1);
 //! @overload
 GAPI_EXPORTS GMat addC(const GScalar& c, const GMat& src1, int ddepth = -1);
 
@@ -684,7 +690,7 @@ GAPI_EXPORTS GMat subC(const GMat& src, const GScalar& c, int ddepth = -1);
 /** @brief Calculates the per-element difference between given scalar and the matrix.
 
 The function can be replaced with matrix expressions:
-    \f[\texttt{dst} =  \texttt{c} - \texttt{src}\f]
+    \f[\texttt{dst} =  \texttt{val} - \texttt{src}\f]
 
 Depth of the output matrix is determined by the ddepth parameter.
 If ddepth is set to default -1, the depth of output matrix will be the same as the depth of input matrix.
@@ -748,10 +754,7 @@ GAPI_EXPORTS GMat mulC(const GScalar& multiplier, const GMat& src, int ddepth = 
 The function divides one matrix by another:
 \f[\texttt{dst(I) = saturate(src1(I)*scale/src2(I))}\f]
 
-For integer types when src2(I) is zero, dst(I) will also be zero.
-Floating point case returns Inf/NaN (according to IEEE).
-
-Different channels of
+When src2(I) is zero, dst(I) will also be zero. Different channels of
 multi-channel matrices are processed independently.
 The matrices can be single or multi channel. Output matrix must have the same size and depth as src.
 
@@ -1444,6 +1447,63 @@ GAPI_EXPORTS GMat inRange(const GMat& src, const GScalar& threshLow, const GScal
 
 //! @addtogroup gapi_transform
 //! @{
+/** @brief Resizes an image.
+
+The function resizes the image src down to or up to the specified size.
+
+Output image size will have the size dsize (when dsize is non-zero) or the size computed from
+src.size(), fx, and fy; the depth of output is the same as of src.
+
+If you want to resize src so that it fits the pre-created dst,
+you may call the function as follows:
+@code
+    // explicitly specify dsize=dst.size(); fx and fy will be computed from that.
+    resize(src, dst, dst.size(), 0, 0, interpolation);
+@endcode
+If you want to decimate the image by factor of 2 in each direction, you can call the function this
+way:
+@code
+    // specify fx and fy and let the function compute the destination image size.
+    resize(src, dst, Size(), 0.5, 0.5, interpolation);
+@endcode
+To shrink an image, it will generally look best with cv::INTER_AREA interpolation, whereas to
+enlarge an image, it will generally look best with cv::INTER_CUBIC (slow) or cv::INTER_LINEAR
+(faster but still looks OK).
+
+@note Function textual ID is "org.opencv.core.transform.resize"
+
+@param src input image.
+@param dsize output image size; if it equals zero, it is computed as:
+ \f[\texttt{dsize = Size(round(fx*src.cols), round(fy*src.rows))}\f]
+ Either dsize or both fx and fy must be non-zero.
+@param fx scale factor along the horizontal axis; when it equals 0, it is computed as
+\f[\texttt{(double)dsize.width/src.cols}\f]
+@param fy scale factor along the vertical axis; when it equals 0, it is computed as
+\f[\texttt{(double)dsize.height/src.rows}\f]
+@param interpolation interpolation method, see cv::InterpolationFlags
+
+@sa  warpAffine, warpPerspective, remap, resizeP
+ */
+GAPI_EXPORTS GMat resize(const GMat& src, const Size& dsize, double fx = 0, double fy = 0, int interpolation = INTER_LINEAR);
+
+/** @brief Resizes a planar image.
+
+The function resizes the image src down to or up to the specified size.
+Planar image memory layout is three planes laying in the memory contiguously,
+so the image height should be plane_height*plane_number, image type is @ref CV_8UC1.
+
+Output image size will have the size dsize, the depth of output is the same as of src.
+
+@note Function textual ID is "org.opencv.core.transform.resizeP"
+
+@param src input image, must be of @ref CV_8UC1 type;
+@param dsize output image size;
+@param interpolation interpolation method, only cv::INTER_LINEAR is supported at the moment
+
+@sa  warpAffine, warpPerspective, remap, resize
+ */
+GAPI_EXPORTS GMatP resizeP(const GMatP& src, const Size& dsize, int interpolation = cv::INTER_LINEAR);
+
 /** @brief Creates one 4-channel matrix out of 4 single-channel ones.
 
 The function merges several matrices to make a single multi-channel matrix. That is, each
@@ -1843,14 +1903,14 @@ kmeans(const GMat& data, const int K, const GMat& bestLabels,
  - Function textual ID is "org.opencv.core.kmeansNDNoInit"
  - #KMEANS_USE_INITIAL_LABELS flag must not be set while using this overload.
  */
-GAPI_EXPORTS_W std::tuple<GOpaque<double>,GMat,GMat>
+GAPI_EXPORTS std::tuple<GOpaque<double>,GMat,GMat>
 kmeans(const GMat& data, const int K, const TermCriteria& criteria, const int attempts,
        const KmeansFlags flags);
 
 /** @overload
 @note Function textual ID is "org.opencv.core.kmeans2D"
  */
-GAPI_EXPORTS_W std::tuple<GOpaque<double>,GArray<int>,GArray<Point2f>>
+GAPI_EXPORTS std::tuple<GOpaque<double>,GArray<int>,GArray<Point2f>>
 kmeans(const GArray<Point2f>& data, const int K, const GArray<int>& bestLabels,
        const TermCriteria& criteria, const int attempts, const KmeansFlags flags);
 
@@ -1861,21 +1921,6 @@ GAPI_EXPORTS std::tuple<GOpaque<double>,GArray<int>,GArray<Point3f>>
 kmeans(const GArray<Point3f>& data, const int K, const GArray<int>& bestLabels,
        const TermCriteria& criteria, const int attempts, const KmeansFlags flags);
 
-
-/** @brief Transposes a matrix.
-
-The function transposes the matrix:
-\f[\texttt{dst} (i,j) =  \texttt{src} (j,i)\f]
-
-@note
- - Function textual ID is "org.opencv.core.transpose"
- - No complex conjugation is done in case of a complex matrix. It should be done separately if needed.
-
-@param src input array.
-*/
-GAPI_EXPORTS GMat transpose(const GMat& src);
-
-
 namespace streaming {
 /** @brief Gets dimensions from Mat.
 
@@ -1884,7 +1929,7 @@ namespace streaming {
 @param src Input tensor
 @return Size (tensor dimensions).
 */
-GAPI_EXPORTS_W GOpaque<Size> size(const GMat& src);
+GAPI_EXPORTS GOpaque<Size> size(const GMat& src);
 
 /** @overload
 Gets dimensions from rectangle.
@@ -1894,16 +1939,7 @@ Gets dimensions from rectangle.
 @param r Input rectangle.
 @return Size (rectangle dimensions).
 */
-GAPI_EXPORTS_W GOpaque<Size> size(const GOpaque<Rect>& r);
-
-/** @brief Gets dimensions from MediaFrame.
-
-@note Function textual ID is "org.opencv.streaming.sizeMF"
-
-@param src Input frame
-@return Size (frame dimensions).
-*/
-GAPI_EXPORTS GOpaque<Size> size(const GFrame& src);
+GAPI_EXPORTS GOpaque<Size> size(const GOpaque<Rect>& r);
 } //namespace streaming
 } //namespace gapi
 } //namespace cv
