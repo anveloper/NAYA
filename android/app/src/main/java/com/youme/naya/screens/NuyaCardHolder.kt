@@ -124,11 +124,11 @@ fun MyNuyaCardList() {
             }
         })
     }
-    LazyColumn {
-        items(cards) { card ->
-            CardRow(card = card, onCardClicked = {} )
-        }
-    }
+//    LazyColumn {
+//        items(cards) { card ->
+//            CardRow(card = card, onCardClicked = {} )
+//        }
+//    }
 }
 
 

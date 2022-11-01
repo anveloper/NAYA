@@ -1,12 +1,9 @@
 package com.youme.naya.model.viewModel
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.*
-import com.youme.naya.db.entity.NayaCard
-import com.youme.naya.db.repository.NayaCardRepository
+import androidx.lifecycle.ViewModel
 import com.youme.naya.model.CardDataSource
 import com.youme.naya.model.entity.Card
-import kotlinx.coroutines.launch
 
 class CardViewModel: ViewModel() {
 
