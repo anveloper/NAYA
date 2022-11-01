@@ -24,7 +24,6 @@ fun HomeScreen() {
     var (currentCardId, setCurrentCardId) = rememberSaveable {
         mutableStateOf(1)
     }
-
     Column(HomeModifier) {
         HeaderBar()
         NayaBcardSwitchButtons(
