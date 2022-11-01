@@ -23,4 +23,4 @@ COPY --from=build-stage /var/jenkins_home/workspace/main/frontend/build /usr/sha
 COPY --from=build-stage /var/jenkins_home/workspace/main/frontend/nginx_conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-CMD ["node", "nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
