@@ -14,7 +14,17 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Ima
     object NuyaCardHolder : BottomBarScreen(
         route = "nuya",
         title = "Nuya",
+<<<<<<< HEAD
         icon = Icons.Default.Person
+=======
+        icon = R.drawable.nav_nuya_icon
+    )
+
+    object Spacer : BottomBarScreen(
+        route = "",
+        title = "",
+        icon = null
+>>>>>>> android
     )
 
     object NayaCard : BottomBarScreen(
@@ -34,4 +44,5 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Ima
         title = "Settings",
         icon = Icons.Default.Settings
     )
+
 }

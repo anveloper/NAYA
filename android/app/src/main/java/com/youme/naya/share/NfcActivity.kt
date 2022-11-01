@@ -39,7 +39,6 @@ class NfcActivity : BaseActivity(TransitionMode.HORIZON) {
     }
 }
 
-
 // view
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

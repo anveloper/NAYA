@@ -42,6 +42,16 @@ val PrimaryGradientBrushH = Brush.horizontalGradient(
     )
 )
 
+<<<<<<< HEAD
+=======
+val SecondaryGradientBrush = Brush.verticalGradient(
+    colors = listOf(
+        SecondaryBasicBlue,
+        SecondarySystemBlue
+    )
+)
+
+>>>>>>> android
 val SystemRedGradientBrush = Brush.verticalGradient(
     listOf(
         SystemRed,

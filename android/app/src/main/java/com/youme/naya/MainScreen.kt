@@ -17,6 +17,41 @@ import com.youme.naya.camera.CameraX
 @Composable
 fun MainScreen(navController: NavHostController) {
     Scaffold(
+<<<<<<< HEAD
+=======
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    context.startActivity(Intent(context, ShareActivity::class.java))
+                },
+                backgroundColor = Color.Transparent,
+                shape = CircleShape,
+            ) {
+                Box(
+                    Modifier
+                        .width(60.dp)
+                        .height(
+                            60.dp
+                        )
+                        .background(SecondaryGradientBrush,
+                            CircleShape
+                        ), Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.nav_send_icon),
+                        contentDescription = "Send",
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(40.dp),
+                        tint = NeutralWhite
+                    )
+                }
+
+            }
+        },
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center,
+>>>>>>> android
         bottomBar = { BottomBar(navController = navController) }
     ) {
         BottomNavGraph(navController)

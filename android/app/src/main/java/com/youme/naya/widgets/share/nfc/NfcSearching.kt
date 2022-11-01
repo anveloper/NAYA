@@ -19,6 +19,7 @@ fun ShareNfcContent() {
         Modifier
             .fillMaxSize(), Arrangement.SpaceEvenly, Alignment.CenterHorizontally
     ) {
+
         Column(
             Modifier
                 .fillMaxWidth(), Arrangement.Top, Alignment.CenterHorizontally

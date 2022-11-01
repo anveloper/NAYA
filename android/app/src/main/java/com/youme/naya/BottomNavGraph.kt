@@ -10,6 +10,7 @@ import com.youme.naya.screens.*
 fun BottomNavGraph(
     navController: NavHostController
 ) {
+
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route

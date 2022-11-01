@@ -28,6 +28,7 @@ fun ShareCard() {
                 .shadow(4.dp)
                 .background(PrimaryGradientBrushH), Alignment.Center
         ) {
+
             Image(
                 painter = painterResource(R.drawable.home_logo_text),
                 null,

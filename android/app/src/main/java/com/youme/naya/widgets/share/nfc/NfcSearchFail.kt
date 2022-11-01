@@ -40,6 +40,7 @@ fun ShareNfcSearchFail(
                 Box(Modifier.fillMaxSize().zIndex(1.0f), Alignment.TopCenter) {
                     Image(painterResource(R.drawable.not_found_ghost), null)
                 }
+
                 Column(
                     Modifier
                         .fillMaxWidth()

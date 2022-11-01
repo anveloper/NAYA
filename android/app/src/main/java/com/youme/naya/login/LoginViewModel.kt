@@ -27,6 +27,12 @@ class LoginViewModel : ViewModel() {
         }
     }
 
+<<<<<<< HEAD
+=======
+
+//    fun getGoogleClient(context: Context) = GoogleSignIn.getClient(context as Activity, )
+
+>>>>>>> android
     // 이전에 로그인 한 계정이 있는지 확인
     private fun getLastSignedInAccount(context: Context) = GoogleSignIn.getLastSignedInAccount(context)
 

@@ -72,6 +72,25 @@ fun ShareScreen(
     onFinish: () -> Unit
 ) {
     val context = LocalContext.current
+<<<<<<< HEAD
+=======
+    val activity = context as? Activity
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        when (it.resultCode) {
+            Activity.RESULT_OK -> {
+
+            }
+            Activity.RESULT_CANCELED -> {
+
+            }
+        }
+    }
+
+
+>>>>>>> android
     Column(ShareContainerModifier, Arrangement.SpaceBetween, Alignment.CenterHorizontally) {
         Box(
             ShareTitleModifier,
