@@ -15,6 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.youme.naya.camera.CameraX
+import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.login.LoginActivity
 import com.youme.naya.login.LoginViewModel
 import com.youme.naya.ui.theme.AndroidTheme
@@ -44,8 +45,7 @@ class MainActivity : BaseActivity() {
                 Text(text = "로그인 확인중", fontSize = 30.sp)
             }
             AndroidTheme {
-                navController = rememberNavController()
-                MainScreen(navController)
+                RootNavigationGraph(navController = rememberNavController())
             }
         }
     }
@@ -56,7 +56,8 @@ class MainActivity : BaseActivity() {
     showBackground = true,
     showSystemUi = true
 )
+
 @Composable
 fun MainPreview() {
-    MainScreen(rememberNavController())
+    RootNavigationGraph(rememberNavController())
 }
