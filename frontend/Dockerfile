@@ -2,7 +2,7 @@
 FROM node:16 as build-stage
 
 # 앱 디렉터리 생성
-WORKDIR /var/jenkins_home/workspace/naya/frontend 
+WORKDIR /var/jenkins_home/workspace/main/frontend 
 
 # 앱 의존성 설치
 # 가능한 경우(npm@5+) package.json과 package-lock.json을 모두 복사하기 위해
