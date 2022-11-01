@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,12 +29,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
-import com.youme.naya.camera.CameraX
+import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
 
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -68,7 +71,9 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
         topBar = { HeaderBar(navController = navController) },
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navController) },
+        modifier = Modifier
+            .addFocusCleaner(focusManager)
     ) {
         BottomNavGraph(navController = navController)
     }
