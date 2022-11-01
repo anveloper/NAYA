@@ -13,6 +13,7 @@ import com.youme.naya.R
 val pico = FontFamily(
     Font(R.font.pico_black, weight = FontWeight.Black),
 )
+
 val fonts = FontFamily(
     Font(R.font.pretendard_black, weight = FontWeight.Black),
     Font(R.font.pretendard_extrabold, weight = FontWeight.ExtraBold),

@@ -22,7 +22,6 @@ fun LoginScreen(content: () -> Unit) {
                 .fillMaxSize()
                 .padding(start = 15.dp, end = 15.dp),
             verticalArrangement = Arrangement.Center
-
         ) {
             Greeting(text = "시작하시겠습니까?")
             SignInGoogleButton { content() }

@@ -13,6 +13,7 @@ object Commons {
         Log.d(TAG, log)
     }
 
+    
     val REQUIRED_PERMISSIONS =
         mutableListOf(
             Manifest.permission.CAMERA,

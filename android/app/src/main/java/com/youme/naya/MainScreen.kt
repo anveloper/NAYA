@@ -55,7 +55,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.nav_send_icon),
-                        contentDescription = "send",
+                        contentDescription = "Send",
                         modifier = Modifier
                             .width(40.dp)
                             .height(40.dp),
