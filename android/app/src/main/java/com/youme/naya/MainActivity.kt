@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.youme.naya.camera.CameraX
 import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.login.LoginActivity
 import com.youme.naya.login.LoginViewModel
@@ -26,6 +25,7 @@ class MainActivity : BaseActivity() {
     private val viewModel by viewModels<LoginViewModel>()
 
     private lateinit var navController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
