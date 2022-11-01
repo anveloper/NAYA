@@ -59,11 +59,6 @@
 
         </activity>
 
-        <!--  로그인을 위한 액티비티  -->
-        <activity
-            android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
-
         <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
             android:name=".share.ShareActivity"
@@ -79,6 +74,7 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+
         <!--  NFC 기능 사용을 위한 별도의 액티비티  -->
         <activity
             android:name=".share.NfcActivity"
@@ -98,6 +94,8 @@
             android:name=".share.QrActivity"
             android:screenOrientation="portrait"></activity>
 
+        <activity android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"></activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"
