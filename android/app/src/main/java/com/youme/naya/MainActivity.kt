@@ -15,7 +15,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.youme.naya.camera.CameraX
-import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.login.LoginActivity
 import com.youme.naya.login.LoginViewModel
 import com.youme.naya.ui.theme.AndroidTheme
@@ -46,7 +45,8 @@ class MainActivity : BaseActivity() {
             }
 
             AndroidTheme {
-                RootNavigationGraph(navController = rememberNavController())
+                navController = rememberNavController()
+                MainScreen(navController)
             }
         }
     }
@@ -57,8 +57,7 @@ class MainActivity : BaseActivity() {
     showBackground = true,
     showSystemUi = true
 )
-
 @Composable
 fun MainPreview() {
-    RootNavigationGraph(rememberNavController())
+    MainScreen(rememberNavController())
 }

@@ -10,7 +10,7 @@ val SecondaryLightBlue = Color(0xFFDFE6FB)
 val SecondaryMediumBlue = Color(0xFF5C8AFF)
 val SecondarySystemBlue = Color(0xFF0891F2)
 val SecondaryBasicBlue = Color(0xFF055EEA)
-val SecondaryDarkBlue = Color(0xFF044BBB)
+val SecondaryDarkBlue = Color(0xFF055EEA)
 val SystemLightRed = Color(0xFFFFF2F9)
 val SystemOrange = Color(0xFFF57227)
 val SystemPink = Color(0xFFFE647C)
@@ -21,11 +21,11 @@ val SystemLightGreen = Color(0xFFEBF9F1)
 val SystemGreen = Color(0xFF3BC171)
 val SystemLightPurple = Color(0xFFF2EFFF)
 val SystemPurple = Color(0xFF7B61FE)
-val NeutralWhite = Color(0xFFFEFEFE)
+val NeutralWhite = Color(0xFFFAFAFC)
 val NeutralLightness = Color(0xFFF2F5F9)
 val NeutralLight = Color(0xFFCED3D6)
 val NeutralMedium = Color(0xFFBDC5CA)
-val NeutralGray = Color(0xFA1ACB3)
+val NeutralGray = Color(0xFFA1ACB3)
 val NeutralMetal = Color(0xFF88929F)
 val NeutralDarkGray = Color(0xFF444657)
 
@@ -41,14 +41,6 @@ val PrimaryGradientBrushH = Brush.horizontalGradient(
         Color(0xFF0891F2)
     )
 )
-
-val SecondaryGradientBrush = Brush.verticalGradient(
-    colors = listOf(
-        SecondaryBasicBlue,
-        SecondarySystemBlue
-    )
-)
-
 
 val SystemRedGradientBrush = Brush.verticalGradient(
     listOf(

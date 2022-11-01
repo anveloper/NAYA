@@ -25,15 +25,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.youme.naya.R
-import com.youme.naya.widgets.items.CardItem
-import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
 private val NayaCardContainerModifier = Modifier
     .fillMaxSize()
 private val NayaCardListModifier = Modifier
     .fillMaxWidth()
-
+private val CardModifier = Modifier
+    .width(200.dp)
+    .height(360.dp)
+    .shadow(elevation = 6.dp)
 
 
 @Composable
@@ -63,11 +64,20 @@ fun MyNayaCardList() {
             horizontalArrangement = Arrangement.spacedBy(32.dp),
             state = currentCardId
         ) {
-            items((1..listSize).toList()) { value ->
-                CardItem(value)
+            items((1..listSize).toList()) {
+                Card(CardModifier) {
+
+                }
             }
             item() {
-                CardItemPlus()
+                Card(CardModifier) {
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Image(
+                            painter = painterResource(R.drawable.card_icon_plus),
+                            contentDescription = "import naya card",
+                        )
+                    }
+                }
             }
         }
         Spacer(Modifier.height(16.dp))

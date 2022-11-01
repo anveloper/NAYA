@@ -7,8 +7,7 @@
     <color name="secondary_color_light_blue">#FFDFE6FB</color>
     <color name="secondary_color_medium_blue">#FF5C8AFF</color>
     <color name="secondary_color_system_blue">#FF0891F2</color>
-    <color name="secondary_color_basic_blue">#FF055EEA</color>
-    <color name="secondary_color_dark_blue">#FF044BBB</color>
+    <color name="secondary_color_dark_blue">#FF055EEA</color>
     <!--  system  -->
     <color name="system_color_light_red">#FFFFF2F9</color>
     <color name="system_color_orange">#FFF57227</color>
