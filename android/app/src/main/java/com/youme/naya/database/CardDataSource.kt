@@ -1,6 +1,6 @@
-package com.youme.naya.model
+package com.youme.naya.database
 
-import com.youme.naya.model.entity.Card
+import com.youme.naya.database.entity.Card
 
 class CardDataSource {
 
@@ -13,6 +13,9 @@ class CardDataSource {
             Card(5, "test5", "010-0000-0005"),
             Card(6, "test6", "010-0000-0006"),
             Card(7, "test7", "010-0000-0007"),
+            Card(8, "test8", "010-0000-0008"),
+            Card(9, "test9", "010-0000-0009"),
+            Card(10, "test10", "010-0000-0010"),
         )
     }
 

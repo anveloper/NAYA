@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
@@ -45,14 +44,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.CustomCardStackView
 import com.youme.naya.constant.MultiFabState
-import com.youme.naya.model.entity.Card
+import com.youme.naya.database.entity.Card
+import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ui.theme.*
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
+
 
 class MultiFabItem(
     val identifier: String,
@@ -103,34 +106,44 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
 
 @Composable
 fun MyNuyaCardList() {
+//    val cardViewModel: CardViewModel =
+//        ViewModelProvider(this).get(CardViewModel::class.java)
+//    val cardViewModel: CardViewModel = viewModel(factory = CardViewModelFactory())
+    val cardViewModel: CardViewModel = hiltViewModel()
 //    val cardViewModel: CardViewModel by viewModels()
+    getNuyaCardList(cardViewModel)
+}
 
-    val cards = remember { mutableStateListOf<Card>() }
+@Composable
+fun getNuyaCardList(cardViewModel: CardViewModel = viewModel()) {
+    val cards = cardViewModel.getAllCards()
 
     var name by remember { mutableStateOf("") }
     var mobile by remember { mutableStateOf("") }
 
     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        CardInputText(text = name, label = "이름", onTextChange = {
-            if (it.all { char -> char.isLetter() || char.isWhitespace() }) name = it
-        })
-        CardInputText(text = mobile, label = "전화번호", onTextChange = {
-            if (it.all { char -> char.isLetter() || char.isWhitespace() }) mobile = it
-        })
-        CardSaveButton(text = "저장", onClick = {
-            if (name.isNotEmpty() && mobile.isNotEmpty()) {
-                name = ""
-                mobile = ""
+        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            CardInputText(text = name, label = "이름", onTextChange = {
+                if (it.all { char -> char.isLetter() || char.isWhitespace() }) name = it
+            })
+            CardInputText(text = mobile, label = "전화번호", onTextChange = {
+                if (it.all { char -> char.isLetter() || char.isWhitespace() }) mobile = it
+            })
+            CardSaveButton(text = "저장", onClick = {
+                if (name.isNotEmpty() && mobile.isNotEmpty()) {
+                    cardViewModel.addCard(Card(0, name, mobile))
+                    name = ""
+                    mobile = ""
+                }
+            })
+        }
+        LazyColumn {
+            items(cards) { card ->
+                CardRow(card = card) { cardViewModel.removeCard(it) }
             }
-        })
+        }
     }
-//    LazyColumn {
-//        items(cards) { card ->
-//            CardRow(card = card, onCardClicked = {} )
-//        }
-//    }
 }
-
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -185,14 +198,13 @@ fun CardRow(
     onCardClicked: (Card) -> Unit
 ) {
     Surface(
-        Modifier
+        modifier = Modifier
             .padding(4.dp)
-            .clip(RoundedCornerShape(topEnd = 33.dp, bottomStart = 33.dp))
-            .fillMaxWidth(), color = NeutralMedium, elevation = 6.dp
+            .fillMaxWidth(), color = NeutralLightness, elevation = 6.dp
     ) {
         Column(
             Modifier
-                .clickable { }
+                .clickable { onCardClicked(card) }
                 .padding(horizontal = 14.dp, vertical = 6.dp),
             horizontalAlignment = Alignment.Start
         ) {
