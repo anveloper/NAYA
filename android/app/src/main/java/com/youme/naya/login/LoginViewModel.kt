@@ -26,7 +26,7 @@ class LoginViewModel : ViewModel() {
 //                getGoogleClient(context)
             }
             Log.i("Login Launch", account.toString())
-            delay(2500)
+//            delay(2500)
             // 계정 확인 -> true, 없음 -> false 반환
             setLoginResult(account.await() != null)
         }
