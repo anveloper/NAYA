@@ -17,6 +17,7 @@ fun NuyaCardCreateScreen() {
         .padding(16.dp), contentAlignment = Alignment.Center) {
         Text(text = "NUYA 카드 직접 입력")
     }
+
 }
 
 @Composable

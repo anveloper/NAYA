@@ -13,14 +13,14 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.youme.naya.BaseActivity
 import com.youme.naya.MainActivity
 import com.youme.naya.R
 import com.youme.naya.screens.LoginScreen
 import com.youme.naya.ui.theme.AndroidTheme
 
 
-class LoginActivity : BaseActivity(TransitionMode.VERTICAL) {
+class LoginActivity : ComponentActivity() {
+
     // Firebase
     private lateinit var googleSignInClient: GoogleSignInClient
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -28,7 +28,6 @@ class LoginActivity : BaseActivity(TransitionMode.VERTICAL) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             AndroidTheme {
                 LoginScreen() { googleLogin() }
