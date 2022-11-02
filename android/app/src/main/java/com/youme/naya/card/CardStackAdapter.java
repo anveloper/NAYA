@@ -34,15 +34,21 @@ public class CardStackAdapter extends StackAdapter<Card> {
     }
 
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
-        View mLayout;
-        View mContainerContent;
-        TextView mTextTitle;
+        View mLayout, mContainerContent;
+        TextView mTextName, mTextEngName, mTextCompany, mTextTeam, mTextRole, mTextAddress, mTextMobile, mTextEmail;
 
         public ColorItemViewHolder(View view) {
             super(view);
             mLayout = view.findViewById(R.id.frame_list_card_item);
             mContainerContent = view.findViewById(R.id.container_list_content);
-            mTextTitle = (TextView) view.findViewById(R.id.bcard_name);
+            mTextName = view.findViewById(R.id.bcard_name);
+            mTextEngName = view.findViewById(R.id.bcard_english_name);
+            mTextCompany = view.findViewById(R.id.bcard_company);
+            mTextTeam = view.findViewById(R.id.bcard_team);
+            mTextRole = view.findViewById(R.id.bcard_role);
+            mTextAddress = view.findViewById(R.id.bcard_address);
+            mTextMobile = view.findViewById(R.id.bcard_mobile);
+            mTextEmail = view.findViewById(R.id.bcard_email);
         }
 
         @Override
@@ -52,7 +58,14 @@ public class CardStackAdapter extends StackAdapter<Card> {
 
         public void onBind(Card card, int position) {
             mLayout.getBackground();
-            mTextTitle.setText(card.getName());
+            mTextName.setText(card.getName());
+            mTextEngName.setText(card.getEngName());
+            mTextCompany.setText(card.getCompany());
+            mTextTeam.setText(card.getTeam());
+            mTextRole.setText(card.getRole());
+            mTextAddress.setText(card.getAddress());
+            mTextMobile.setText(card.getMobile());
+            mTextEmail.setText(card.getEmail());
         }
 
     }
