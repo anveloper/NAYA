@@ -22,7 +22,7 @@ import com.youme.naya.ui.theme.AndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(TransitionMode.NONE) {
     // Firebase
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val viewModel by viewModels<LoginViewModel>()
