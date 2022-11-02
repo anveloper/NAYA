@@ -18,6 +18,8 @@ class CardRepository @Inject constructor(private val cardDao: CardDao) {
 
     suspend fun deleteAllCards() = cardDao.deleteAll()
 
-    fun getAllCards(): Flow<List<Card>> = cardDao.getAllCards().flowOn(Dispatchers.IO).conflate()
+    fun getNayaCards(): Flow<List<Card>> = cardDao.getNayaCards().flowOn(Dispatchers.IO).conflate()
+
+    fun getBusinessCards(): Flow<List<Card>> = cardDao.getBusinessCards().flowOn(Dispatchers.IO).conflate()
 
 }

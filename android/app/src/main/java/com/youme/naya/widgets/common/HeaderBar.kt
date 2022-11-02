@@ -1,6 +1,5 @@
 package com.youme.naya.widgets.common
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
@@ -36,6 +35,10 @@ fun HeaderBar(
         "nuyaDetails" -> {
             logo = false
             title = "카드 상세 보기"
+        }
+        "nuyaCreate" -> {
+            logo = false
+            title = "카드 직접 등록"
         }
     }
 

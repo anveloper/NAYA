@@ -66,7 +66,9 @@ class MultiFabItem(
 @Composable
 fun NuyaCardHolderScreen(navController: NavHostController) {
     val ctx = LocalContext.current
+    val cardViewModel: CardViewModel = hiltViewModel()
     var toState by remember { mutableStateOf(MultiFabState.COLLAPSED) }
+    var isBCard = false
 
     Box(
         Modifier
@@ -78,8 +80,14 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
         ) {
             SearchInput()
             NayaBcardSwitchButtons(
-                nayaTab = { MyNuyaCardList() },
-                bCardTab = { MyBusinessCardList() }
+                nayaTab = {
+                    isBCard = false
+                    CustomCardStackView(cardViewModel, false)
+                },
+                bCardTab = {
+                    isBCard = true
+                    CustomCardStackView(cardViewModel, true)
+                }
             )
         }
         MultiFloatingActionButton(
@@ -95,129 +103,12 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
                     ContextCompat.getDrawable(ctx, R.drawable.ic_outline_keyboard_alt_24)!!
                         .toBitmap().asImageBitmap(),
                     "직접 입력"
-                ) { navController.navigate("nuyaCreate") }
+                ) { navController.navigate("nuyaCreate/${if (isBCard) "BCard" else "NayaCard"}") }
             ),
             toState,
             true
         ) { state -> toState = state }
     }
-}
-
-@Composable
-fun MyNuyaCardList() {
-    val cardViewModel: CardViewModel = hiltViewModel()
-    NuyaCardList(cardViewModel)
-}
-
-@Composable
-fun NuyaCardList(cardViewModel: CardViewModel = viewModel()) {
-    val cards = cardViewModel.cardList.collectAsState().value
-
-    var name by remember { mutableStateOf("") }
-    var mobile by remember { mutableStateOf("") }
-
-    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            CardInputText(text = name, label = "이름", onTextChange = {
-                if (it.all { char -> char.isLetter() || char.isWhitespace() }) name = it
-            })
-            CardInputText(text = mobile, label = "전화번호", onTextChange = {
-                if (it.all { char -> char.isLetter() || char.isWhitespace() }) mobile = it
-            })
-            CardSaveButton(text = "저장", onClick = {
-                if (name.isNotEmpty() && mobile.isNotEmpty()) {
-                    cardViewModel.addCard(Card(0, name, mobile))
-                    name = ""
-                    mobile = ""
-                }
-            })
-        }
-        LazyColumn {
-            items(cards) { card -> CardRow(card) { cardViewModel.removeCard(it) } }
-        }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun CardInputText(
-    modifier: Modifier = Modifier,
-    text: String,
-    label: String,
-    maxLine: Int = 1,
-    onTextChange: (String) -> Unit,
-    onImeAction: () -> Unit = {}
-) {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    TextField(
-        value = text,
-        onValueChange = onTextChange,
-        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Transparent
-        ),
-        maxLines = maxLine,
-        label = { Text(text = label) },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(onDone = {
-            onImeAction()
-            keyboardController?.hide()
-        }),
-        modifier = modifier
-    )
-}
-
-@Composable
-fun CardSaveButton(
-    modifier: Modifier = Modifier,
-    text: String,
-    onClick: () -> Unit,
-    enabled: Boolean = true
-) {
-    Button(
-        onClick = onClick,
-        shape = CircleShape,
-        enabled = enabled,
-        modifier = modifier
-    ) {
-        Text(text = text)
-    }
-}
-
-@Composable
-fun CardRow(
-    card: Card,
-    onCardClicked: (Card) -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .padding(4.dp)
-            .fillMaxWidth(), color = NeutralLightness, elevation = 6.dp
-    ) {
-        Column(
-            Modifier
-                .clickable { onCardClicked(card) }
-                .padding(horizontal = 14.dp, vertical = 6.dp),
-            horizontalAlignment = Alignment.Start
-        ) {
-            Text(text = card.name, style = MaterialTheme.typography.subtitle2)
-            Text(text = card.mobile, style = MaterialTheme.typography.subtitle1)
-        }
-    }
-}
-
-@Composable
-fun MyBusinessCardList() {
-    val testData = listOf<String>(
-        "Business Card 1",
-        "Business Card 2",
-        "Business Card 3",
-        "Business Card 4",
-        "Business Card 5",
-        "Business Card 6"
-    )
-    CustomCardStackView(testData)
 }
 
 /**
@@ -268,47 +159,6 @@ fun SearchInput() {
                 Text("이름, 전화번호, 회사명, 직책으로 검색", color = NeutralMedium)
             }
             innerTextField()
-        }
-    }
-}
-
-/**
- * 세로 스크롤이 가능한 카드 리스트 컴포저블
- *
- * @author Sckroll
- */
-@Composable
-fun CardList() {
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        itemsIndexed(
-            listOf("Test 1", "Test 2", "Test 3", "Test 4")
-        ) { _, item ->
-            CardContainer(item = item)
-        }
-    }
-}
-
-/**
- * 카드 컨테이너 컴포저블
- *
- * @author Sckroll
- */
-@Composable
-fun CardContainer(item: String) {
-    Card(
-        modifier = Modifier
-            .aspectRatio(9 / 5f)
-            .width(300.dp),
-        backgroundColor = NeutralWhite
-    ) {
-        Box(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "your name is $item"
-            )
         }
     }
 }

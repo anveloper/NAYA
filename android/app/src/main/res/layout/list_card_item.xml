@@ -1,28 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear_list_card_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:stackHeaderHeight="160dp">
+    android:orientation="vertical">
 
     <FrameLayout
         android:id="@+id/frame_list_card_item"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/business_card">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/business_card"
+        app:layout_constraintDimensionRatio="H,9:5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/text_list_card_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:textColor="@color/neutral_dark_gray"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            tools:text="12" />
+            <TextView
+                android:id="@+id/bcard_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:textColor="@color/neutral_dark_gray"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/bcard_english_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="이름" />
+
+            <TextView
+                android:id="@+id/bcard_english_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="24dp"
+                android:textColor="@color/neutral_metal"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/bcard_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="영어 이름" />
+
     </FrameLayout>
 
     <LinearLayout
@@ -38,4 +60,4 @@
             android:text="NUYA 카드 테스트입니다." />
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

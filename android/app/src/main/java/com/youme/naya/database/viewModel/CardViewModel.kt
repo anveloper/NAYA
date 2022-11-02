@@ -15,13 +15,18 @@ import javax.inject.Inject
 @HiltViewModel
 class CardViewModel @Inject constructor(private val repository: CardRepository) : ViewModel() {
 
-    private val _cardList = MutableStateFlow<List<Card>>(emptyList())
-    val cardList = _cardList.asStateFlow()
+    private val _nayaCardList = MutableStateFlow<List<Card>>(emptyList())
+    private val _businessCardList = MutableStateFlow<List<Card>>(emptyList())
+    val nayaCardList = _nayaCardList.asStateFlow()
+    val businessCardList = _businessCardList.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getAllCards().distinctUntilChanged().collect { listOfCards ->
-                _cardList.value = listOfCards
+            repository.getNayaCards().distinctUntilChanged().collect { listOfCards ->
+                _nayaCardList.value = listOfCards
+            }
+            repository.getBusinessCards().distinctUntilChanged().collect { listOfCards ->
+                _businessCardList.value = listOfCards
             }
         }
     }
