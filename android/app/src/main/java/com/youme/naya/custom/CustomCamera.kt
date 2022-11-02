@@ -64,7 +64,7 @@ fun CustomCamera(
             Alignment.CenterHorizontally
         ) {
             IconButton(
-                onClick = { onCaptureClick }
+                onClick = onCaptureClick
             ) {
                 Icon(
                     imageVector = Icons.Sharp.Lens,
