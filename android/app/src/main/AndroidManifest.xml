@@ -57,8 +57,11 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
         </activity>
+
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
@@ -95,8 +98,10 @@
             android:name=".share.QrActivity"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".login.LoginActivity"
+        <activity
+            android:name=".custom.MediaCardActivity"
             android:screenOrientation="portrait"></activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"
