@@ -1,5 +1,5 @@
 FROM openjdk:8
-WORKDIR /var/jenkins_home/workspace/naya/backend/naya
+WORKDIR /var/jenkins_home/workspace/NAYA/backend/naya
 #VOLUME /tmp
 #ARG JAR_FILE=build/libs/*.jar
 #COPY {JAR_FILE} app.jar
