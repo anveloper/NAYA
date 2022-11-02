@@ -2,7 +2,7 @@
 FROM node:16 as build-stage
 
 # 앱 디렉터리 생성
-WORKDIR /var/jenkins/workspace/main/frontend 
+WORKDIR /jenkins/workspace/main/frontend 
 
 # 앱 의존성 설치
 # 가능한 경우(npm@5+) package.json과 package-lock.json을 모두 복사하기 위해
@@ -19,8 +19,8 @@ COPY . .
 RUN npm run build
 
 FROM nginx:stable-alpine as production-stage
-COPY --from=build-stage /var/jenkins/workspace/main/frontend/build /usr/share/nginx/html
-COPY --from=build-stage /var/jenkins/workspace/main/frontend/nginx_conf/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build-stage /jenkins/workspace/main/frontend/build /usr/share/nginx/html
+COPY --from=build-stage /jenkins/workspace/main/frontend/nginx_conf/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 3000
 CMD ["nginx", "-g", "daemon off;"]
