@@ -4,28 +4,21 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.youme.naya.camera.CameraX
 import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.login.LoginActivity
 import com.youme.naya.login.LoginViewModel
 import com.youme.naya.ui.theme.AndroidTheme
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : BaseActivity() {
-    // Firebase
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+@AndroidEntryPoint
+class MainActivity : BaseActivity(TransitionMode.NONE) {
+    // login viewModel
     private val viewModel by viewModels<LoginViewModel>()
 
-    private lateinit var navController: NavHostController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -41,9 +34,6 @@ class MainActivity : BaseActivity() {
             }
         }
         setContent {
-            Surface(color = Color.White) {
-                Text(text = "로그인 확인중", fontSize = 30.sp)
-            }
             AndroidTheme {
                 RootNavigationGraph(navController = rememberNavController())
             }
