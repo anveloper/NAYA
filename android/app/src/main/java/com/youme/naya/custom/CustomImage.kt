@@ -2,20 +2,21 @@ package com.youme.naya.custom
 
 import android.graphics.Bitmap
 import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -24,24 +25,23 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.youme.naya.components.BasicTextField
-import com.youme.naya.ui.theme.PrimaryBlue
-import com.youme.naya.ui.theme.PrimaryDark
-import com.youme.naya.ui.theme.PrimaryGradientBrush
-import com.youme.naya.ui.theme.fonts
+import com.youme.naya.ui.theme.*
 import kotlin.math.roundToInt
+
 
 @Composable
 fun CustomImage(bitmap: Bitmap) {
 
     var scale by remember { mutableStateOf(1f) }
-    var rotation by remember { mutableStateOf(0f) }
+    var rotation by remember { mutableStateOf(15f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
         scale *= zoomChange
@@ -74,12 +74,11 @@ data class InfoItem(
     var fontSize: Int = 24,
 )
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CardInfoTools() {
     Box(Modifier.fillMaxSize(), Alignment.Center) {
-        var items = rememberSaveable {
-            mutableListOf<InfoItem>(InfoItem("안성진", PrimaryBlue), InfoItem("#ISFJ", PrimaryDark))
-        }
+        var items = rememberSaveable { mutableListOf<InfoItem>() }
 
         // 정보 붙히는 곳
         Box(Modifier.fillMaxSize(), Alignment.Center) {
@@ -92,18 +91,41 @@ fun CardInfoTools() {
                 .padding(24.dp),
             Alignment.BottomCenter
         ) {
-            var (newContent, setNewContent) = remember {
-                mutableStateOf("")
-            }
+            var (newColor, setNewColor) = remember { mutableStateOf<Color>(PrimaryBlue) }
+            var (newContent, setNewContent) = remember { mutableStateOf<String>("") }
             Column() {
-                BasicTextField(text = newContent, placeholder = "새로운 내용", onChange = setNewContent)
-                IconButton(onClick = { items.add(InfoItem(newContent)) }) {
-                    Icon(
-                        Icons.Outlined.Add,
-                        "move to start",
-                        tint = Color(0xFFCED3D6)
-                    )
-                }
+                val keyboardController = LocalSoftwareKeyboardController.current
+
+                TextField(
+                    value = newContent,
+                    onValueChange = {
+                        setNewContent(it)
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = { setNewContent("") }) {
+                            Icon(Icons.Outlined.Clear, null)
+                        }
+                    },
+                    modifier = Modifier.border(
+                        BorderStroke(
+                            width = 4.dp,
+                            brush = PrimaryGradientBrush
+                        ),
+                        shape = RoundedCornerShape(50)
+                    ),
+                    colors = TextFieldDefaults.textFieldColors(
+                        backgroundColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    keyboardActions = KeyboardActions(onDone = {
+                        if (newContent.trim().isNotEmpty())
+                            items.add(InfoItem(newContent))
+                        setNewContent("")
+                        keyboardController?.hide()
+                    }),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                )
             }
         }
     }
@@ -115,21 +137,37 @@ fun CardFrame(items: List<InfoItem>) {
     Box(Modifier.fillMaxSize(), Alignment.Center) {
         Box(
             Modifier
-                .width(250.dp)
-                .height(450.dp)
+                .width(300.dp)
+                .height(540.dp)
                 .padding(5.dp)
                 .border(5.dp, PrimaryGradientBrush, RectangleShape)
                 .padding(8.dp)
         ) {
 
-
-            // 미디어 명함 테두리
             items.forEach { item ->
+
+                var offsetX by remember { mutableStateOf(item.offsetX) }
+                var offsetY by remember { mutableStateOf(item.offsetX) }
+
+                var (isSelected, setIsSelected) = remember { mutableStateOf(false) }
+
+                var (content, setContent) = remember { mutableStateOf(item.content) }
+                var (fontSize, setFontSize) = remember { mutableStateOf(item.fontSize) }
+                var (fontColor, setFontColor) = remember { mutableStateOf(item.fontColor) }
+                if (isSelected) {
+                    FontTool(
+                        setIsSelected,
+                        content,
+                        setContent,
+                        fontSize,
+                        setFontSize,
+                        fontColor,
+                        setFontColor
+                    )
+                }
                 Box(Modifier.matchParentSize(), Alignment.Center) {
-                    var offsetX by remember { mutableStateOf(item.offsetX) }
-                    var offsetY by remember { mutableStateOf(item.offsetX) }
                     Text(
-                        item.content,
+                        content,
                         Modifier
                             .offset {
                                 IntOffset(
@@ -137,16 +175,20 @@ fun CardFrame(items: List<InfoItem>) {
                                     offsetY.roundToInt()
                                 )
                             }
+                            .clickable {
+                                Log.i("${content}", "isSelected")
+                                setIsSelected(true)
+                            }
                             .pointerInput(Unit) {
                                 detectDragGestures { change, dragAmount ->
                                     change.consumeAllChanges()
                                     offsetX += dragAmount.x
                                     offsetY += dragAmount.y
-                                    Log.i("${item.content}", "$offsetX $offsetY")
+                                    Log.i("${content}", "$offsetX $offsetY")
                                 }
                             },
-                        item.fontColor,
-                        item.fontSize.sp,
+                        fontColor,
+                        fontSize.sp,
                         FontStyle.Normal,
                         FontWeight.Normal,
                         fonts
@@ -155,7 +197,78 @@ fun CardFrame(items: List<InfoItem>) {
             }
         }
     }
+}
 
+@Composable
+fun FontTool(
+    setIsSelected: (Boolean) -> Unit,
+    content: String,
+    setContent: (String) -> Unit,
+    fontSize: Int,
+    setFontSize: (Int) -> Unit,
+    fontColor: Color,
+    setFontColor: (Color) -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { setIsSelected(false) },
+        buttons = {
+            Box(
+                Modifier
+                    .width(280.dp)
+                    .height(280.dp)
+                    .padding(8.dp), Alignment.Center
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxSize()
+                        .background(NeutralGrayTrans, RoundedCornerShape(12.dp)), Alignment.TopEnd
+                ) {
+                    IconButton(onClick = { setIsSelected(false) }) {
+                        Icon(Icons.Outlined.Clear, null, tint = NeutralLight)
+                    }
+                }
+                Column(
+                    Modifier
+                        .fillMaxSize(),
+                    Arrangement.Bottom,
+                    Alignment.CenterHorizontally
+                ) {
+
+                    var newFontSize by remember { mutableStateOf(fontSize.toFloat()) }
+                    var newFontColor by remember { mutableStateOf(fontColor) }
+                    Text(
+                        content,
+                        Modifier.sizeIn(20.dp),
+                        fontColor,
+                        newFontSize.toInt().sp,
+                        FontStyle.Normal,
+                        FontWeight.Normal,
+                        fonts
+                    )
+                    Slider(
+                        value = newFontSize,
+                        onValueChange = {
+                            newFontSize = it
+                        },
+                        onValueChangeFinished = {
+                            setFontSize(newFontSize.toInt())
+                        },
+                        valueRange = 12f..48f,
+                        steps = 36,
+                        colors = SliderDefaults.colors(
+                            thumbColor = PrimaryLight,
+                            activeTrackColor = Color.Transparent
+                        )
+                    )
+                    TextField(value = content, onValueChange = { setContent(it) })
+                }
+            }
+
+        },
+
+        backgroundColor = Color.Transparent,
+        shape = RoundedCornerShape(20.dp)
+    )
 }
 
 
