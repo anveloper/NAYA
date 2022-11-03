@@ -19,12 +19,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import com.youme.naya.BaseActivity
 import com.youme.naya.ui.theme.AndroidTheme
+import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.fonts
 
 class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
@@ -73,9 +73,9 @@ fun MediaCardScreen(
                 Icon(
                     Icons.Outlined.ArrowBackIos,
                     "move to start",
-                    tint = Color(0xFFCED3D6)
+                    tint = NeutralLight
                 )
-                Text(text = "돌아가기", fontFamily = fonts)
+                Text(text = "돌아가기", fontFamily = fonts, color = NeutralLight)
             }
         }
     }
