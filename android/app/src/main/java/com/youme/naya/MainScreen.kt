@@ -1,43 +1,110 @@
 package com.youme.naya
 
+import android.content.Intent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.DialogNavigator
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.youme.naya.ui.theme.PrimaryBlue
+import com.youme.naya.share.ShareActivity
+import com.youme.naya.ui.theme.*
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
+fun MainScreen(navController: NavHostController = rememberNavController()) {
+    val context = LocalContext.current
     Scaffold(
-        bottomBar = { BottomBar(navController = navController)}
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    context.startActivity(Intent(context, ShareActivity::class.java))
+                },
+                backgroundColor = Color.Transparent,
+                shape = CircleShape,
+            ) {
+                Box(
+                    Modifier
+                        .width(60.dp)
+                        .height(
+                            60.dp
+                        )
+                        .background(SecondaryGradientBrush,
+                            CircleShape
+                        ), Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.nav_send_icon),
+                        contentDescription = "Send",
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(40.dp),
+                        tint = NeutralWhite
+                    )
+                }
+
+            }
+        },
+        isFloatingActionButtonDocked = true,
+        floatingActionButtonPosition = FabPosition.Center,
+        bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNacGraph(navController = navController)
+        BottomNavGraph(navController = navController)
     }
 }
 
 @Composable
-fun BottomBar(navController: NavHostController) {
+fun BottomBar(
+    navController: NavHostController
+) {
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.NuyaCardHolder,
+        BottomBarScreen.Spacer,
         BottomBarScreen.NayaCard,
         BottomBarScreen.Calendar,
-        BottomBarScreen.Settings
+//        BottomBarScreen.Settings
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation {
+    BottomAppBar(
+        cutoutShape = CircleShape,
+        backgroundColor = PrimaryLight,
+        modifier = Modifier
+            .background(
+                color = PrimaryLight,
+                shape = RoundedCornerShape(
+                    topStart = 20.dp,
+                    topEnd = 20.dp
+                )
+            )
+            .graphicsLayer {
+                shape = RoundedCornerShape(
+                    topStart = 20.dp,
+                    topEnd = 20.dp
+                )
+                clip = true
+            }
+    ) {
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
@@ -55,19 +122,31 @@ fun RowScope.AddItem(
     navController: NavHostController
 ) {
     BottomNavigationItem(
+        modifier = Modifier
+            .height(72.dp),
         label = {
-            Text(text = screen.title)
+            Text(
+                screen.title,
+                fontSize = 10.sp,
+                fontFamily = pico,
+            )
         },
         icon = {
-            Icon(
-                imageVector = screen.icon,
-                contentDescription = "Navigation Icon"
-            )
+            screen.icon?.let { painterResource(id = it) }?.let {
+                Icon(
+                    painter = it,
+                    contentDescription = screen.title,
+                    modifier = Modifier
+                        .width(24.dp)
+                        .height(24.dp)
+                )
+            }
         },
         selected = currentDestination?.hierarchy?.any {
             it.route == screen.route
         } == true,
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        selectedContentColor = PrimaryBlue,
+        unselectedContentColor = NeutralLight,
         onClick = {
             navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
@@ -75,4 +154,10 @@ fun RowScope.AddItem(
             } // 홈에서 뒤로가기 누르면 앱 밖으로 이동
         }
     )
+}
+
+@Preview
+@Composable
+fun MainScreenPreview() {
+    MainScreen(rememberNavController())
 }
