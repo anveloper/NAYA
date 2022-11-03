@@ -3,9 +3,7 @@ package com.youme.naya
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 
-abstract class BaseActivity(
-    private val transitionMode: TransitionMode = TransitionMode.NONE
-) : ComponentActivity() {
+abstract class BaseActivity(private val transitionMode: TransitionMode) : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
