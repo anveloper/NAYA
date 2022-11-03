@@ -2,6 +2,8 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -32,6 +34,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
+        freeCompilerArgs = ['-Xjvm-default=enable']
         jvmTarget = '1.8'
     }
     buildFeatures {
@@ -44,6 +47,7 @@ android {
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            exclude 'META-INF/atomicfu.kotlin_module'
         }
         pickFirst '**/*.so'
     }
@@ -62,9 +66,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
-    
+
     implementation project(path: ':sdk')
-    
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
@@ -94,6 +98,12 @@ dependencies {
     // Icons
     implementation "androidx.compose.material:material-icons-extended:$compose_ui_version"
 
+    // color picker
+    implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.5.1'
+
+    // with Android ColorInt extensions
+    implementation 'com.godaddy.android.colorpicker:compose-color-picker-android:0.5.1'
+
     // Coil
     implementation "io.coil-kt:coil-compose:1.4.0"
 
@@ -105,7 +115,6 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
-
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
@@ -113,7 +122,39 @@ dependencies {
     implementation 'com.github.loopeer:CardStackView:1.0.0'
 
     // QR 코드 생성
-    implementation ('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
+    implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
 
+    // Room components
+    def room_version = '2.4.3'
+    implementation "androidx.room:room-ktx:$room_version"
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt "androidx.room:room-compiler:$room_version"
+    androidTestImplementation "androidx.room:room-testing:$room_version"
+
+    // Lifecycle components
+    def lifecycle_version = '2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
+    // Kotlin components
+    def coroutines_version = '1.3.9'
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // For control over item selection of both touch and mouse driven selection
+    implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+
+    // dagger & hilt
+    implementation "com.google.dagger:hilt-android:2.44"
+    kapt "com.google.dagger:hilt-compiler:2.44"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+
+}
+
+kapt {
+    correctErrorTypes true
 }
