@@ -28,6 +28,7 @@ val NeutralMedium = Color(0xFFBDC5CA)
 val NeutralGray = Color(0xFA1ACB3)
 val NeutralMetal = Color(0xFF88929F)
 val NeutralDarkGray = Color(0xFF444657)
+val NeutralGrayTrans = Color(0xFA1ACB3)
 
 val PrimaryGradientBrush = Brush.verticalGradient(
     listOf(
