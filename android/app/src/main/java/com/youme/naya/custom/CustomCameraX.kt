@@ -1,4 +1,4 @@
-package com.youme.naya.camera
+package com.youme.naya.custom
 
 
 import android.content.ContentValues
@@ -30,7 +30,7 @@ import java.io.FileOutputStream
 import java.io.OutputStream
 import java.nio.ByteBuffer
 
-class CameraX(
+class CustomCameraX(
     private var context: Context,
     private var owner: LifecycleOwner
 ) {

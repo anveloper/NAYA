@@ -1,4 +1,0 @@
-/Users/kyh/Library/Android/sdk/cmake/3.18.1/bin/ninja \
-  -C \
-  /Users/kyh/Developer/S07P31B104/android/sdk/.cxx/Debug/6o4a7271/x86 \
-  opencv_jni_shared
