@@ -13,7 +13,7 @@ import java.util.Calendar;
 
 @Controller
 @ResponseBody
-@RequestMapping("/api/sendCard")
+@RequestMapping("/sendCard")
 @RequiredArgsConstructor
 public class SendCardController {
 

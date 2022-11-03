@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 @Controller
 @ResponseBody
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 
