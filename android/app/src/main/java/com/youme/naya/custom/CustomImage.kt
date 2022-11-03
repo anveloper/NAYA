@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -33,9 +34,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.godaddy.android.colorpicker.ClassicColorPicker
+import com.godaddy.android.colorpicker.HsvColor
 import com.youme.naya.ui.theme.*
 import kotlin.math.roundToInt
-
 
 @Composable
 fun CustomImage(bitmap: Bitmap) {
@@ -48,7 +50,11 @@ fun CustomImage(bitmap: Bitmap) {
         rotation += rotationChange
         offset += offsetChange
     }
-    Box(Modifier.fillMaxSize()) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
         Image(
             bitmap.asImageBitmap(), null,
             Modifier
@@ -77,7 +83,10 @@ data class InfoItem(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CardInfoTools() {
-    Box(Modifier.fillMaxSize(), Alignment.Center) {
+    Box(
+        Modifier
+            .fillMaxSize(), Alignment.Center
+    ) {
         var items = rememberSaveable { mutableListOf<InfoItem>() }
 
         // 정보 붙히는 곳
@@ -145,54 +154,55 @@ fun CardFrame(items: List<InfoItem>) {
         ) {
 
             items.forEach { item ->
+                if (item.content.isNotEmpty()) {
+                    var offsetX by remember { mutableStateOf(item.offsetX) }
+                    var offsetY by remember { mutableStateOf(item.offsetX) }
 
-                var offsetX by remember { mutableStateOf(item.offsetX) }
-                var offsetY by remember { mutableStateOf(item.offsetX) }
+                    var (isSelected, setIsSelected) = remember { mutableStateOf(false) }
 
-                var (isSelected, setIsSelected) = remember { mutableStateOf(false) }
-
-                var (content, setContent) = remember { mutableStateOf(item.content) }
-                var (fontSize, setFontSize) = remember { mutableStateOf(item.fontSize) }
-                var (fontColor, setFontColor) = remember { mutableStateOf(item.fontColor) }
-                if (isSelected) {
-                    FontTool(
-                        setIsSelected,
-                        content,
-                        setContent,
-                        fontSize,
-                        setFontSize,
-                        fontColor,
-                        setFontColor
-                    )
-                }
-                Box(Modifier.matchParentSize(), Alignment.Center) {
-                    Text(
-                        content,
-                        Modifier
-                            .offset {
-                                IntOffset(
-                                    offsetX.roundToInt(),
-                                    offsetY.roundToInt()
-                                )
-                            }
-                            .clickable {
-                                Log.i("${content}", "isSelected")
-                                setIsSelected(true)
-                            }
-                            .pointerInput(Unit) {
-                                detectDragGestures { change, dragAmount ->
-                                    change.consumeAllChanges()
-                                    offsetX += dragAmount.x
-                                    offsetY += dragAmount.y
-                                    Log.i("${content}", "$offsetX $offsetY")
+                    var (content, setContent) = remember { mutableStateOf(item.content) }
+                    var (fontSize, setFontSize) = remember { mutableStateOf(item.fontSize) }
+                    var (fontColor, setFontColor) = remember { mutableStateOf(item.fontColor) }
+                    if (isSelected) {
+                        FontTool(
+                            setIsSelected,
+                            content,
+                            setContent,
+                            fontSize,
+                            setFontSize,
+                            fontColor,
+                            setFontColor
+                        )
+                    }
+                    Box(Modifier.matchParentSize(), Alignment.Center) {
+                        Text(
+                            content,
+                            Modifier
+                                .offset {
+                                    IntOffset(
+                                        offsetX.roundToInt(),
+                                        offsetY.roundToInt()
+                                    )
                                 }
-                            },
-                        fontColor,
-                        fontSize.sp,
-                        FontStyle.Normal,
-                        FontWeight.Normal,
-                        fonts
-                    )
+                                .clickable {
+                                    Log.i("${content}", "isSelected")
+                                    setIsSelected(true)
+                                }
+                                .pointerInput(Unit) {
+                                    detectDragGestures { change, dragAmount ->
+                                        change.consumeAllChanges()
+                                        offsetX += dragAmount.x
+                                        offsetY += dragAmount.y
+                                        Log.i("${content}", "$offsetX $offsetY")
+                                    }
+                                },
+                            fontColor,
+                            fontSize.sp,
+                            FontStyle.Normal,
+                            FontWeight.Normal,
+                            fonts
+                        )
+                    }
                 }
             }
         }
@@ -214,18 +224,48 @@ fun FontTool(
         buttons = {
             Box(
                 Modifier
-                    .width(280.dp)
-                    .height(280.dp)
+                    .width(300.dp)
+                    .height(540.dp)
                     .padding(8.dp), Alignment.Center
             ) {
                 Box(
                     Modifier
                         .fillMaxSize()
-                        .background(NeutralGrayTrans, RoundedCornerShape(12.dp)), Alignment.TopEnd
+                        .background(NeutralGrayTrans, RoundedCornerShape(12.dp)),
+                    Alignment.TopCenter
                 ) {
-                    IconButton(onClick = { setIsSelected(false) }) {
-                        Icon(Icons.Outlined.Clear, null, tint = NeutralLight)
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        Arrangement.SpaceBetween,
+                        Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = {
+                            setContent("")
+                            setIsSelected(false)
+                        }) {
+                            Icon(Icons.Outlined.Delete, null, tint = NeutralLight)
+                        }
+                        IconButton(onClick = { setIsSelected(false) }) {
+                            Icon(Icons.Outlined.Clear, null, tint = NeutralLight)
+                        }
                     }
+
+                }
+
+
+                var newFontSize by remember { mutableStateOf(fontSize.toFloat()) }
+                var newFontColor by remember { mutableStateOf(fontColor) }
+
+                Box(Modifier.fillMaxSize(), Alignment.Center) {
+                    Text(
+                        content,
+                        Modifier.sizeIn(20.dp),
+                        newFontColor,
+                        newFontSize.toInt().sp,
+                        FontStyle.Normal,
+                        FontWeight.Normal,
+                        fonts
+                    )
                 }
                 Column(
                     Modifier
@@ -233,18 +273,7 @@ fun FontTool(
                     Arrangement.Bottom,
                     Alignment.CenterHorizontally
                 ) {
-
-                    var newFontSize by remember { mutableStateOf(fontSize.toFloat()) }
-                    var newFontColor by remember { mutableStateOf(fontColor) }
-                    Text(
-                        content,
-                        Modifier.sizeIn(20.dp),
-                        fontColor,
-                        newFontSize.toInt().sp,
-                        FontStyle.Normal,
-                        FontWeight.Normal,
-                        fonts
-                    )
+                    // 폰트 사이즈 수정
                     Slider(
                         value = newFontSize,
                         onValueChange = {
@@ -260,7 +289,16 @@ fun FontTool(
                             activeTrackColor = Color.Transparent
                         )
                     )
-                    TextField(value = content, onValueChange = { setContent(it) })
+                    ClassicColorPicker(
+                        color = newFontColor,
+                        onColorChanged = { color: HsvColor ->
+                            newFontColor = color.toColor()
+                            setFontColor(color.toColor())
+                            Log.i("color", color.toColor().toString())
+                        },
+                        modifier = Modifier.fillMaxWidth().height(120.dp)
+                    )
+
                 }
             }
 
