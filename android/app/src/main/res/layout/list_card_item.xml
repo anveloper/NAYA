@@ -88,7 +88,7 @@
             tools:text="주소" />
 
         <TextView
-            android:id="@+id/bcard_team"
+            android:id="@+id/bcard_team_and_role"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
@@ -98,33 +98,7 @@
             android:fontFamily="@font/pretendard_medium"
             app:layout_constraintBottom_toBottomOf="@+id/bcard_address"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="부서" />
-
-        <TextView
-            android:id="@+id/bcard_divider"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/neutral_dark_gray"
-            android:textSize="12sp"
-            android:fontFamily="@font/pretendard_bold"
-            app:layout_constraintBottom_toBottomOf="@+id/bcard_address"
-            app:layout_constraintStart_toEndOf="@+id/bcard_team"
-            tools:text="-" />
-
-        <TextView
-            android:id="@+id/bcard_role"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="16dp"
-            android:textColor="@color/neutral_dark_gray"
-            android:textSize="12sp"
-            android:fontFamily="@font/pretendard_medium"
-            app:layout_constraintBottom_toBottomOf="@+id/bcard_address"
-            app:layout_constraintStart_toEndOf="@+id/bcard_divider"
-            tools:text="역할" />
+            tools:text="부서 - 직책" />
 
         <TextView
             android:id="@+id/bcard_company"
@@ -135,7 +109,7 @@
             android:textColor="@color/neutral_dark_gray"
             android:textSize="12sp"
             android:fontFamily="@font/pretendard_semibold"
-            app:layout_constraintBottom_toBottomOf="@+id/bcard_role"
+            app:layout_constraintBottom_toBottomOf="@+id/bcard_team_and_role"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="회사명" />
 
