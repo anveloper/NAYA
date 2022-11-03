@@ -12,15 +12,19 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "USERS")
-public class User {
+@Table(name = "SENDCARD")
+public class SendCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sendCardId")
+    private Long sendCardId;
     @Column(name = "userId")
     private Long userId;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "joinDate")
-    private String joinDate;
+    @Column(name = "cardUrl")
+    private String cardUrl;
+    @Column(name = "sendDatetime")
+    private String sendDatetime;
+    @Column(name = "expiredDatetime")
+    private String expiredDatetime;
 }

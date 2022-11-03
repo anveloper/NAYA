@@ -29,4 +29,10 @@ public class UserController {
         UserDto user=UserDto.builder().userId(dto.getUserId()).email(dto.getEmail()).joinDate(nowTime).build();
         return userService.save(user);
     }
+
+    @PostMapping("/login")
+    public UserDto findByEmail(@RequestBody UserRequestDto dto){
+        String email=dto.getEmail();
+        return userService.findByEmail(email);
+    }
 }

@@ -19,4 +19,10 @@ public class UserServiceImpl implements UserService{
         User res=userRepository.saveAndFlush(dto.toEntity());
         return UserDto.builder().userId(res.getUserId()).email(res.getEmail()).joinDate(res.getJoinDate()).build();
     }
+
+    @Override
+    public UserDto findByEmail(String email) {
+        User res=userRepository.findByEmail(email);
+        return UserDto.builder().userId(res.getUserId()).email(res.getEmail()).joinDate(res.getJoinDate()).build();
+    }
 }
