@@ -101,6 +101,9 @@ dependencies {
     // color picker
     implementation 'com.godaddy.android.colorpicker:compose-color-picker:0.5.1'
 
+    // capture
+    implementation "dev.shreyaspatil:capturable:1.0.3"
+
     // with Android ColorInt extensions
     implementation 'com.godaddy.android.colorpicker:compose-color-picker-android:0.5.1'
 
