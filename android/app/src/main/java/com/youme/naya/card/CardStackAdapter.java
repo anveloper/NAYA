@@ -35,7 +35,7 @@ public class CardStackAdapter extends StackAdapter<Card> {
 
     static class ColorItemViewHolder extends CardStackView.ViewHolder {
         View mLayout, mContainerContent;
-        TextView mTextName, mTextEngName, mTextCompany, mTextTeam, mTextRole, mTextAddress, mTextMobile, mTextEmail;
+        TextView mTextName, mTextEngName, mTextCompany, mTextTeam, mTextRole, mTextAddress, mTextMobile, mTextEmail, mTextSummaryMain, mTextSummarySub;
 
         public ColorItemViewHolder(View view) {
             super(view);
@@ -49,6 +49,8 @@ public class CardStackAdapter extends StackAdapter<Card> {
             mTextAddress = view.findViewById(R.id.bcard_address);
             mTextMobile = view.findViewById(R.id.bcard_mobile);
             mTextEmail = view.findViewById(R.id.bcard_email);
+            mTextSummaryMain = view.findViewById(R.id.bcard_summary_main);
+            mTextSummarySub = view.findViewById(R.id.bcard_summary_sub);
         }
 
         @Override
@@ -66,6 +68,11 @@ public class CardStackAdapter extends StackAdapter<Card> {
             mTextAddress.setText(card.getAddress());
             mTextMobile.setText(card.getMobile());
             mTextEmail.setText(card.getEmail());
+
+            String summaryMain = card.getName() + " / " + card.getCompany() + " / " + card.getTeam() + " / " + card.getRole();
+            String summarySub = card.getMemo_content().isEmpty() ? "메모를 등록하지 않았어요" : card.getMemo_content();
+            mTextSummaryMain.setText(summaryMain);
+            mTextSummarySub.setText(summarySub);
         }
 
     }

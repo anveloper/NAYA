@@ -10,11 +10,15 @@
         android:id="@+id/frame_list_card_item"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_margin="4dp"
         android:background="@drawable/business_card"
+        android:elevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="H,9:5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0">
 
         <TextView
             android:id="@+id/bcard_name"
@@ -24,7 +28,7 @@
             android:layout_marginTop="24dp"
             android:textColor="@color/neutral_dark_gray"
             android:textSize="16sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_bold"
             app:layout_constraintBottom_toTopOf="@+id/bcard_english_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -37,10 +41,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
             android:textColor="@color/neutral_metal"
             android:textSize="11sp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bcard_name"
             tools:text="영어 이름" />
@@ -53,9 +56,9 @@
             android:layout_marginBottom="24dp"
             android:textColor="@color/neutral_metal"
             android:textSize="10sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="이메일" />
 
         <TextView
@@ -63,12 +66,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="14dp"
             android:textColor="@color/neutral_metal"
             android:textSize="10sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintBottom_toBottomOf="@+id/bcard_email"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="휴대폰 번호" />
 
         <TextView
@@ -76,12 +79,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="14dp"
             android:textColor="@color/neutral_metal"
             android:textSize="10sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            android:fontFamily="@font/pretendard_regular"
             app:layout_constraintBottom_toBottomOf="@+id/bcard_mobile"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="주소" />
 
         <TextView
@@ -91,10 +94,10 @@
             android:layout_marginStart="24dp"
             android:layout_marginBottom="16dp"
             android:textColor="@color/neutral_dark_gray"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_medium"
             app:layout_constraintBottom_toBottomOf="@+id/bcard_address"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="부서" />
 
         <TextView
@@ -104,11 +107,11 @@
             android:layout_marginStart="4dp"
             android:layout_marginBottom="16dp"
             android:textColor="@color/neutral_dark_gray"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/bcard_team"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_bold"
             app:layout_constraintBottom_toBottomOf="@+id/bcard_address"
-            tools:text="|" />
+            app:layout_constraintStart_toEndOf="@+id/bcard_team"
+            tools:text="-" />
 
         <TextView
             android:id="@+id/bcard_role"
@@ -117,10 +120,10 @@
             android:layout_marginStart="4dp"
             android:layout_marginBottom="16dp"
             android:textColor="@color/neutral_dark_gray"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/bcard_divider"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_medium"
             app:layout_constraintBottom_toBottomOf="@+id/bcard_address"
+            app:layout_constraintStart_toEndOf="@+id/bcard_divider"
             tools:text="역할" />
 
         <TextView
@@ -128,24 +131,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="16dp"
             android:textColor="@color/neutral_dark_gray"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintBottom_toBottomOf="@+id/bcard_role"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="회사명" />
 
         <TextView
             android:id="@+id/bcard_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
             android:layout_marginTop="24dp"
-            android:textColor="@color/neutral_metal"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_marginEnd="24dp"
             android:textAlignment="textEnd"
+            android:textColor="@color/neutral_metal"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="로고 이미지" />
@@ -156,30 +159,66 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
-            android:textColor="@color/neutral_metal"
-            android:textSize="16sp"
-            android:textStyle="bold"
             android:textAlignment="textEnd"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/neutral_metal"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_medium"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="QR코드 이미지" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:id="@+id/container_list_content"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:animateLayoutChanges="true"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/frame_list_card_item">-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_list_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        app:layout_constraintTop_toBottomOf="@+id/frame_list_card_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingTop="16dp"-->
-<!--            android:text="NUYA 카드 테스트입니다."-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <TextView
+            android:id="@+id/bcard_summary_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="8dp"
+            android:text="이름 / 회사명 / 부서 / 역할"
+            android:textColor="@color/neutral_dark_gray"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard_semibold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/bcard_summary_sub"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="8dp"
+            android:text="메모?"
+            android:textColor="@color/neutral_metal"
+            android:textSize="12sp"
+            android:fontFamily="@font/pretendard_medium"
+            app:layout_constraintTop_toBottomOf="@+id/bcard_summary_main"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btn_details"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="상세보기"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textSize="14sp"
+            android:textColor="@color/primary_color_blue"
+            android:background="@drawable/btn_with_border"
+            android:layout_marginVertical="16dp"
+            android:layout_marginHorizontal="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/bcard_summary_sub"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
