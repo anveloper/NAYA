@@ -55,7 +55,6 @@ public class CardStackAdapter extends StackAdapter<Card> {
 
         @Override
         public void onItemExpand(boolean b) {
-            Log.i("CardStackExpanded", String.valueOf(b));
             mContainerContent.setVisibility(b ? View.VISIBLE : View.GONE);
         }
 
