@@ -32,13 +32,9 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = "camera") {
 //            CameraScreen()
         }
-        // Nuya 나야 카드 생성 (직접 입력)
-        composable(route = "nuyaCreate/NayaCard") {
-            NuyaCardCreateScreen(navController = navController, kind = 0)
-        }
         // Nuya 명함 생성 (직접 입력)
-        composable(route = "nuyaCreate/BCard") {
-            NuyaCardCreateScreen(navController = navController, kind = 1)
+        composable(route = "nuyaBcardCreate") {
+            NuyaCardCreateScreen(navController = navController)
         }
         // Nuya 카드 상세 정보
         composable(route = "nuyaDetails") {

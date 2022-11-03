@@ -14,8 +14,9 @@ import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
 
+
 @Composable
-fun NuyaCardCreateScreen(navController: NavHostController, kind: Int = 0) {
+fun NuyaCardCreateScreen(navController: NavHostController, kind: Int = 1) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
 
@@ -58,7 +59,12 @@ fun NuyaCardCreateScreen(navController: NavHostController, kind: Int = 0) {
 //            BasicTextField(text = memo3, placeholder = "메모3", onChange = { memo3 = it })
 //            BasicTextField(text = memo_content, placeholder = "메모", onChange = { memo_content = it })
         PrimaryBigButton(text = "저장") {
-            if (name.isNotEmpty() && mobile.isNotEmpty()) {
+            val isValid = name.isNotEmpty() && eng_name.isNotEmpty() && email.isNotEmpty()
+                    && mobile.isNotEmpty() && address.isNotEmpty() && company.isNotEmpty()
+                    && team.isNotEmpty() && role.isNotEmpty() && tel.isNotEmpty()
+                    && fax.isNotEmpty()
+
+            if (isValid) {
                 val card = Card(
                     0,
                     name,
@@ -83,6 +89,8 @@ fun NuyaCardCreateScreen(navController: NavHostController, kind: Int = 0) {
                 cardViewModel.addCard(card)
                 Toast.makeText(ctx, "카드 생성이 완료되었어요", Toast.LENGTH_SHORT).show()
                 navController.popBackStack()
+            } else {
+                Toast.makeText(ctx, "모든 양식을 채워주세요", Toast.LENGTH_SHORT).show()
             }
         }
     }

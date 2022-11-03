@@ -25,6 +25,8 @@ class CardViewModel @Inject constructor(private val repository: CardRepository) 
             repository.getNayaCards().distinctUntilChanged().collect { listOfCards ->
                 _nayaCardList.value = listOfCards
             }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getBusinessCards().distinctUntilChanged().collect { listOfCards ->
                 _businessCardList.value = listOfCards
             }
