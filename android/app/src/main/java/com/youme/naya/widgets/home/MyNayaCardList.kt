@@ -1,12 +1,15 @@
 package com.youme.naya.widgets.home
 
+import android.app.Activity
+import android.app.Application
+import android.content.ContentUris
+import android.net.Uri
+import android.provider.MediaStore
 import android.util.DisplayMetrics
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -15,16 +18,17 @@ import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.youme.naya.R
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.youme.naya.widgets.items.CardItem
 import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
@@ -35,11 +39,11 @@ private val NayaCardListModifier = Modifier
     .fillMaxWidth()
 
 
-
 @Composable
 fun MyNayaCardList() {
     // 처음 아이템의 padding을 정해주기 위한 식
     val context = LocalContext.current
+    val activity = context as? Activity
     val display = context.resources?.displayMetrics
     val deviceWidth = display?.widthPixels
     val deviceHeight = display?.heightPixels
@@ -48,9 +52,14 @@ fun MyNayaCardList() {
 
     val listVerticalPadding = (px2dp(deviceWidth!!) - 200) / 2
     // page를 이동하기 위한 상태 값
-    val listSize = 12
     var currentCardId = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    val viewModel = viewModel<CardListViewModel>()
+    viewModel.fetchCards()
+    val cardList = viewModel.cardUris.value
+    val listSize = cardList.size
+
     Column(
         NayaCardContainerModifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,7 +72,7 @@ fun MyNayaCardList() {
             horizontalArrangement = Arrangement.spacedBy(32.dp),
             state = currentCardId
         ) {
-            items((1..listSize).toList()) { value ->
+            items(cardList) { value ->
                 CardItem(value)
             }
 
@@ -118,6 +127,7 @@ fun MyNayaCardList() {
         }
     }
 }
+
 
 @Composable
 @Preview

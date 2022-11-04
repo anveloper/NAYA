@@ -1,5 +1,6 @@
 package com.youme.naya.custom
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.*
@@ -20,10 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -37,13 +35,16 @@ import androidx.compose.ui.unit.sp
 import com.godaddy.android.colorpicker.ClassicColorPicker
 import com.godaddy.android.colorpicker.HsvColor
 import com.youme.naya.ui.theme.*
+import dev.shreyaspatil.capturable.controller.CaptureController
 import kotlin.math.roundToInt
 
 @Composable
-fun CustomImage(bitmap: Bitmap) {
+fun CustomImage(
+    bitmap: Bitmap
+) {
 
     var scale by remember { mutableStateOf(1f) }
-    var rotation by remember { mutableStateOf(15f) }
+    var rotation by remember { mutableStateOf(0f) }
     var offset by remember { mutableStateOf(Offset.Zero) }
     val state = rememberTransformableState { zoomChange, offsetChange, rotationChange ->
         scale *= zoomChange
@@ -296,7 +297,9 @@ fun FontTool(
                             setFontColor(color.toColor())
                             Log.i("color", color.toColor().toString())
                         },
-                        modifier = Modifier.fillMaxWidth().height(120.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(120.dp)
                     )
 
                 }
