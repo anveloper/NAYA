@@ -99,5 +99,4 @@ root
    ![image-20221019150554535](./images/repository.png)
 
 9. service : 메서드를 선언하는 인터페이스 파일, 실제 구현하는 자바 파일 저장
-
    ![image-20221019150832286](./images/service.png)
