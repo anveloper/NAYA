@@ -4,4 +4,10 @@
     <string name="title_activity_share">ShareActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!--  CUSTOM IMAGE FILE PATH  -->
+    <string name="naya_media">NAYA-MEDIA-</string>
+    <string name="naya_media_relative">DCIM/NAYA</string>
+
+    <string name="mime_type_png">image/png</string>
 </resources>
