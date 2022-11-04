@@ -1,5 +1,7 @@
 package com.youme.naya.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -9,21 +11,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.youme.naya.R
+import com.youme.naya.ui.theme.NeutralLight
+import com.youme.naya.ui.theme.PrimaryGradientBrush
+import com.youme.naya.ui.theme.fonts
 
 
 @Composable
 fun LoginScreen(content: () -> Unit) {
-    Surface(color = Color.White) {
+    Surface(Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 15.dp, end = 15.dp),
+                .background(PrimaryGradientBrush)
+                .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Greeting(text = "시작하시겠습니까?")
+            Greeting(text = "Hi, It’s me.")
+            Image(
+                painter = painterResource(R.drawable.splash_logo_text_light),
+                contentDescription = "logo",
+                modifier = Modifier
+                    .width(150.dp)
+                    .padding(bottom = 16.dp)
+            )
             SignInGoogleButton { content() }
         }
     }
@@ -34,8 +50,11 @@ fun Greeting(text: String) {
     Text(
         text = text,
         style = MaterialTheme.typography.body2,
-        color = Color.Gray,
-        modifier = Modifier.padding(bottom = 12.dp)
+        color = NeutralLight,
+        modifier = Modifier.padding(bottom = 8.dp),
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        fontFamily = fonts
     )
 }
 
@@ -55,15 +74,33 @@ fun SignInGoogleButton(onClick: () -> Unit) {
                 start = 14.dp, end = 12.dp, top = 11.dp, bottom = 11.dp
             )
         ) {
-//            Icon(painter = painterResource(id = R.drawable.icon_google), contentDescription = "Google sign button", tint = Color.Unspecified, modifier = Modifier.size(35.dp))
+            Image(
+                painterResource(R.drawable.ic_share_sns),
+                "Google sign button",
+                modifier = Modifier.size(32.dp),
+            )
             Spacer(modifier = Modifier.width(20.dp))
             Text(
-                text = "Sign in with Google",
+                text = "Google로 시작하기",
                 style = MaterialTheme.typography.overline,
                 color = Color.Gray,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = fonts
             )
         }
+    }
+}
+
+
+@Preview(
+    name = "Login Preview",
+    showSystemUi = true,
+    showBackground = true
+)
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen {
+
     }
 }
