@@ -78,10 +78,14 @@ dependencies {
 
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+
+    // 한번 수정된 프로젝트만 담으면 될것 같음.
+    implementation project(path: ':sdk')
+    implementation project(path: ':documentscanner')
     // Detection
-    implementation 'com.websitebeaver:documentscanner:1.0.0'
+    //implementation 'com.websitebeaver:documentscanner:1.0.0'
     // OpenCV
-//    implementation project(path: ':openCVLibrary455')
+    //implementation project(path: ':openCVLibrary455')
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
     //implementation project(':opencv')
 
@@ -157,6 +161,20 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+
+    // implementation 'com.websitebeaver:documentscanner:1.0.0'
+    implementation 'com.google.mlkit:vision-common:17.2.1'
+    implementation 'com.google.mlkit:vision-interfaces:16.1.0'
+    implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta6'
+    implementation 'com.google.mlkit:text-recognition-bundled-common:16.0.0-beta6'
+    implementation 'com.google.mlkit:text-recognition:16.0.0-beta6'
+    implementation 'com.google.mlkit:entity-extraction:16.0.0-beta4'
+    implementation 'com.google.mlkit:vision-internal-vkp:18.2.2'
+    implementation 'com.google.mlkit:acceleration:16.0.0-beta1'
+    implementation 'com.google.mlkit:camera:16.0.0-beta3'
+    implementation 'com.google.mlkit:object-detection:17.0.0'
+    // implementation 'com.google.mlkit:vision-demo'
+
 }
 
 kapt {
