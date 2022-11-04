@@ -9,6 +9,7 @@ import com.naya.naya.repository.DesignRepository;
 import com.naya.naya.repository.NayaCardRepository;
 import com.naya.naya.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NayaCardServiceImpl implements NayaCardService{
 
     private final UserRepository userRepository;
@@ -52,11 +54,14 @@ public class NayaCardServiceImpl implements NayaCardService{
     };
 
     private NayaCard findById(Long id){
+        log.debug("nayaCardService findById method, parameter Long, nayaCardId " + id);
         return nayaCardRepository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
 
     @Override
     public NayaCardRqDto2 findByNayaCardId(Long nayaCardId) {
+
+        log.debug("nayaCardService findByNayaCardId method, parameter Long, nayaCardId " + nayaCardId);
 
         return NayaCardRqDto2.from(NayaCardDto.of(findById(nayaCardId),
                 designRepository.findByNayaCardId(nayaCardId)
@@ -69,6 +74,8 @@ public class NayaCardServiceImpl implements NayaCardService{
     @Override
     public List<NayaCardRqDto2> findAllByUserId(Long userId) {
 
+        log.debug("nayaCardService findAllByUserId method, parameter Long, userId " + userId);
+
         return nayaCardRepository.findByUserId(userId)
                 .stream()
                 .map(NayaCardDto::from)
@@ -78,20 +85,18 @@ public class NayaCardServiceImpl implements NayaCardService{
 
     @Override
     public List<NayaCardRqDto2> save(NayaCardRqDto2 dto) {
-        
+
+        log.debug("nayaCardService save method, parameter NayaCardRqDto, dto " + dto);
+
         // 카드 내용 저장
         NayaCardDto nayaCardDto = NayaCardDto.from(
                 nayaCardRepository.save(
                         NayaCard.create(NayaCardDto.from(dto))));
 
-        System.out.println("here: "+ nayaCardDto);
         // 카드 추가 시에 디폴트 값 or 넘어온 값을 넣어줘야 함
         // 기본 14개 생성
         Queue<Integer> columnNos = new LinkedList<>();
         for(DesignDto cur : dto.getDesignList()) columnNos.add(cur.getColumnNo());
-        System.out.println("list: "+ columnNos);
-        System.out.println("check: "+ nayaCardDto.from(dto).getDesignList().get(0));
-
 
         Design cur;
         DesignDto designDto;
@@ -120,6 +125,8 @@ public class NayaCardServiceImpl implements NayaCardService{
     @Transactional
     @Override
     public NayaCardRqDto2 update(NayaCardRqDto2 dto) {
+
+        log.debug("nayaCardService update method, parameter NayaCardRqDto, dto " + dto);
 
         // dto -> update
         // 카드 정보 변경
@@ -151,6 +158,9 @@ public class NayaCardServiceImpl implements NayaCardService{
     @Transactional
     @Override
     public void delete(Long nayaCardId) {
+
+        log.debug("nayaCardService delete method, parameter Long, Long " + nayaCardId);
+
         NayaCard nayaCard = nayaCardRepository.findById(nayaCardId).orElseThrow(IllegalAccessError::new);
         List<Design> list = designRepository.findByNayaCardId(nayaCardId);
 

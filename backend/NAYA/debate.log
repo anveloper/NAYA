@@ -1,0 +1,90 @@
+2022-11-04 14:33:41.635  INFO 12416 --- [restartedMain] c.n.n.NayaApplication                    : Starting NayaApplication using Java 11.0.16.1 on DESKTOP-KVCQHCD with PID 12416 (C:\ssafy\merge\backend\NAYA\build\classes\java\main started by SSAFY in C:\ssafy\merge\backend\NAYA)
+2022-11-04 14:33:41.644  INFO 12416 --- [restartedMain] c.n.n.NayaApplication                    : No active profile set, falling back to 1 default profile: "default"
+2022-11-04 14:33:41.705  INFO 12416 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-11-04 14:33:41.706  INFO 12416 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-11-04 14:33:42.581  INFO 12416 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-04 14:33:42.674  INFO 12416 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 80 ms. Found 4 JPA repository interfaces.
+2022-11-04 14:33:43.054  INFO 12416 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$693f8035] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-11-04 14:33:43.114  INFO 12416 --- [restartedMain] .w.s.a.s.AnnotationActionEndpointMapping : Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2022-11-04 14:33:43.526  INFO 12416 --- [restartedMain] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2022-11-04 14:33:43.548  INFO 12416 --- [restartedMain] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2022-11-04 14:33:43.549  INFO 12416 --- [restartedMain] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-04 14:33:43.662  INFO 12416 --- [restartedMain] o.a.c.c.C.[.[.[/naya]                    : Initializing Spring embedded WebApplicationContext
+2022-11-04 14:33:43.663  INFO 12416 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1949 ms
+2022-11-04 14:33:43.704  INFO 12416 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2022-11-04 14:33:44.143  INFO 12416 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2022-11-04 14:33:44.156  INFO 12416 --- [restartedMain] o.s.b.a.h.H2ConsoleAutoConfiguration     : H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/naya?serverTimezone=UTC&characterEncoding=UTF-8'
+2022-11-04 14:33:44.320  INFO 12416 --- [restartedMain] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-04 14:33:44.403  INFO 12416 --- [restartedMain] o.h.Version                              : HHH000412: Hibernate ORM core version 5.6.11.Final
+2022-11-04 14:33:44.596  INFO 12416 --- [restartedMain] o.h.a.c.Version                          : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-04 14:33:44.743  INFO 12416 --- [restartedMain] o.h.d.Dialect                            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-11-04 14:33:46.077  INFO 12416 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-04 14:33:46.088  INFO 12416 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-04 14:33:46.754  WARN 12416 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userController' defined in file [C:\ssafy\merge\backend\NAYA\build\classes\java\main\com\naya\naya\controller\UserController.class]: Unsatisfied dependency expressed through constructor parameter 1; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'lombok.extern.log4j.Log4j2' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2022-11-04 14:33:46.755  INFO 12416 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-11-04 14:33:46.759  INFO 12416 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2022-11-04 14:33:46.781  INFO 12416 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2022-11-04 14:33:46.784  INFO 12416 --- [restartedMain] o.a.c.c.StandardService                  : Stopping service [Tomcat]
+2022-11-04 14:33:46.799  INFO 12416 --- [restartedMain] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-11-04 14:33:46.828 ERROR 12416 --- [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of constructor in com.naya.naya.controller.UserController required a bean of type 'lombok.extern.log4j.Log4j2' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'lombok.extern.log4j.Log4j2' in your configuration.
+
+2022-11-04 14:34:37.389  INFO 16228 --- [restartedMain] c.n.n.NayaApplication                    : Starting NayaApplication using Java 11.0.16.1 on DESKTOP-KVCQHCD with PID 16228 (C:\ssafy\merge\backend\NAYA\build\classes\java\main started by SSAFY in C:\ssafy\merge\backend\NAYA)
+2022-11-04 14:34:37.400  INFO 16228 --- [restartedMain] c.n.n.NayaApplication                    : No active profile set, falling back to 1 default profile: "default"
+2022-11-04 14:34:37.459  INFO 16228 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-11-04 14:34:37.459  INFO 16228 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-11-04 14:34:38.391  INFO 16228 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-11-04 14:34:38.498  INFO 16228 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 89 ms. Found 4 JPA repository interfaces.
+2022-11-04 14:34:38.912  INFO 16228 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.ws.config.annotation.DelegatingWsConfiguration' of type [org.springframework.ws.config.annotation.DelegatingWsConfiguration$$EnhancerBySpringCGLIB$$6ff04742] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-11-04 14:34:38.963  INFO 16228 --- [restartedMain] .w.s.a.s.AnnotationActionEndpointMapping : Supporting [WS-Addressing August 2004, WS-Addressing 1.0]
+2022-11-04 14:34:39.355  INFO 16228 --- [restartedMain] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port(s): 8080 (http)
+2022-11-04 14:34:39.377  INFO 16228 --- [restartedMain] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2022-11-04 14:34:39.378  INFO 16228 --- [restartedMain] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-11-04 14:34:39.483  INFO 16228 --- [restartedMain] o.a.c.c.C.[.[.[/naya]                    : Initializing Spring embedded WebApplicationContext
+2022-11-04 14:34:39.484  INFO 16228 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2024 ms
+2022-11-04 14:34:39.529  INFO 16228 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2022-11-04 14:34:39.943  INFO 16228 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2022-11-04 14:34:39.956  INFO 16228 --- [restartedMain] o.s.b.a.h.H2ConsoleAutoConfiguration     : H2 console available at '/h2-console'. Database available at 'jdbc:mysql://localhost:3306/naya?serverTimezone=UTC&characterEncoding=UTF-8'
+2022-11-04 14:34:40.118  INFO 16228 --- [restartedMain] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-11-04 14:34:40.195  INFO 16228 --- [restartedMain] o.h.Version                              : HHH000412: Hibernate ORM core version 5.6.11.Final
+2022-11-04 14:34:40.402  INFO 16228 --- [restartedMain] o.h.a.c.Version                          : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-11-04 14:34:40.567  INFO 16228 --- [restartedMain] o.h.d.Dialect                            : HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2022-11-04 14:34:42.015  INFO 16228 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-11-04 14:34:42.027  INFO 16228 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-11-04 14:34:42.676  WARN 16228 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userController' defined in file [C:\ssafy\merge\backend\NAYA\build\classes\java\main\com\naya\naya\controller\UserController.class]: Unsatisfied dependency expressed through constructor parameter 1; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'lombok.extern.log4j.Log4j2' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2022-11-04 14:34:42.678  INFO 16228 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-11-04 14:34:42.682  INFO 16228 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2022-11-04 14:34:42.703  INFO 16228 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2022-11-04 14:34:42.706  INFO 16228 --- [restartedMain] o.a.c.c.StandardService                  : Stopping service [Tomcat]
+2022-11-04 14:34:42.723  INFO 16228 --- [restartedMain] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-11-04 14:34:42.752 ERROR 16228 --- [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 1 of constructor in com.naya.naya.controller.UserController required a bean of type 'lombok.extern.log4j.Log4j2' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'lombok.extern.log4j.Log4j2' in your configuration.
+
