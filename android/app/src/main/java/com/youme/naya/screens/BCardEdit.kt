@@ -27,7 +27,7 @@ import com.youme.naya.ui.theme.*
 
 
 @Composable
-fun NuyaCardCreateScreen(navController: NavHostController, kind: Int = 1) {
+fun NuyaCardCreateScreen(navController: NavHostController, id: Int?, kind: Int = 1) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
 
