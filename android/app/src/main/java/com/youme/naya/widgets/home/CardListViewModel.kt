@@ -9,8 +9,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 
 class CardListViewModel(application: Application) : AndroidViewModel(application) {
-    private val _CardUris = mutableStateOf(emptyList<Uri>())
-    val cardUris: State<List<Uri>> = _CardUris
+    private val _cardUris = mutableStateOf(emptyList<Uri>())
+    val cardUris: State<List<Uri>> = _cardUris
 
     fun fetchCards() {
         val uris = mutableListOf<Uri>()
@@ -31,7 +31,7 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
                 )
                 uris.add(contentUri)
             }
-            _CardUris.value = uris
+            _cardUris.value = uris
         }
     }
 }
