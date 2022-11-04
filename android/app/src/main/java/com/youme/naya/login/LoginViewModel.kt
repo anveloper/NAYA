@@ -1,6 +1,5 @@
 package com.youme.naya.login
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -13,29 +12,20 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
-
-    // 로그인 결과 반환 변수
     private val _loginResult = MutableSharedFlow<Boolean>()
     var loginResult = _loginResult.asSharedFlow()
 
     fun tryLogin(context: Context) {
         viewModelScope.launch {
-//            var googleClient = null
             val account = async {
                 getLastSignedInAccount(context)
-//                getGoogleClient(context)
             }
             Log.i("Login Launch", account.toString())
-//            delay(2500)
-            // 계정 확인 -> true, 없음 -> false 반환
+            delay(2500)
             setLoginResult(account.await() != null)
         }
     }
 
-
-//    fun getGoogleClient(context: Context) = GoogleSignIn.getClient(context as Activity, )
-
-    // 이전에 로그인 한 계정이 있는지 확인
     private fun getLastSignedInAccount(context: Context) =
         GoogleSignIn.getLastSignedInAccount(context)
 
