@@ -109,6 +109,10 @@
             android:name=".ocr.DocumentScannerActivity"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name=".ocr.StillImageActivity"
+            android:screenOrientation="portrait"></activity>
+
         <!--  저버전 외부 저장소   -->
         <provider
             android:name="androidx.core.content.FileProvider"
