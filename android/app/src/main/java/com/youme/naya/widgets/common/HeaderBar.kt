@@ -36,7 +36,7 @@ fun HeaderBar(
             logo = false
             title = "카드 상세 보기"
         }
-        "nuyaBCardCreate" -> {
+        "bCardEdit/" -> {
             logo = false
             title = "카드 직접 등록"
         }

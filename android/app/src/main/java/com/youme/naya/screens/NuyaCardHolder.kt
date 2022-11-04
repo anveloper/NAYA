@@ -134,14 +134,14 @@ fun MultiFloatingActionButton(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             FloatingActionButton(
-                onClick = { navController.navigate("nuyaDetails") },
+                onClick = { /* TODO */ },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite
             ) {
                 Icon(Icons.Filled.AddAPhoto, Icons.Filled.AddAPhoto.toString())
             }
             FloatingActionButton(
-                onClick = { navController.navigate("nuyaBCardCreate") },
+                onClick = { navController.navigate("bCardEdit/0") },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite
             ) {

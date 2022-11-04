@@ -12,12 +12,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.databinding.CardStackViewMainBinding
 import com.youme.naya.ui.theme.NeutralLight
 
 @Composable
-fun CustomCardStackView(cardViewModel: CardViewModel = viewModel(), isBCard: Boolean = false) {
+fun CustomCardStackView(
+    cardViewModel: CardViewModel = viewModel(),
+    isBCard: Boolean = false
+) {
     val nayaCards = cardViewModel.nayaCardList.collectAsState().value
     val businessCards = cardViewModel.businessCardList.collectAsState().value
     val context = LocalContext.current

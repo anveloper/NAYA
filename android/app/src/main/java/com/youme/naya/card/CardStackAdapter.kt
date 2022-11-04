@@ -1,16 +1,21 @@
 package com.youme.naya.card
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.NavHostController
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import com.loopeer.cardstack.CardStackView
 import com.loopeer.cardstack.StackAdapter
 import com.youme.naya.R
 import com.youme.naya.database.entity.Card
 
-class CardStackAdapter(context: Context?) : StackAdapter<Card>(context) {
+class CardStackAdapter(context: Context) : StackAdapter<Card>(context) {
+
     override fun bindView(card: Card, position: Int, holder: CardStackView.ViewHolder) {
         val h = holder as ColorItemViewHolder
         h.onBind(card, position)
@@ -26,6 +31,8 @@ class CardStackAdapter(context: Context?) : StackAdapter<Card>(context) {
     }
 
     internal class ColorItemViewHolder(view: View) : CardStackView.ViewHolder(view) {
+        private val navController = NavHostController(context)
+
         var mLayout: View
         var mContainerContent: View
         var mTextName: TextView
@@ -73,7 +80,10 @@ class CardStackAdapter(context: Context?) : StackAdapter<Card>(context) {
             val summarySub = if (card.memo_content.isEmpty()) "메모를 등록하지 않았어요" else card.memo_content
             mTextSummaryMain.text = summaryMain
             mTextSummarySub.text = summarySub
-            mBtnDetails.setOnClickListener { view: View? -> }
+            mBtnDetails.setOnClickListener { view: View ->
+                view.findNavController().navigate("nuyaDetails/${card.NayaCardId}")
+            }
         }
     }
+
 }

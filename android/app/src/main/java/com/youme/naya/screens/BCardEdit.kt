@@ -1,21 +1,13 @@
 package com.youme.naya.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.youme.naya.card.BusinessCardTemplate
@@ -23,11 +15,10 @@ import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
-import com.youme.naya.ui.theme.*
 
 
 @Composable
-fun NuyaCardCreateScreen(navController: NavHostController, id: Int?, kind: Int = 1) {
+fun BCardEditScreen(navController: NavHostController, id: Int?, kind: Int = 1) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
 
@@ -149,6 +140,6 @@ fun NuyaCardCreateScreen(navController: NavHostController, id: Int?, kind: Int =
 
 //@Composable
 //@Preview
-//fun NuyaCardCreateScreenPreview() {
-//    NuyaCardCreateScreen(rememberNavController(), 1)
+//fun BCardEditScreenPreview() {
+//    BCardEditScreen(rememberNavController(), 1)
 //}

@@ -1,5 +1,6 @@
 package com.youme.naya.database.viewModel
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.youme.naya.database.entity.Card
@@ -17,8 +18,10 @@ class CardViewModel @Inject constructor(private val repository: CardRepository) 
 
     private val _nayaCardList = MutableStateFlow<List<Card>>(emptyList())
     private val _businessCardList = MutableStateFlow<List<Card>>(emptyList())
+    private val _selectResult = MutableStateFlow<Card?>(null)
     val nayaCardList = _nayaCardList.asStateFlow()
     val businessCardList = _businessCardList.asStateFlow()
+    val selectResult = _selectResult.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -47,6 +50,10 @@ class CardViewModel @Inject constructor(private val repository: CardRepository) 
 
     fun removeAllCards() = viewModelScope.launch {
         repository.deleteAllCards()
+    }
+
+    fun getCardFromId(id: Int) = viewModelScope.launch {
+        _selectResult.value = repository.getCardById(id)
     }
 
 }
