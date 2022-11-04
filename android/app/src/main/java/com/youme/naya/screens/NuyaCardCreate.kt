@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.youme.naya.card.BusinessCardTemplate
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
@@ -50,139 +51,13 @@ fun NuyaCardCreateScreen(navController: NavHostController, kind: Int = 1) {
     Column(
         Modifier
             .fillMaxSize()
-            .padding(bottom = 96.dp),
+            .padding(bottom = 56.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .aspectRatio(9f / 5f)
-                .background(NeutralWhite)
-                .shadow(2.dp)
-                .drawBehind {
-                    val strokeWidth = 16f
-                    val y = size.height - strokeWidth / 2
-
-                    drawLine(
-                        PrimaryBlue,
-                        Offset(0f, y),
-                        Offset(size.width + 32, y),
-                        strokeWidth
-                    )
-                }) {
-            Text(
-                name.ifEmpty { "이름" },
-                fontSize = 16.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Bold,
-                color = NeutralDarkGray,
-                modifier = Modifier
-                    .align(
-                        Alignment.TopStart
-                    )
-                    .padding(top = 16.dp, start = 16.dp)
-            )
-            Text(
-                engName.ifEmpty { "영어 이름" },
-                fontSize = 11.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Medium,
-                color = NeutralMetal,
-                modifier = Modifier
-                    .align(
-                        Alignment.TopStart
-                    )
-                    .padding(top = 38.dp, start = 16.dp)
-            )
-            Text(
-                email.ifEmpty { "이메일" },
-                fontSize = 10.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Normal,
-                color = NeutralMetal,
-                modifier = Modifier
-                    .align(
-                        Alignment.BottomStart
-                    )
-                    .padding(bottom = 16.dp, start = 16.dp)
-            )
-            Text(
-                mobile.ifEmpty { "휴대폰 번호" },
-                fontSize = 10.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Normal,
-                color = NeutralMetal,
-                modifier = Modifier
-                    .align(
-                        Alignment.BottomStart
-                    )
-                    .padding(bottom = 28.dp, start = 16.dp)
-            )
-            Text(
-                address.ifEmpty { "주소" },
-                fontSize = 10.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Normal,
-                color = NeutralMetal,
-                modifier = Modifier
-                    .align(
-                        Alignment.BottomStart
-                    )
-                    .padding(bottom = 40.dp, start = 16.dp)
-            )
-            Text(
-                if (team.isNotEmpty() && role.isNotEmpty()) "$team - $role" else "부서 - 직책",
-                fontSize = 12.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Medium,
-                color = NeutralDarkGray,
-                modifier = Modifier
-                    .align(
-                        Alignment.BottomStart
-                    )
-                    .padding(bottom = 54.dp, start = 16.dp)
-            )
-            Text(
-                company.ifEmpty { "회사명" },
-                fontSize = 12.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.SemiBold,
-                color = NeutralDarkGray,
-                modifier = Modifier
-                    .align(
-                        Alignment.BottomStart
-                    )
-                    .padding(bottom = 68.dp, start = 16.dp)
-            )
-            Text(
-                "로고 이미지",
-                fontSize = 12.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.End,
-                color = NeutralMetal,
-                modifier = Modifier
-                    .align(
-                        Alignment.TopEnd
-                    )
-                    .padding(top = 16.dp, end = 16.dp)
-            )
-            Text(
-                "QR 코드",
-                fontSize = 12.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.End,
-                color = NeutralMetal,
-                modifier = Modifier
-                    .align(
-                        Alignment.BottomEnd
-                    )
-                    .padding(bottom = 16.dp, end = 16.dp)
-            )
-        }
+        BusinessCardTemplate(
+            name, engName, email, mobile, address, team, role, company, logo
+        )
 
         LazyColumn(
             Modifier.fillMaxWidth(),
@@ -263,6 +138,10 @@ fun NuyaCardCreateScreen(navController: NavHostController, kind: Int = 1) {
                         Toast.makeText(ctx, "필수 입력 양식을 채워주세요", Toast.LENGTH_SHORT).show()
                     }
                 }
+                Spacer(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(40.dp))
             }
         }
     }
