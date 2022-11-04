@@ -1,1 +1,0 @@
-/Users/kyh/Developer/OpenCVTutorial/opencv/build/intermediates/cxx/Debug/3f5o5t3j/obj/x86
