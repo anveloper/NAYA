@@ -101,10 +101,9 @@
         <activity
             android:name=".custom.MediaCardActivity"
             android:screenOrientation="portrait"></activity>
-
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.youme.naye.camera.file_provider"
+            android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
