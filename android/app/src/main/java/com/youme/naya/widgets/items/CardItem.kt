@@ -32,7 +32,7 @@ private val CardModifier = Modifier
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CardItem(uri: Uri) {
+fun CardItem(uri: Uri, filename: String) {
     val context = LocalContext.current
     val activity = context as? Activity
     var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
@@ -60,7 +60,8 @@ fun CardItem(uri: Uri) {
                 state = rememberDraggableState { delta ->
                     if (delta < 0 && !isShareOpen) {
                         var intent = Intent(activity, ShareActivity::class.java)
-                        intent.putExtra("cardId", uri)
+                        intent.putExtra("cardUri", uri.toString())
+                        intent.putExtra("filename", filename)
 //                        context.startActivity(intent)
                         launcher.launch(intent)
                         setIsShareOpen(true)
@@ -84,5 +85,4 @@ fun CardItem(uri: Uri) {
             }) {
         Image(rememberImagePainter(data = uri), null, Modifier.fillMaxSize())
     }
-
 }
