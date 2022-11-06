@@ -1,24 +1,24 @@
 package com.youme.naya.card
 
 import android.content.Context
-import android.util.Log
+import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.NavHostController
-import androidx.navigation.Navigation
+import androidx.compose.ui.platform.LocalView
 import androidx.navigation.findNavController
 import com.loopeer.cardstack.CardStackView
 import com.loopeer.cardstack.StackAdapter
 import com.youme.naya.R
 import com.youme.naya.database.entity.Card
+import com.youme.naya.share.ShareActivity
 
 class CardStackAdapter(context: Context) : StackAdapter<Card>(context) {
 
     override fun bindView(card: Card, position: Int, holder: CardStackView.ViewHolder) {
         val h = holder as ColorItemViewHolder
-        h.onBind(card, position)
+        h.onBind(card)
     }
 
     override fun onCreateView(parent: ViewGroup, viewType: Int): CardStackView.ViewHolder {
@@ -31,8 +31,6 @@ class CardStackAdapter(context: Context) : StackAdapter<Card>(context) {
     }
 
     internal class ColorItemViewHolder(view: View) : CardStackView.ViewHolder(view) {
-        private val navController = NavHostController(context)
-
         var mLayout: View
         var mContainerContent: View
         var mTextName: TextView
@@ -65,7 +63,7 @@ class CardStackAdapter(context: Context) : StackAdapter<Card>(context) {
             mContainerContent.visibility = if (b) View.VISIBLE else View.GONE
         }
 
-        fun onBind(card: Card, position: Int) {
+        fun onBind(card: Card) {
             mLayout.background
             mTextName.text = card.name
             mTextEngName.text = card.engName
@@ -80,8 +78,10 @@ class CardStackAdapter(context: Context) : StackAdapter<Card>(context) {
             val summarySub = if (card.memo_content.isEmpty()) "메모를 등록하지 않았어요" else card.memo_content
             mTextSummaryMain.text = summaryMain
             mTextSummarySub.text = summarySub
-            mBtnDetails.setOnClickListener { view: View ->
-                view.findNavController().navigate("nuyaDetails/${card.NayaCardId}")
+            mBtnDetails.setOnClickListener {
+                val intent = Intent(context, CardDetailsActivity::class.java)
+                intent.putExtra("cardId", card.NayaCardId)
+                context.startActivity(intent)
             }
         }
     }

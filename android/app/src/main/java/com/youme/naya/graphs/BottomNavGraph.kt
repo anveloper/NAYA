@@ -35,22 +35,8 @@ fun BottomNavGraph(navController: NavHostController) {
 //            CameraScreen()
         }
         // Nuya 명함 생성 (직접 입력)
-        composable(route = "bCardEdit/{id}", arguments = listOf(
-            navArgument("id") {
-                type = NavType.IntType
-            }
-        )) { entry ->
-            val id = entry.arguments?.getInt("id")
-            BCardEditScreen(navController = navController, id = id)
-        }
-        // Nuya 카드 상세 정보
-        composable(route = "nuyaDetails/{id}", arguments = listOf(
-            navArgument("id") {
-                type = NavType.IntType
-            }
-        )) { entry ->
-            val id = entry.arguments?.getInt("id")
-            NuyaCardDetailsScreen(navController = navController, id = id)
+        composable(route = "bCardEdit") { entry ->
+            BCardEditScreen(navController = navController)
         }
     }
 }

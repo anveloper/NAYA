@@ -19,10 +19,7 @@ interface CardDao {
     fun getBusinessCards(): Flow<List<Card>>
 
     @Query("SELECT * FROM naya_card WHERE NayaCardId = :id")
-    suspend fun getCardById(id: Int): Card?
-
-    @Query("SELECT * FROM naya_card where name=:name")
-    suspend fun getCardByName(name: String): Card
+    fun getCardById(id: Int): Flow<Card>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(card: Card)

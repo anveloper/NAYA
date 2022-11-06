@@ -141,7 +141,7 @@ fun MultiFloatingActionButton(
                 Icon(Icons.Filled.AddAPhoto, Icons.Filled.AddAPhoto.toString())
             }
             FloatingActionButton(
-                onClick = { navController.navigate("bCardEdit/0") },
+                onClick = { navController.navigate("bCardEdit") },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite
             ) {

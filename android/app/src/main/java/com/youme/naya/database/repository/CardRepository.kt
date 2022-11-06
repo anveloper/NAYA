@@ -22,6 +22,6 @@ class CardRepository @Inject constructor(private val cardDao: CardDao) {
 
     fun getBusinessCards(): Flow<List<Card>> = cardDao.getBusinessCards().flowOn(Dispatchers.IO).conflate()
 
-    suspend fun getCardById(id: Int) = cardDao.getCardById(id)
+    fun getCardById(id: Int): Flow<Card> = cardDao.getCardById(id).flowOn(Dispatchers.IO).conflate()
 
 }
