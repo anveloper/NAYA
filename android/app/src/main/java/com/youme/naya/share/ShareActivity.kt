@@ -2,6 +2,7 @@ package com.youme.naya.share
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -18,6 +19,8 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -28,21 +31,40 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 import com.youme.naya.BaseActivity
 import com.youme.naya.R
 import com.youme.naya.ui.theme.*
 
-
 class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val auth = FirebaseAuth.getInstance()
+        val uid = auth.uid
+        Log.i("Share Firebase uid", uid.toString())
+
         super.onCreate(savedInstanceState)
         setContent {
-            val cardId = intent.getIntExtra("cardId", 1)
+            val cardUri = intent.getStringExtra("cardUri")
+            val filename = intent.getStringExtra("filename")
             val activity = LocalContext.current as? Activity
-            Log.i("Shard Card Id", cardId.toString())
+            var (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
+
+            if (uid != null && cardUri != null && filename != null) {
+                if (sharedUri == null) {
+                    uploadFirebase(uid, cardUri, filename) { uri ->
+                        setSharedUri(uri)
+                    }
+                } else {
+                    Log.i("Firebase Shared Uri", sharedUri.toString())
+                }
+            } else {
+                Log.i("Share Some", "is null")
+            }
             AndroidTheme() {
-                ShareScreen(cardId) {
+                ShareScreen() {
                     intent.putExtra("finish", 0)
                     setResult(RESULT_OK, intent)
                     activity?.finish()
@@ -50,6 +72,37 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
             }
         }
     }
+
+    private fun uploadFirebase(
+        uid: String,
+        uri: String,
+        filename: String,
+        uploadComplete: (Uri) -> Unit
+    ): Unit {
+        val storage = FirebaseStorage.getInstance("gs://naya-365407.appspot.com")
+        Log.i("Share Firebase uid", uid)
+        Log.i("Share Card Uri", uri)
+        Log.i("Share Card Filename", filename)
+
+        storage.reference
+            .child("naya/$uid")
+            .child(filename)
+            .putFile(uri.toUri())
+            .addOnCompleteListener() {
+                if (it.isSuccessful) {
+                    storage.reference.child("naya/$uid").child(filename).downloadUrl
+                        .addOnSuccessListener { uri ->
+                            uploadComplete(uri)
+                        }.addOnFailureListener { e ->
+                            Log.i("upload failed", e.toString())
+                        }
+                } else {
+                    Log.i("upload failed", "from firebase")
+                }
+            }
+
+    }
+
 }
 
 
@@ -63,7 +116,6 @@ private val ShareTitleModifier = Modifier
 
 @Composable
 fun ShareScreen(
-    cardId: Int,
     onFinish: () -> Unit
 ) {
     val context = LocalContext.current
@@ -125,7 +177,7 @@ fun ShareScreen(
 //            context.startActivity(Intent(context, NfcActivity::class.java))
             var intent = Intent(activity, NfcActivity::class.java)
             intent.putExtra("userId", 123)
-            intent.putExtra("cardId", cardId)
+//            intent.putExtra("cardId", cardId)
             launcher.launch(intent)
         }
         ShareTextButton(
@@ -143,7 +195,7 @@ fun ShareScreen(
             // QR코드 생성
             var intent = Intent(activity, QrActivity::class.java)
             intent.putExtra("userId", 123)
-            intent.putExtra("cardId", cardId)
+//            intent.putExtra("cardId", cardId)
             intent.putExtra("contentUrl", "testUrl")
             launcher.launch(intent)
         }
@@ -244,5 +296,5 @@ fun ShareIconButton(
 )
 @Composable
 fun sharePreview() {
-    ShareScreen(1) { Log.i("ShareActivity", "test") }
+    ShareScreen() { Log.i("ShareActivity", "test") }
 }

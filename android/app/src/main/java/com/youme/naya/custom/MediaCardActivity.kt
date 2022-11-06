@@ -150,7 +150,7 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
     private fun saveImageOnUnderAndroidQ(bitmap: Bitmap) {
         val fileName = "NAYA-MEDIA-" + System.currentTimeMillis().toString() + ".png"
         val externalStorage = Environment.getExternalStorageDirectory().absolutePath
-        val path = "$externalStorage/DCIM/imageSave"
+        val path = "$externalStorage/DCIM/NAYA"
         val dir = File(path)
 
         if (dir.exists().not()) {

@@ -73,7 +73,7 @@ fun MyNayaCardList() {
             state = currentCardId
         ) {
             items(cardList) { value ->
-                CardItem(value)
+                CardItem(value.uri, value.filename)
             }
 
             item() {
