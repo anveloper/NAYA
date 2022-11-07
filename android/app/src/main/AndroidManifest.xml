@@ -60,6 +60,14 @@
 
         </activity>
 
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.CardDetailsActivity"
+            android:screenOrientation="portrait"></activity>
+
         <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
             android:name=".share.ShareActivity"
@@ -95,8 +103,21 @@
             android:name=".share.QrActivity"
             android:screenOrientation="portrait"></activity>
 
-        <activity android:name=".login.LoginActivity"
+        <activity
+            android:name=".custom.MediaCardActivity"
             android:screenOrientation="portrait"></activity>
+
+        <!--  OCR, DocumentScanner 액티비티  -->
+
+        <activity
+            android:name=".ocr.DocumentScannerActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".ocr.StillImageActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <!--  저버전 외부 저장소   -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"

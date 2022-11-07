@@ -15,6 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapter
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.youme.naya.CardDetailsScreen
 import com.youme.naya.components.OutlinedSmallButton
 import com.youme.naya.components.PrimarySmallButton
 import com.youme.naya.database.entity.Card
@@ -22,10 +27,8 @@ import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ui.theme.fonts
 
 @Composable
-fun CardDetailsMainScreen(cardId: Int) {
+fun CardDetailsMainScreen(navController: NavHostController, cardId: Int) {
     val cardViewModel: CardViewModel = hiltViewModel()
-    val context = LocalContext.current
-    val navController = NavHostController(context)
 
     cardViewModel.getCardFromId(cardId)
     val card: Card? = cardViewModel.selectResult.collectAsState().value
@@ -80,7 +83,16 @@ fun CardDetailsMainScreen(cardId: Int) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 PrimarySmallButton(text = "수정하기") {
+                    val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+                    val jsonAdapter = moshi.adapter(Card::class.java).lenient()
+                    val cardJson = jsonAdapter.toJson(card)
 
+                    navController.navigate(
+                        CardDetailsScreen.BCardModify.route.replace(
+                            "{card}",
+                            cardJson
+                        )
+                    )
                 }
                 OutlinedSmallButton(text = "삭제하기") {
 
@@ -99,13 +111,7 @@ fun CardDetailsItem(
         Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = fieldName, fontFamily = fonts, fontWeight = FontWeight.SemiBold)
+        Text(text = fieldName, fontFamily = fonts, fontWeight = FontWeight.Bold)
         Text(text = fieldValue, fontFamily = fonts, textAlign = TextAlign.End)
     }
-}
-
-@Preview
-@Composable
-fun CardDetailsMainScreenPreview() {
-    CardDetailsMainScreen(1)
 }

@@ -171,6 +171,11 @@ dependencies {
     implementation 'com.google.mlkit:object-detection:17.0.0'
     // implementation 'com.google.mlkit:vision-demo'
 
+    // Moshi
+    def moshi_version = '1.14.0'
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+
 }
 
 kapt {
