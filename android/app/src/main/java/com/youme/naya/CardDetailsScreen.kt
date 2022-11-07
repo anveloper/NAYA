@@ -8,9 +8,9 @@ sealed class CardDetailsScreen(val route: String, val title: String, val icon: I
         icon = null
     )
 
-    object Modify : CardDetailsScreen(
-        route = "modify",
-        title = "Modify",
+    object BCardModify : CardDetailsScreen(
+        route = "bCardModify/card={card}",
+        title = "BCardModify",
         icon = null
     )
 
