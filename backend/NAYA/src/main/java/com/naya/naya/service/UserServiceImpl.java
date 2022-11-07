@@ -4,29 +4,32 @@ import com.naya.naya.dto.UserDto;
 import com.naya.naya.entity.User;
 import com.naya.naya.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService{
 
-    @Autowired
     private final UserRepository userRepository;
 
     @Override
     public UserDto save(UserDto dto) {
-        System.out.println("service: "+dto.getEmail());
+
+        log.debug("userService save method, parameter UserDto, dto " + dto);
+
         User res=userRepository.saveAndFlush(dto.toEntity());
-        System.out.println("return: "+res.getUserId()+" "+res.getEmail()+" "+res.getJoinDate());
+
         return UserDto.builder().userId(res.getUserId()).email(res.getEmail()).joinDate(res.getJoinDate()).build();
     }
 
     @Override
     public UserDto findByEmail(String email) {
+
+        log.debug("userService findByEmail method, parameter String, email " + email);
+
         User res=userRepository.findByEmail(email);
-        System.out.println("service: "+email);
-        System.out.println("return: "+res.getUserId()+" "+res.getEmail()+" "+res.getJoinDate());
         return UserDto.builder().userId(res.getUserId()).email(res.getEmail()).joinDate(res.getJoinDate()).build();
     }
 }

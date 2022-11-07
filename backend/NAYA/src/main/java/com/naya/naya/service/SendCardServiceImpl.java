@@ -4,7 +4,7 @@ import com.naya.naya.dto.SendCardDto;
 import com.naya.naya.entity.SendCard;
 import com.naya.naya.repository.SendCardRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,13 +12,16 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SendCardServiceImpl implements SendCardService{
 
-    @Autowired
     private final SendCardRepository sendCardRepository;
 
     @Override
     public SendCardDto save(SendCardDto dto) {
+
+        log.debug("sendService save method, parameter SendCardDto, dto " + dto);
+
         SendCard res=sendCardRepository.saveAndFlush(dto.toEntity());
         return SendCardDto.builder()
                 .sendCardId(res.getSendCardId()).userId(res.getUserId())
@@ -29,6 +32,9 @@ public class SendCardServiceImpl implements SendCardService{
 
     @Override
     public String findBySendCardId(long sendCardId) {
+
+        log.debug("sendService findBySendCardId method, parameter sendCardId, Long " + sendCardId);
+
         SendCard res=sendCardRepository.findBySendCardId(sendCardId);
 
         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
