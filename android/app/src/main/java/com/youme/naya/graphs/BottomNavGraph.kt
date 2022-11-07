@@ -2,8 +2,10 @@ package com.youme.naya.graphs
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.youme.naya.BottomBarScreen
 import com.youme.naya.screens.*
 
@@ -32,13 +34,9 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = "camera") {
 //            CameraScreen()
         }
-        // Nuya 카드 생성 (직접 입력)
-        composable(route = "nuyaCreate") {
-            NuyaCardCreateScreen()
-        }
-        // Nuya 카드 상세 정보
-        composable(route = "nuyaDetails") {
-            NuyaCardDetailsScreen()
+        // Nuya 명함 생성 (직접 입력)
+        composable(route = "bCardEdit") { entry ->
+            BCardEditScreen(navController = navController)
         }
     }
 }
