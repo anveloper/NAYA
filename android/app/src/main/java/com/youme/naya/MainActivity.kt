@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +31,7 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
         Manifest.permission.NFC,
     )
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -66,6 +68,7 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(
     name = "naya Project",
     showBackground = true,

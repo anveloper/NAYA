@@ -171,6 +171,22 @@ dependencies {
     implementation 'com.google.mlkit:object-detection:17.0.0'
     // implementation 'com.google.mlkit:vision-demo'
 
+    // Calendar
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+    implementation("com.himanshoe:kalendar:1.2.0")
+
+    // db library
+    implementation("com.google.code.gson:gson:2.8.9")
+
+    // time picker
+    implementation "com.chargemap.compose:numberpicker:1.0.3"
+
+    // MapView
+    implementation 'com.google.maps.android:maps-compose:2.7.2'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+
+    // FusedLocationProvideClient
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
 }
 
 kapt {
