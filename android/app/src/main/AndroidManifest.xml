@@ -26,6 +26,8 @@
     <!-- NFC 사용 권한 -->
     <uses-permission android:name="android.permission.NFC" />
 
+    <!--  HTTP 통신 인터넷 사용권한  -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <meta-data
         android:name="android.nfc.action.TECH_DISCOVERED"
@@ -57,10 +59,15 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
         </activity>
 
         <activity
             android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.CardDetailsActivity"
             android:screenOrientation="portrait"></activity>
 
         <!--  공유모드를 위한 별도의 액티비티  -->
@@ -102,7 +109,6 @@
             android:name=".custom.MediaCardActivity"
             android:screenOrientation="portrait"></activity>
 
-
         <!--  OCR, DocumentScanner 액티비티  -->
 
         <activity
@@ -116,7 +122,7 @@
         <!--  저버전 외부 저장소   -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:authorities="com.youme.naye.camera.file_provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
