@@ -40,8 +40,8 @@ public class SendCardController {
     }
 
     @GetMapping
-    public String findBySendCardId(@RequestParam("sendCardId") long sendCardId){
-        log.debug("sendCardController findBySendCardId method, parameter Long, sendCardId " + sendCardId);
-        return sendCardService.findBySendCardId(sendCardId);
+    public String findBySendCardId(@RequestParam("userId") String userId, @RequestParam("sendCardId") long sendCardId){
+        log.debug("sendCardController findBySendCardId method, parameter Long, userId "+userId+" / sendCardId " + sendCardId);
+        return sendCardService.findBySendCardIdAndUserId(userId,sendCardId);
     }
 }
