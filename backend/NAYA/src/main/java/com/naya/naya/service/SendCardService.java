@@ -6,5 +6,5 @@ public interface SendCardService {
 
     SendCardDto save(SendCardDto dto);
 
-    String findBySendCardIdAndUserId(String userId, long sendCardId);
+    String findByUserIdAndSendCardId(String userId, long sendCardId);
 }
