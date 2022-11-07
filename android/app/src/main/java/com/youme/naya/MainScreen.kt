@@ -1,9 +1,6 @@
 package com.youme.naya
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
@@ -36,77 +33,46 @@ import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 
-    // 현재 위치 추적
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination?.route
-
     Scaffold(
         floatingActionButton = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    FloatingActionButton(
-                        onClick = {
-                            when (currentDestination.toString()) {
-                                "schedule" ->  navController.navigate("scheduleCreate")
-                                else -> context.startActivity(Intent(context, ShareActivity::class.java))
-                            }},
-                        backgroundColor = Color.Transparent,
-                        shape = CircleShape,
-                    ) {
-                        Box(
-                            Modifier
-                                .width(60.dp)
-                                .height(
-                                    60.dp
-                                )
-                                .background(
-                                    SecondaryGradientBrush,
-                                    CircleShape
-                                ), Alignment.Center
-                        ) {
-                            // 아이콘 상황에 따라 변하게
-                            fun setCenterIcon(): Int {
-                                return when (currentDestination.toString()) {
-                                    "schedule" -> R.drawable.nav_schedule_plus_icon
-                                    else -> R.drawable.nav_send_icon
-                                }
-                            }
-                            Icon(
-                                painter = painterResource(setCenterIcon()),
-                                contentDescription = "send",
-                                modifier = Modifier
-                                    .width(40.dp)
-                                    .height(40.dp),
-                                tint = NeutralWhite
-                            )
-                        }
-                    }
-
+            FloatingActionButton(
+                onClick = {
+                    context.startActivity(Intent(context, ShareActivity::class.java))
+                },
+                backgroundColor = Color.Transparent,
+                shape = CircleShape,
+            ) {
+                Box(
+                    Modifier
+                        .width(60.dp)
+                        .height(
+                            60.dp
+                        )
+                        .background(SecondaryGradientBrush,
+                            CircleShape
+                        ), Alignment.Center
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.nav_send_icon),
+                        contentDescription = "Send",
+                        modifier = Modifier
+                            .width(40.dp)
+                            .height(40.dp),
+                        tint = NeutralWhite
+                    )
                 }
+
             }
         },
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
-        topBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {  HeaderBar(navController = navController) }
-            }
-        },
-        bottomBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> { BottomBar(navController = navController) }
-            }
-        },
+        topBar = { HeaderBar(navController = navController) },
+        bottomBar = { BottomBar(navController = navController) },
         modifier = Modifier
             .addFocusCleaner(focusManager)
     ) {
@@ -199,7 +165,6 @@ fun RowScope.AddItem(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun MainScreenPreview() {

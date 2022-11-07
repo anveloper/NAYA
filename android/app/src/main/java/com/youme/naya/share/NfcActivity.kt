@@ -30,7 +30,6 @@ class NfcActivity : BaseActivity(TransitionMode.HORIZON) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
             val activity = LocalContext.current as? Activity
             AndroidTheme() {
                 NfcShareScreen() {

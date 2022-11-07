@@ -1,21 +1,12 @@
 package com.youme.naya.graphs
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.youme.naya.BottomBarScreen
 import com.youme.naya.screens.*
-import com.youme.naya.screens.schedule.ScheduleCreateScreen
-import com.youme.naya.screens.schedule.ScheduleDetailScreen
-import com.youme.naya.screens.schedule.ScheduleMainScreen
-import com.youme.naya.screens.schedule.ScheduleUpdateScreen
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomNavGraph(navController: NavHostController) {
     NavHost(
@@ -32,7 +23,7 @@ fun BottomNavGraph(navController: NavHostController) {
             NayaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Calendar.route) {
-            ScheduleMainScreen(navController = navController)
+            CalendarScreen()
         }
         composable(route = BottomBarScreen.Settings.route) {
             SettingsScreen()
@@ -41,18 +32,13 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = "camera") {
 //            CameraScreen()
         }
-        // Nuya 명함 생성 (직접 입력)
-        composable(route = "bCardEdit") { entry ->
-            BCardEditScreen(navController = navController)
+        // Nuya 카드 생성 (직접 입력)
+        composable(route = "nuyaCreate") {
+            NuyaCardCreateScreen()
         }
-        composable(route = "scheduleCreate") {
-            ScheduleCreateScreen(navController = navController)
-        }
-        composable(route = "scheduleUpdate") {
-            ScheduleUpdateScreen()
-        }
-        composable(route = "scheduleDetail") {
-            ScheduleDetailScreen()
+        // Nuya 카드 상세 정보
+        composable(route = "nuyaDetails") {
+            NuyaCardDetailsScreen()
         }
     }
 }
