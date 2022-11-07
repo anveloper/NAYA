@@ -42,8 +42,8 @@ fun BottomNavGraph(navController: NavHostController) {
 //            CameraScreen()
         }
         // Nuya 명함 생성 (직접 입력)
-        composable(route = "bCardEdit") { entry ->
-            BCardEditScreen(navController = navController)
+        composable(route = "bCardCreate") { entry ->
+            BCardCreateScreen(navController = navController)
         }
         composable(route = "scheduleCreate") {
             ScheduleCreateScreen(navController = navController)

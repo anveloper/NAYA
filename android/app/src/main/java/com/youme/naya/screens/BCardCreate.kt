@@ -18,7 +18,7 @@ import com.youme.naya.database.viewModel.CardViewModel
 
 
 @Composable
-fun BCardEditScreen(navController: NavHostController, kind: Int = 1) {
+fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
 
@@ -140,6 +140,6 @@ fun BCardEditScreen(navController: NavHostController, kind: Int = 1) {
 
 //@Composable
 //@Preview
-//fun BCardEditScreenPreview() {
-//    BCardEditScreen(rememberNavController(), 1)
+//fun BCardCreateScreenPreview() {
+//    BCardCreateScreen(rememberNavController(), 1)
 //}
