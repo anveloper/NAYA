@@ -22,7 +22,7 @@ export const getCardInfo = createAsyncThunk(
   "card/getCardInfo",
   async (params: RequestParams, { rejectWithValue }) => {
     try {
-      const response = await client.get("/", { params });
+      const response = await client.get(`/${params.userId}/${params.cardId}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err);

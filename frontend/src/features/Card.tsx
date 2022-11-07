@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
 const Card = () => {
   const { userId, cardId }: any = useParams();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const imageUrl = useSelector(selectImageUrl);
+  const dispatch = useAppDispatch();
   // render
   useEffect(() => {
-    getCardInfo({ userId, cardId });
+    dispatch(getCardInfo({ userId, cardId }));
     console.log(userId, cardId);
-  }, [userId, cardId]);
+  }, []);
 
   // action
   const [rotateX, setRotateX] = useState(0.0);
