@@ -26,8 +26,6 @@
     <!-- NFC 사용 권한 -->
     <uses-permission android:name="android.permission.NFC" />
 
-    <!--  HTTP 통신 인터넷 사용권한  -->
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <meta-data
         android:name="android.nfc.action.TECH_DISCOVERED"
@@ -45,6 +43,12 @@
         android:theme="@style/Theme.Android"
         tools:targetApi="31">
 
+        <!-- text recognition -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" />
+        <!-- To use multiple models: android:value="ocr,model2,model3" -->
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -61,14 +65,6 @@
                 android:value="" />
 
         </activity>
-
-        <activity
-            android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <activity
-            android:name=".card.CardDetailsActivity"
-            android:screenOrientation="portrait"></activity>
 
         <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
@@ -106,20 +102,19 @@
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name=".custom.MediaCardActivity"
-            android:screenOrientation="portrait"></activity>
-
-        <!--  OCR, DocumentScanner 액티비티  -->
-
-        <activity
-            android:name=".ocr.DocumentScannerActivity"
+            android:name=".login.LoginActivity"
             android:screenOrientation="portrait"></activity>
 
         <activity
-            android:name=".ocr.StillImageActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name=".screens.TestActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Demo"></activity>
+        <!--이미지 액티비티 추가-->
+        <activity
+            android:name=".screens.StillImageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Demo"></activity>
 
-        <!--  저버전 외부 저장소   -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"

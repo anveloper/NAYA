@@ -1,5 +1,6 @@
 package com.youme.naya.components
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,7 +14,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.youme.naya.ui.theme.*
@@ -23,18 +23,17 @@ fun BasicTextField(
     modifier: Modifier = Modifier,
     text: String,
     placeholder: String,
-    isHintVisible: Boolean = true,
     leadingIcon: @Composable (() -> Unit)? = null,
     onChange: (String) -> Unit = {},
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
     keyBoardActions: KeyboardActions = KeyboardActions(),
-    isEnabled: Boolean = true,
+    isEnabled: Boolean = true
 ) {
     OutlinedTextField(
         modifier = modifier
-            .width(300.dp)
-            .height(52.dp),
+            .width(280.dp)
+            .height(48.dp),
         value = text,
         onValueChange = onChange,
         leadingIcon = leadingIcon,
@@ -54,24 +53,14 @@ fun BasicTextField(
             disabledBorderColor = NeutralLight,
             disabledTextColor = NeutralGray
         ),
-        singleLine = false,
         placeholder = {
-            if (isHintVisible) {
-                Text(
-                    text = placeholder,
-                    style = TextStyle(
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.Medium,
-                        color = NeutralMedium))
-            }
+            Text(
+                text = placeholder,
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontFamily = fonts,
+                    fontWeight = FontWeight.Medium,
+                    color = NeutralMedium))
         }
     )
-}
-
-@Composable
-@Preview
-fun InputPreview() {
-    BasicTextField(
-        text = "input test",
-        placeholder = "input test")
 }

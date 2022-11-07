@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.TestActivity">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/cropped_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/scanned_image" />
+
+        <Button
+            android:id="@+id/ocr_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="clickOcrBtn"
+            android:text="이미지 저장 및 OCR 적용하기"
+            android:layout_gravity="bottom"
+            android:layout_marginHorizontal="80dp"
+            android:layout_marginBottom="20dp"
+            android:textAllCaps="false" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

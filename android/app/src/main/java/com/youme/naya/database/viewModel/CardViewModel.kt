@@ -1,36 +1,27 @@
 package com.youme.naya.database.viewModel
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.repository.CardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CardViewModel @Inject constructor(private val repository: CardRepository) : ViewModel() {
 
-    private val _nayaCardList = MutableStateFlow<List<Card>>(emptyList())
-    private val _businessCardList = MutableStateFlow<List<Card>>(emptyList())
-    private val _selectResult = MutableStateFlow<Card?>(null)
-    val nayaCardList = _nayaCardList.asStateFlow()
-    val businessCardList = _businessCardList.asStateFlow()
-    val selectResult = _selectResult.asStateFlow()
+    private val _cardList = MutableStateFlow<List<Card>>(emptyList())
+    val cardList = _cardList.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getNayaCards().distinctUntilChanged().collect { listOfCards ->
-                _nayaCardList.value = listOfCards
-            }
-        }
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getBusinessCards().distinctUntilChanged().collect { listOfCards ->
-                _businessCardList.value = listOfCards
+            repository.getAllCards().distinctUntilChanged().collect { listOfCards ->
+                _cardList.value = listOfCards
             }
         }
     }
@@ -49,12 +40,6 @@ class CardViewModel @Inject constructor(private val repository: CardRepository) 
 
     fun removeAllCards() = viewModelScope.launch {
         repository.deleteAllCards()
-    }
-
-    fun getCardFromId(id: Int) = viewModelScope.launch {
-        repository.getCardById(id).distinctUntilChanged().collect { card ->
-            _selectResult.value = card
-        }
     }
 
 }
