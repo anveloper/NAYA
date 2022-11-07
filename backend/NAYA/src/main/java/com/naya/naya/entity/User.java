@@ -20,9 +20,9 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "userId")
-    private Long userId;
+    private String userId;
     @Column(name = "email")
     private String email;
     @Column(name = "joinDate")
@@ -30,7 +30,7 @@ public class User {
     @OneToMany(mappedBy = "userId")
     private List<NayaCard> cardList = new ArrayList<>();
 
-    public static User create(Long userId){
+    public static User create(String userId){
         if(ObjectUtils.isEmpty(userId)) return null;
         User user = new User();
         user.userId = userId;

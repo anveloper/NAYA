@@ -28,7 +28,7 @@ public class UserController {
         String nowTime = sdf.format(System.currentTimeMillis());
         UserDto user=UserDto.builder().userId(dto.getUserId()).email(dto.getEmail()).joinDate(nowTime).build();
 
-        log.debug("usercontroller save method, parameter UserRequestDto, email: " + dto.getEmail());
+        log.debug("usercontroller save method, parameter UserRequestDto, user_id: "+ dto.getUserId() + "email: " + dto.getEmail());
 
         return userService.save(user);
     }

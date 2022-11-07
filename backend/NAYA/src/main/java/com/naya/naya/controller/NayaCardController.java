@@ -29,7 +29,7 @@ public class NayaCardController {
     }
 
     @GetMapping
-    public List<NayaCardRqDto2> findAllByUserId(@RequestParam("id") Long userId){
+    public List<NayaCardRqDto2> findAllByUserId(@RequestParam("id") String userId){
         log.debug("nayaCardController findAllByUserId method, parameter Long, userId " + userId);
         return nayaCardService.findAllByUserId(userId);
     }

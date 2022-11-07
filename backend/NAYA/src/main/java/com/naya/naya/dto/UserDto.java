@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
-    private Long userId;
+    private String userId;
     private String email;
     private String joinDate;
     private List<NayaCardDto> cardList = new ArrayList<>();
@@ -33,7 +33,7 @@ public class UserDto {
         return User.builder().userId(userId).email(email).joinDate(joinDate).build();
     }
 
-    public static UserDto from(Long userId){
+    public static UserDto from(String userId){
         UserDto userDto = new UserDto();
         userDto.userId = userId;
 

@@ -72,7 +72,7 @@ public class NayaCardServiceImpl implements NayaCardService{
     }
 
     @Override
-    public List<NayaCardRqDto2> findAllByUserId(Long userId) {
+    public List<NayaCardRqDto2> findAllByUserId(String userId) {
 
         log.debug("nayaCardService findAllByUserId method, parameter Long, userId " + userId);
 

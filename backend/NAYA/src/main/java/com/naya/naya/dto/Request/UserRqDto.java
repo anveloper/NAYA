@@ -8,7 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UserRqDto {
-    private Long userId;
+    private String userId;
     private String joinDate;
     private String email;
 }
