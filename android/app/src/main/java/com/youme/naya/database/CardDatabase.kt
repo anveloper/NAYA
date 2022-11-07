@@ -7,10 +7,11 @@ import com.youme.naya.database.dao.ScheduleDao
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
+import com.youme.naya.database.entity.relations.ScheduleWithMembers
 
 @Database(
-    entities = [Card::class, Schedule::class, Member::class],
-    version = 4,
+    entities = [Card::class, Schedule::class, Member::class, ScheduleWithMembers::class],
+    version = 5,
     exportSchema = false
 )
 abstract class CardDatabase: RoomDatabase() {

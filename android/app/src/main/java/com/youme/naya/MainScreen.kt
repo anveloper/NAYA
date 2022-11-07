@@ -39,7 +39,9 @@ import com.youme.naya.widgets.common.HeaderBar
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController()) {
+fun MainScreen(
+    navController: NavHostController = rememberNavController(),
+) {
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
 

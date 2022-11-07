@@ -12,13 +12,13 @@ import java.util.*
 
 @Entity
 data class Schedule(
-    @PrimaryKey(autoGenerate = true) var scheduleId: Int? = null,
+    @PrimaryKey(autoGenerate = true) val scheduleId: Int? = null,
     val title: String,
-    var date: String ?= Clock.System.todayIn(TimeZone.currentSystemDefault()).toString(),
+    var scheduleDate: String ?= Clock.System.todayIn(TimeZone.currentSystemDefault()).toString(),
     val color: Int = SecondarySystemBlue.toArgb(),
-    val isAllTime: Boolean = false,
-    val startTime: String ?= null,
-    val endTime: String ?= null,
+    val isOnAlarm: Boolean = false,
+    val startTime: String ?= "00:00:AM",
+    val endTime: String ?= "00:00:AM",
     val address: String ?= null,
     val content: String ?= null,
     val isDone: Boolean = false,
@@ -27,5 +27,3 @@ data class Schedule(
         val scheduleColors = listOf(SystemPink, SystemOrange, SystemYellow, SystemGreen, SecondarySystemBlue, SystemPurple)
     }
 }
-
-class InvalidScheduleException(message: String) : Exception(message)

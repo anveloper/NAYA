@@ -9,14 +9,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ScheduleDao {
 
-    @Query("SELECT * FROM schedule ORDER BY date DESC")
+    @Query("SELECT * FROM schedule")
     fun getSchedules(): Flow<List<Schedule>>
 
     @Query("SELECT * FROM member")
     fun getMembers(): Flow<List<Member>>
 
+    // 스케줄 id로 조회
     @Query("SELECT * FROM schedule WHERE scheduleId = :scheduleId")
     suspend fun getScheduleById(scheduleId: Int): Schedule?
+
+    // 스케줄 날짜로 조회
+    @Query("SELECT * FROM schedule WHERE scheduleDate = :scheduleDate")
+    suspend fun getScheduleByDate(scheduleDate: String): Schedule?
 
     @Query("SELECT * FROM member WHERE memberId = :memberId")
     suspend fun getMemberById(memberId: Int): Member?
@@ -26,19 +31,19 @@ interface ScheduleDao {
     suspend fun getScheduleWithMembers(scheduleId: Int): List<ScheduleWithMembers>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(schedule: Schedule)
+    suspend fun insertSchedule(schedule: Schedule)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMember(member: Member)
 
     @Update
-    suspend fun update(schedule: Schedule)
+    suspend fun updateSchedule(schedule: Schedule)
 
     @Update
     suspend fun updateMember(member: Member)
 
     @Delete
-    suspend fun delete(schedule: Schedule)
+    suspend fun deleteSchedule(schedule: Schedule)
 
     @Delete
     suspend fun deleteMember(member: Member)
