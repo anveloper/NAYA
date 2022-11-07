@@ -3,17 +3,19 @@ package com.youme.naya.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.youme.naya.R
 import com.youme.naya.ui.theme.*
+import kotlinx.coroutines.launch
 
 @Composable
 fun PrimaryBigButton(
@@ -24,7 +26,7 @@ fun PrimaryBigButton(
 ) {
     Button(
         modifier = Modifier
-            .width(280.dp)
+            .width(300.dp)
             .height(48.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = PrimaryBlue,
@@ -92,7 +94,7 @@ fun OutlinedBigButton(
 ) {
     Button(
         modifier = Modifier
-            .width(280.dp)
+            .width(300.dp)
             .height(48.dp),
         shape = Shapes.large,
         onClick = { onClick() },
@@ -212,53 +214,3 @@ fun SecondarySelectIconButton(
             style = Typography.button)
     }
 }
-
-
-// 버튼 사용 예시
-//@Preview
-//@Composable
-//fun ButtonPreview() {
-//    Column() {
-//        PrimaryBigButton(
-//            "나야 나",
-//            true,
-//            {}
-//        )
-//        PrimaryBigButton(
-//            "나야 나",
-//            false,
-//            {}
-//        )
-//        PrimarySmallButton(
-//            "나야 나",
-//            true,
-//            {}
-//        )
-//        OutlinedBigButton(
-//            "나야 나",
-//            true,
-//            {}
-//        )
-//        OutlinedSmallButton(
-//            "나야 나",
-//            true,
-//            {}
-//        )
-//        OutlinedSmallButton(
-//            "나야 나",
-//            false,
-//            {}
-//        )
-//        SecondaryclickIconButton(
-//            "나야 나",
-//            true,
-//            {},
-//            icon = R.drawable.btn_google_logo)
-//        SecondaryclickIconButton(
-//            "나야 나",
-//            true,
-//            {},
-//            icon = R.drawable.btn_google_logo,
-//            true)
-//    }
-//}
