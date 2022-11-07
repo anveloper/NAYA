@@ -38,8 +38,9 @@ class QrActivity : BaseActivity(TransitionMode.HORIZON) {
         super.onCreate(savedInstanceState)
         setContent {
             val activity = LocalContext.current as? Activity
-            val contentUrl = intent.getStringExtra("contentUrl") ?: ""
-            val contents = "https://k7b104.p.ssafy.io/$contentUrl"
+            val uid = intent.getStringExtra("uid")
+            val cardId = intent.getIntExtra("cardId", 0) ?: ""
+            val contents = "https://k7b104.p.ssafy.io/$uid/$cardId"
             val bitmap = generateBitmapQRCode(contents)
 
             AndroidTheme() {

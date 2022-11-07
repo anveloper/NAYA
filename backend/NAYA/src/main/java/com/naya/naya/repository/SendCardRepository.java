@@ -10,5 +10,5 @@ public interface SendCardRepository extends JpaRepository<SendCard,Long> {
 
     SendCard save(SendCard sendCard);
 
-    SendCard findBySendCardIdAndUserId(String userId, long sendCardId);
+    SendCard findByUserIdAndSendCardId(String userId, long sendCardId);
 }
