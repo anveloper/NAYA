@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.youme.naya.database.CardDatabase
 import com.youme.naya.database.dao.CardDao
+import com.youme.naya.database.dao.ScheduleDao
+import com.youme.naya.database.repository.ScheduleRepository
+import com.youme.naya.database.repository.ScheduleRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,10 +22,25 @@ object AppModule {
     @Provides
     fun provideCardDao(cardDatabase: CardDatabase): CardDao = cardDatabase.cardDao()
 
+
+    @Singleton
+    @Provides
+    fun provideScheduleDao(database: CardDatabase) : ScheduleDao {
+        return database.scheduleDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideScheduleRepository(database: CardDatabase) : ScheduleRepository {
+        return ScheduleRepositoryImpl(database.scheduleDao())
+    }
+
+
     @Singleton
     @Provides
     fun providesAppDatabase(@ApplicationContext context: Context): CardDatabase =
         Room.databaseBuilder(context, CardDatabase::class.java, "cards_database")
-            .fallbackToDestructiveMigration().build()
+            .fallbackToDestructiveMigration()
+            .build()
 
 }
