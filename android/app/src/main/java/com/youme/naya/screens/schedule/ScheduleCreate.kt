@@ -1,10 +1,8 @@
 package com.youme.naya.screens.schedule
 
-import android.graphics.Paint.Align
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -31,6 +29,7 @@ import androidx.navigation.NavHostController
 import com.chargemap.compose.numberpicker.AMPMHours
 import com.chargemap.compose.numberpicker.Hours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
+import com.youme.naya.BaseActivity
 import com.youme.naya.R
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.PrimaryBigButton
@@ -48,9 +47,8 @@ import kotlin.time.Duration.Companion.days
 @Composable
 fun ScheduleCreateScreen(
     navController: NavHostController,
-    viewModel: ScheduleViewModel = hiltViewModel(),
+    viewModel: ScheduleViewModel = hiltViewModel()
 ) {
-
     val componentVariable = remember {
         mutableStateOf(0)
     }
@@ -71,7 +69,7 @@ fun ScheduleCreateScreen(
     // focus
     val focusRequester = remember { FocusRequester() }
 
-    var pickerValue by remember { mutableStateOf<Hours>(AMPMHours(9, 12, AMPMHours.DayTime.PM )) }
+    var pickerValue by remember { mutableStateOf<Hours>(AMPMHours(0, 0, AMPMHours.DayTime.PM )) }
     var pickerString = pickerValue.toString().reversed()
     var pickerDate by remember {
         mutableStateOf(
@@ -82,7 +80,7 @@ fun ScheduleCreateScreen(
         mutableStateOf(false)
     }
 
-    var pickerValue2 by remember { mutableStateOf<Hours>(AMPMHours(9, 12, AMPMHours.DayTime.PM )) }
+    var pickerValue2 by remember { mutableStateOf<Hours>(AMPMHours(12, 0, AMPMHours.DayTime.PM )) }
     var pickerString2 = pickerValue.toString().reversed()
     var pickerDate2 by remember {
         mutableStateOf(
@@ -92,7 +90,9 @@ fun ScheduleCreateScreen(
     var showPickerDate2 by remember {
         mutableStateOf(false)
     }
+
     Column {
+        // 상단 바
         when (componentVariable.value) {
             0 -> HeaderBar(navController = navController, title = "일정 등록")
             else -> {
@@ -131,10 +131,14 @@ fun ScheduleCreateScreen(
             }
         }
 
+        // 캘린더
         AnimatedCalendar(
             false,
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        // 하위 컴포넌트들
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
@@ -355,8 +359,8 @@ fun ScheduleCreateScreen(
                 onClick = {
                     componentVariable.value = componentVariable.value + 1
                     when (componentVariable.value) {
-                        0 -> { title = title }
-                        4 -> {
+                        0 -> { if (title == "") title = "제목 없음" else title = title}
+                        5 -> {
                             viewModel.insertSchedule(title, selectedColor)
                             navController.navigate("schedule")
                         }

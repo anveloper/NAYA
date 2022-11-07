@@ -4,9 +4,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.youme.naya.database.entity.Card
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.repository.ScheduleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,6 +20,8 @@ class ScheduleViewModel @Inject constructor(
 
     private val _schedules = mutableStateOf(emptyList<Schedule>())
     val schedules: State<List<Schedule>> = _schedules
+    private val _selectScheduleDate = MutableStateFlow<String?>(null)
+    val selectedScheduleDate = _selectScheduleDate.asStateFlow()
 
     private var recentlyDeletedSchedule: Schedule? = null
 
@@ -33,6 +38,12 @@ class ScheduleViewModel @Inject constructor(
     fun insertSchedule(title: String, color: Int) {
         viewModelScope.launch {
             scheduleRepository.insertSchedule(Schedule(title = title, color = color))
+        }
+    }
+
+    fun insertSelectedDate(selectedDate: String) {
+        viewModelScope.launch {
+            _selectScheduleDate.value = selectedDate
         }
     }
 

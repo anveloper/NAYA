@@ -108,13 +108,13 @@ fun HeaderBar(
                         IconButton(onClick = { /*TODO*/ }) {
                             Image(
                                 painter = painterResource(R.drawable.home_icon_alarm),
-                                contentDescription = "Alarm button"
+                                contentDescription = "Alarm button",
                             )
                         }
                         IconButton(onClick = { /*TODO*/ }) {
                             Image(
                                 painter = painterResource(R.drawable.home_icon_setting),
-                                contentDescription = "Settings button"
+                                contentDescription = "Settings button",
                             )
                         }
                     }
@@ -130,7 +130,8 @@ fun HeaderBar(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Image(
                             painter = painterResource(R.drawable.ic_baseline_arrow_back_ios_24),
-                            contentDescription = "Prev page button"
+                            contentDescription = "Prev page button",
+                            colorFilter = ColorFilter.tint(NeutralLight)
                         )
                     }
                     Text(
@@ -138,7 +139,11 @@ fun HeaderBar(
                         modifier = if (closeActivityButton) Modifier else Modifier
                             .fillMaxWidth()
                             .padding(end = 48.dp),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = PrimaryDark
                     )
                     if (closeActivityButton) {
                         IconButton(

@@ -6,13 +6,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProviders
+import com.youme.naya.database.entity.Card
+import com.youme.naya.database.entity.Schedule
+import com.youme.naya.database.viewModel.CardViewModel
+import com.youme.naya.database.viewModel.ScheduleViewModel
+import com.youme.naya.database.viewModel.ScheduleViewModel_Factory
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDay
@@ -30,6 +37,7 @@ import com.youme.naya.widgets.calendar.customCalendar.ui.basic.CustomCalendarThe
 import com.youme.naya.widgets.calendar.customCalendar.ui.basic.onDateChanged
 import com.youme.naya.widgets.calendar.customCalendar.ui.fold.data.getNext7Dates
 import com.youme.naya.widgets.calendar.customCalendar.ui.fold.data.getPrevious7Dates
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.datetime.*
 
 val WeekDays: List<String>
@@ -47,9 +55,7 @@ fun CustomCalendarFull(
     customCalendarEvents: List<CustomCalendarEvent> = emptyList(),
     onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
 ) {
-
     val selectedCustomCalendarDate = remember { mutableStateOf(Clock.System.todayIn(TimeZone.currentSystemDefault())) }
-
     val displayedYear = remember {
         mutableStateOf(selectedCustomCalendarDate.value.year)
     }
@@ -78,6 +84,7 @@ fun CustomCalendarFull(
     val weekValue = remember { mutableStateOf(selectedCustomCalendarDate.value.getNext7Dates()) }
     val month = weekValue.value.last().month
     val year = weekValue.value.last().year
+
 
     Column(
         modifier = modifier

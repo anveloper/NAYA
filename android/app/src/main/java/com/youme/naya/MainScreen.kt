@@ -49,47 +49,43 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     Scaffold(
         floatingActionButton = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    FloatingActionButton(
-                        onClick = {
-                            when (currentDestination.toString()) {
-                                "schedule" ->  navController.navigate("scheduleCreate")
-                                else -> context.startActivity(Intent(context, ShareActivity::class.java))
-                            }},
-                        backgroundColor = Color.Transparent,
-                        shape = CircleShape,
-                    ) {
-                        Box(
-                            Modifier
-                                .width(60.dp)
-                                .height(
-                                    60.dp
-                                )
-                                .background(
-                                    SecondaryGradientBrush,
-                                    CircleShape
-                                ), Alignment.Center
-                        ) {
-                            // 아이콘 상황에 따라 변하게
-                            fun setCenterIcon(): Int {
-                                return when (currentDestination.toString()) {
-                                    "schedule" -> R.drawable.nav_schedule_plus_icon
-                                    else -> R.drawable.nav_send_icon
-                                }
-                            }
-                            Icon(
-                                painter = painterResource(setCenterIcon()),
-                                contentDescription = "send",
-                                modifier = Modifier
-                                    .width(40.dp)
-                                    .height(40.dp),
-                                tint = NeutralWhite
+            if (currentDestination.toString() != "scheduleCreate") {
+                FloatingActionButton(
+                    onClick = {
+                        when (currentDestination.toString()) {
+                            "schedule" ->  navController.navigate("scheduleCreate")
+                            else -> context.startActivity(Intent(context, ShareActivity::class.java))
+                        }},
+                    backgroundColor = Color.Transparent,
+                    shape = CircleShape,
+                ) {
+                    Box(
+                        Modifier
+                            .width(60.dp)
+                            .height(
+                                60.dp
                             )
+                            .background(
+                                SecondaryGradientBrush,
+                                CircleShape
+                            ), Alignment.Center
+                    ) {
+                        // 아이콘 상황에 따라 변하게
+                        fun setCenterIcon(): Int {
+                            return when (currentDestination.toString()) {
+                                "schedule" -> R.drawable.nav_schedule_plus_icon
+                                else -> R.drawable.nav_send_icon
+                            }
                         }
+                        Icon(
+                            painter = painterResource(setCenterIcon()),
+                            contentDescription = "send",
+                            modifier = Modifier
+                                .width(40.dp)
+                                .height(40.dp),
+                            tint = NeutralWhite
+                        )
                     }
-
                 }
             }
         },

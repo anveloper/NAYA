@@ -14,7 +14,7 @@ import java.util.*
 data class Schedule(
     @PrimaryKey(autoGenerate = true) var scheduleId: Int? = null,
     val title: String,
-    val date: String ?= Clock.System.todayIn(TimeZone.currentSystemDefault()).toString(),
+    var date: String ?= Clock.System.todayIn(TimeZone.currentSystemDefault()).toString(),
     val color: Int = SecondarySystemBlue.toArgb(),
     val isAllTime: Boolean = false,
     val startTime: String ?= null,

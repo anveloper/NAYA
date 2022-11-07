@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +20,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.youme.naya.ui.theme.NeutralWhite
+import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.widgets.calendar.customCalendar.CustomCalendar
 import com.youme.naya.widgets.calendar.customCalendar.model.CustomCalendarType
 import kotlinx.coroutines.selects.select
@@ -54,7 +56,10 @@ private val CornerShape =
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AnimatedCalendar(expanded: Boolean, selectedDate: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())) {
+fun AnimatedCalendar(
+    expanded: Boolean,
+    selectedDate: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())) {
+
     var expanded by remember { mutableStateOf(expanded) }
     var selectedDate by remember {
         mutableStateOf(selectedDate) }
