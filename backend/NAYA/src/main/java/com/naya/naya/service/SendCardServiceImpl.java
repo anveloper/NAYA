@@ -31,11 +31,11 @@ public class SendCardServiceImpl implements SendCardService{
     }
 
     @Override
-    public String findBySendCardId(long sendCardId) {
+    public String findBySendCardIdAndUserId(String userId, long sendCardId) {
 
-        log.debug("sendService findBySendCardId method, parameter sendCardId, Long " + sendCardId);
+        log.debug("sendService findBySendCardId method, parameter userId, String "+userId+" / sendCardId, Long " + sendCardId);
 
-        SendCard res=sendCardRepository.findBySendCardId(sendCardId);
+        SendCard res=sendCardRepository.findBySendCardIdAndUserId(userId,sendCardId);
 
         DateTimeFormatter dtf=DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         String nowTime=dtf.format(LocalDateTime.now());
