@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface NayaCardRepository extends JpaRepository<NayaCard, Long>                                                           {
     @Query("select n from NayaCard n where n.userId.userId = :userId")
-    List<NayaCard> findByUserId(Long userId);
+    List<NayaCard> findByUserId(String userId);
 }

@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 public class NayaCardRsDto {
     private Long nayaCardId;
-    private Long userId;
+    private String userId;
 //    private User user;
     private String name;
     private String kind;

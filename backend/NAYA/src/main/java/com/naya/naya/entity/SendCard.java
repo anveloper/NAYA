@@ -20,7 +20,7 @@ public class SendCard {
     @Column(name = "sendCardId")
     private Long sendCardId;
     @Column(name = "userId")
-    private Long userId;
+    private String userId;
     @Column(name = "cardUrl")
     private String cardUrl;
     @Column(name = "sendDatetime")

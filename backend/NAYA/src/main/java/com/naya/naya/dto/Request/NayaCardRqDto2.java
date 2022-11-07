@@ -15,7 +15,7 @@ public class NayaCardRqDto2 {
 //    private NayaCardDto nayaCardDto;
 //    private List<DesignDto> designList;
     private Long nayaCardId;
-    private Long userId;
+    private String userId;
     //    private User user;
     private String name;
     private String kind;

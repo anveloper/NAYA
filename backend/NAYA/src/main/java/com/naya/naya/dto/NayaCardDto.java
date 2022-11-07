@@ -20,7 +20,7 @@ import java.util.List;
 public class NayaCardDto {
 
     private Long nayaCardId;
-    private Long userId;
+    private String userId;
 //    private User user;
     private String name;
     private String kind;
