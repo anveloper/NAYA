@@ -1,16 +1,20 @@
 package com.youme.naya.widgets.common
 
-import android.util.Log
+import android.app.Activity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,13 +23,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.youme.naya.R
 
 @Composable
-fun HeaderBar(
-    navController: NavHostController
-) {
-    var title: String = ""
-    var logo: Boolean = false
-
+fun HeaderBar(navController: NavHostController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val activity = LocalContext.current as? Activity
+
+    var title = ""
+    var logo = false
+    var closeActivityButton = false
+
     when (navBackStackEntry?.destination?.route) {
         "home" -> {
             logo = true
@@ -33,9 +38,14 @@ fun HeaderBar(
         "nuya" -> {
             logo = true
         }
-        "nuyaDetails" -> {
+        "bCardEdit" -> {
+            logo = false
+            title = "카드 직접 등록"
+        }
+        "details" -> {
             logo = false
             title = "카드 상세 보기"
+            closeActivityButton = true
         }
     }
 
@@ -86,8 +96,11 @@ fun HeaderBar(
                 }
             } else {
                 Row(
-                    Modifier.height(24.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    Modifier
+                        .fillMaxWidth()
+                        .height(24.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = if (closeActivityButton) Arrangement.SpaceBetween else Arrangement.Start
                 ) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Image(
@@ -97,9 +110,18 @@ fun HeaderBar(
                     }
                     Text(
                         title,
-                        modifier = Modifier.fillMaxWidth().padding(end = 48.dp),
+                        modifier = if (closeActivityButton) Modifier else Modifier
+                            .fillMaxWidth()
+                            .padding(end = 48.dp),
                         textAlign = TextAlign.Center
                     )
+                    if (closeActivityButton) {
+                        IconButton(
+                            onClick = { activity?.finish() }
+                        ) {
+                            Icon(Icons.Filled.Close, Icons.Filled.Close.toString())
+                        }
+                    }
                 }
             }
         }
