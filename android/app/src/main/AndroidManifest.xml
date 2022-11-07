@@ -26,6 +26,8 @@
     <!-- NFC 사용 권한 -->
     <uses-permission android:name="android.permission.NFC" />
 
+    <!--  HTTP 통신 인터넷 사용권한  -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <meta-data
         android:name="android.nfc.action.TECH_DISCOVERED"
