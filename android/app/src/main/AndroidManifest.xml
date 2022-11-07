@@ -1,21 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <!-- 기능 -->
-    <!-- 카메라 -->
-    <uses-feature android:name="android.hardware.camera.any" /> <!-- NFC -->
+    <!--  카메라  -->
+    <uses-feature android:name="android.hardware.camera.any" />
+
+    <!-- NFC -->
     <uses-feature
         android:name="android.hardware.nfc"
-        android:required="true" /> <!-- 권한 -->
+        android:required="true" />
+
+    <!-- 권한 -->
     <!-- 카메라 사용 권한 -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- 외부 저장소(갤러리) 읽고 쓰기 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- 외부 저장소(갤러리) 읽고 쓰기 -->
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" /> <!-- NFC 사용 권한 -->
+        android:maxSdkVersion="28" />
+
+    <!-- NFC 사용 권한 -->
     <uses-permission android:name="android.permission.NFC" />
+
 
     <meta-data
         android:name="android.nfc.action.TECH_DISCOVERED"
@@ -32,6 +42,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android"
         tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -43,11 +54,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity> <!-- 공유모드를 위한 별도의 액티비티 -->
+
+        </activity>
+
+        <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
             android:name=".share.ShareActivity"
             android:exported="true"
@@ -55,47 +68,35 @@
             android:theme="@style/Theme.Android">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
             </intent-filter>
-
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
-        </activity> <!-- NFC 기능 사용을 위한 별도의 액티비티 -->
+        </activity>
+
+        <!--  NFC 기능 사용을 위한 별도의 액티비티  -->
         <activity
             android:name=".share.NfcActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:mimeType="text/plain" />
             </intent-filter>
-
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
-        </activity> <!-- QR 기능 사용을 위한 별도의 액티비티 -->
+        </activity>
+        <!--  QR 기능 사용을 위한 별도의 액티비티  -->
         <activity
             android:name=".share.QrActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".login.LoginActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"></activity>
 
-        <!-- 카드 상세 화면 액티비티 -->
-        <activity
-            android:name=".card.CardDetailsActivity"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Android">
-        </activity>
-
+        <activity android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"></activity>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"

@@ -28,3 +28,7 @@ data class Card(
     @ColumnInfo(name = "memo_content") val memo_content: String
 
 )
+// mainCardId : NayaCardId 1개
+// 카드번호 Unique ID
+// filename <- String
+// ImageURI <- 앱저장소에 들어있는 위치(외부 개별 앱저장소)
