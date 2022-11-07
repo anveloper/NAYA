@@ -35,7 +35,6 @@ class CameraX(
     private var owner: LifecycleOwner
 ) {
     private var imageCapture: ImageCapture? = null
-    private var cameraSelector = CameraSelector.LENS_FACING_FRONT
 
     fun startCameraPreviewView(): PreviewView {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
@@ -46,7 +45,7 @@ class CameraX(
         imageCapture = ImageCapture.Builder().build()
 
         val camSelector =
-            CameraSelector.Builder().requireLensFacing(cameraSelector).build()
+            CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
         try {
             cameraProviderFuture.get().bindToLifecycle(
                 owner,
@@ -70,16 +69,11 @@ class CameraX(
                     val resizedImage = resizeBitmap(1024, imageProxyToBitmap(image))
                     val rotatedImage =
                         rotateBitmap(resizedImage, image.imageInfo.rotationDegrees * 1.0f)
-                    val resultImage =
-                        if (cameraSelector == CameraSelector.LENS_FACING_FRONT)
-                            inverseBitmap(rotatedImage)
-                        else rotatedImage
-//                    saveMediaToStorage(
-//                        resultImage,
-//                        System.currentTimeMillis().toString()
-//                    )
-                    Log.i("CameraX", image.imageInfo.timestamp.toString())
-                    setImageBitmap(resultImage)
+                    saveMediaToStorage(
+                        rotatedImage,
+                        System.currentTimeMillis().toString()
+                    )
+                    setImageBitmap(rotatedImage)
                 }
             }
 
@@ -156,12 +150,6 @@ class CameraX(
         val ratio = targetWidth.toDouble() / source.width.toDouble()
         val targetHeight = (source.height * ratio).toInt()
         return Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false)
-    }
-
-    fun inverseBitmap(bitmap: Bitmap): Bitmap {
-        val matrix = Matrix()
-        matrix.setScale(-1.0f, 1.0f)
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
     fun getDegree(uri: Uri, source: String): Float {

@@ -92,7 +92,7 @@ class StillImageActivity : AppCompatActivity() {
         popup.show()
       }
     preview = findViewById(R.id.preview)
-    graphicOverlay = findViewById(R.id.graphic_overlay)
+//    graphicOverlay = findViewById(R.id.graphic_overlay)
 
     populateFeatureSelector()
 
