@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class SendCardDto {
 
     private Long sendCardId;
-    private Long userId;
+    private String userId;
     private String cardUrl;
     private String sendDatetime;
     private String expiredDatetime;
