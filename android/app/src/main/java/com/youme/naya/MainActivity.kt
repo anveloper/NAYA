@@ -16,27 +16,34 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.login.LoginActivity
 import com.youme.naya.login.LoginViewModel
+import com.youme.naya.network.RetrofitClient
+import com.youme.naya.network.RetrofitService
 import com.youme.naya.ui.theme.AndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Retrofit
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity(TransitionMode.NONE) {
     // login viewModel
     private val viewModel by viewModels<LoginViewModel>()
+    private lateinit var retrofit: Retrofit
+    private lateinit var supplementService: RetrofitService
 
     private var permissionList = listOf<String>(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.CAMERA,
         Manifest.permission.NFC,
+        Manifest.permission.INTERNET,
     )
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initRetrofit()
 
         // 로그인 시도
-        viewModel.tryLogin(this)
+        viewModel.tryLogin(this, supplementService)
 
         lifecycleScope.launchWhenCreated {
             viewModel.loginResult.collect { isLogin ->
@@ -56,6 +63,12 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
         checkPermission()
     }
 
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        supplementService = retrofit.create(RetrofitService::class.java)
+    }
+
+
     private fun checkPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return;
@@ -63,7 +76,7 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
             if (checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
                 requestPermissions(permissionList.toTypedArray(), 0)
             }
-            Log.i("Permission Check", "processing")
+            Log.i("Permission Check", "$permission processing")
         }
     }
 }
