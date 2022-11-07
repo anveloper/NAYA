@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "SENDCARD")
+@Table(name = "sendcard")
 public class SendCard {
 
     @Id
@@ -20,7 +20,7 @@ public class SendCard {
     @Column(name = "sendCardId")
     private Long sendCardId;
     @Column(name = "userId")
-    private Long userId;
+    private String userId;
     @Column(name = "cardUrl")
     private String cardUrl;
     @Column(name = "sendDatetime")
