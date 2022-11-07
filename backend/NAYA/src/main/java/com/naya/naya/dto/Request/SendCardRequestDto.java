@@ -8,7 +8,7 @@ import lombok.Setter;
 public class SendCardRequestDto {
 
     private Long sendCardId;
-    private Long userId;
+    private String userId;
     private String cardUrl;
     private String sendDatetime;
     private String expiredDatetime;
