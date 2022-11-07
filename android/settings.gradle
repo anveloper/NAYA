@@ -17,6 +17,7 @@ rootProject.name = "android"
 include ':app'
 include ':java'
 include ':sdk'
+include ':documentscanner'
 include ':opencv'
 
 def opencvsdk='android/opencv'

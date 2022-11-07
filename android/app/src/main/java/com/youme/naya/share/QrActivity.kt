@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,8 +27,9 @@ import com.journeyapps.barcodescanner.BarcodeEncoder
 import com.youme.naya.BaseActivity
 import com.youme.naya.R
 import com.youme.naya.ui.theme.AndroidTheme
+import com.youme.naya.ui.theme.NeutralMedium
+import com.youme.naya.ui.theme.fonts
 import com.youme.naya.widgets.share.CircleWaveComp
-import com.youme.naya.widgets.share.ShareExtra
 import com.youme.naya.widgets.share.ShareHeader
 import com.youme.naya.widgets.share.ShareInfo
 
@@ -36,8 +38,9 @@ class QrActivity : BaseActivity(TransitionMode.HORIZON) {
         super.onCreate(savedInstanceState)
         setContent {
             val activity = LocalContext.current as? Activity
-            val contentUrl = intent.getStringExtra("contentUrl") ?: ""
-            val contents = "https://k7b104.p.ssafy.io/$contentUrl"
+            val uid = intent.getStringExtra("uid")
+            val cardId = intent.getIntExtra("cardId", 0) ?: ""
+            val contents = "https://k7b104.p.ssafy.io/$uid/$cardId"
             val bitmap = generateBitmapQRCode(contents)
 
             AndroidTheme() {
@@ -65,15 +68,13 @@ fun QrShareScreen(
         CircleWaveComp()
         // QR 컨텐츠
         ShareQr(contents, bitmap)
-        ShareInfo(R.drawable.ic_share_qr, "아래의 QR코드를 스캔해서\nNaya 카드를 받으세요")
+        ShareInfo(R.drawable.ic_share_qr, "\n아래의 QR코드를 스캔해서\nNaya 카드를 받으세요")
         Column(Modifier.fillMaxSize(), Arrangement.SpaceBetween, Alignment.CenterHorizontally) {
             ShareHeader { onFinish() }
-            Spacer(Modifier.height(108.dp))
-            Spacer(Modifier.height(108.dp))
-            Spacer(Modifier.height(108.dp))
-            ShareExtra()
+            Spacer(Modifier.height(280.dp))
+            Text(text = "QR코드를 터치하면 웹으로 이동할 수 있습니다.", color = NeutralMedium, fontFamily = fonts)
+            Spacer(Modifier.height(8.dp))
         }
-
     }
 }
 
