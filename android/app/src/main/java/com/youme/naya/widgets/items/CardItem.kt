@@ -2,13 +2,16 @@ package com.youme.naya.widgets.items
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
@@ -19,6 +22,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.youme.naya.share.ShareActivity
 
 private val CardModifier = Modifier
@@ -28,7 +32,7 @@ private val CardModifier = Modifier
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CardItem(cardId: Int) {
+fun CardItem(uri: Uri, filename: String) {
     val context = LocalContext.current
     val activity = context as? Activity
     var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
@@ -56,7 +60,8 @@ fun CardItem(cardId: Int) {
                 state = rememberDraggableState { delta ->
                     if (delta < 0 && !isShareOpen) {
                         var intent = Intent(activity, ShareActivity::class.java)
-                        intent.putExtra("cardId", cardId)
+                        intent.putExtra("cardUri", uri.toString())
+                        intent.putExtra("filename", filename)
 //                        context.startActivity(intent)
                         launcher.launch(intent)
                         setIsShareOpen(true)
@@ -66,19 +71,18 @@ fun CardItem(cardId: Int) {
             .pointerInteropFilter {
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        Log.i("Card", "Down $cardId")
+                        Log.i("Card", "Down $uri")
                     }
                     MotionEvent.ACTION_MOVE -> {
-                        Log.i("Card", "Move $cardId")
+                        Log.i("Card", "Move $uri")
                     }
                     MotionEvent.ACTION_UP -> {
-                        Log.i("Card", "Up $cardId")
+                        Log.i("Card", "Up $uri")
                     }
                     else -> false
                 }
                 true
             }) {
-
+        Image(rememberImagePainter(data = uri), null, Modifier.fillMaxSize())
     }
-
 }

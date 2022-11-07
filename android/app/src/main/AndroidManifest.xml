@@ -26,12 +26,15 @@
     <!-- NFC 사용 권한 -->
     <uses-permission android:name="android.permission.NFC" />
 
+    <!--  HTTP 통신 인터넷 사용권한  -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <meta-data
         android:name="android.nfc.action.TECH_DISCOVERED"
         android:resource="@xml/nfc_tech_filter" />
 
     <application
+        android:name=".CardApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -59,9 +62,12 @@
 
         </activity>
 
-        <!--  로그인을 위한 액티비티  -->
         <activity
             android:name=".login.LoginActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".card.CardDetailsActivity"
             android:screenOrientation="portrait"></activity>
 
         <!--  공유모드를 위한 별도의 액티비티  -->
@@ -79,6 +85,7 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
+
         <!--  NFC 기능 사용을 위한 별도의 액티비티  -->
         <activity
             android:name=".share.NfcActivity"
@@ -98,6 +105,21 @@
             android:name=".share.QrActivity"
             android:screenOrientation="portrait"></activity>
 
+        <activity
+            android:name=".custom.MediaCardActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <!--  OCR, DocumentScanner 액티비티  -->
+
+        <activity
+            android:name=".ocr.DocumentScannerActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <activity
+            android:name=".ocr.StillImageActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <!--  저버전 외부 저장소   -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.youme.naye.camera.file_provider"

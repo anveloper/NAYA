@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.widgets.home.MyBCardList
 import com.youme.naya.widgets.home.MyNayaCardList
@@ -25,7 +24,6 @@ fun HomeScreen() {
         mutableStateOf(1)
     }
     Column(HomeModifier) {
-        HeaderBar()
         NayaBcardSwitchButtons(
             nayaTab = { MyNayaCardList() },
             bCardTab = { MyBCardList() }
