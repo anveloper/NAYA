@@ -24,6 +24,7 @@ const Card = () => {
   const [rotateY, setRotateY] = useState(0.0);
   const [transition, setTransition] = useState("all .3s ease");
   const [translateZ, setTranslateZ] = useState("0px");
+  // mouse
   const mousemoveOn = (e: MouseEvent) => {
     // console.log(e.pageX, e.pageY);
     let xAxis = (window.innerWidth / 2 - e.pageX) / 12;
@@ -42,17 +43,47 @@ const Card = () => {
     setTransition("all .3s ease");
     setTranslateZ("0px");
   };
+
+  //touch
+  const touchmoveOn = (ev: TouchEvent) => {
+    // console.log(e.pageX, e.pageY);
+    let xAxis = (window.innerWidth / 2 - ev.touches[0].pageX) / 12;
+    let yAxis = (window.innerHeight / 2 - ev.touches[0].pageY) / 12;
+    setRotateX(xAxis);
+    setRotateY(yAxis);
+  };
+  const touchstartOn = (ev: TouchEvent) => {
+    setTransition("none");
+    setTranslateZ("100px");
+  };
+
+  const touchendOn = (ev: TouchEvent) => {
+    setRotateX(0.0);
+    setRotateY(0.0);
+    setTransition("all .3s ease");
+    setTranslateZ("0px");
+  };
+
   useEffect(() => {
     if (!contentRef.current) return;
     const content: HTMLDivElement = contentRef.current;
+    // mouse
     content.addEventListener("mousemove", mousemoveOn);
     content.addEventListener("mouseenter", mouseenterOn);
     content.addEventListener("mouseleave", mouseleaveOn);
-
+    // touch
+    content.addEventListener("touchmove", touchmoveOn);
+    content.addEventListener("touchstart", touchstartOn);
+    content.addEventListener("touchend", touchendOn);
     return () => {
+      // mouse
       content.removeEventListener("mousemove", mousemoveOn);
       content.removeEventListener("mouseenter", mouseenterOn);
       content.addEventListener("mouseleave", mouseleaveOn);
+      // touch
+      content.removeEventListener("touchmove", touchmoveOn);
+      content.removeEventListener("touchstart", touchstartOn);
+      content.removeEventListener("touchend", touchendOn);
     };
   });
   return (
@@ -71,6 +102,7 @@ const Card = () => {
           alt=""
           style={{
             transform: `translateZ(${translateZ})`,
+            transition: "all .3s ease",
           }}
         />
       </div>
