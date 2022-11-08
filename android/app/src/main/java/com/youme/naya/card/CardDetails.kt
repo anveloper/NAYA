@@ -1,7 +1,9 @@
 package com.youme.naya.card
 
 import android.app.Activity
+import android.content.Intent
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -30,7 +32,8 @@ import com.youme.naya.ui.theme.fonts
 @Composable
 fun CardDetailsMainScreen(navController: NavHostController, cardId: Int) {
     val cardViewModel: CardViewModel = hiltViewModel()
-    val context = LocalContext.current
+    val context = LocalContext.current as Activity
+    val intent = Intent(context, CardDetailsActivity::class.java)
 
     cardViewModel.getCardFromId(cardId)
     val card: Card? = cardViewModel.selectResult.collectAsState().value
@@ -42,7 +45,9 @@ fun CardDetailsMainScreen(navController: NavHostController, cardId: Int) {
             DeleteAlertDialog(
                 onDelete = {
                     SetIsClickDelete(false)
-                    (context as Activity).finish()
+                    intent.putExtra("finish", 0)
+                    context.setResult(ComponentActivity.RESULT_OK, intent)
+                    context.finish()
                     cardViewModel.removeCard(card)
                     Toast.makeText(context, "명함을 삭제했어요", Toast.LENGTH_SHORT).show()
                 },

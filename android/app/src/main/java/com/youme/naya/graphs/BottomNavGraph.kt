@@ -4,10 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.youme.naya.BottomBarScreen
 import com.youme.naya.screens.*
 import com.youme.naya.screens.schedule.ScheduleCreateScreen
