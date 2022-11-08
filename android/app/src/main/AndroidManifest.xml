@@ -119,6 +119,13 @@
             android:name=".ocr.StillImageActivity"
             android:screenOrientation="portrait"></activity>
 
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="1320519775352968"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="8179a4da11a463688558f24e6804df61"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1320519775352968"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
+
         <!--  저버전 외부 저장소   -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -130,5 +137,7 @@
                 android:resource="@xml/file_path" />
         </provider>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 </manifest>

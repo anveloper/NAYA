@@ -10,4 +10,7 @@
     <string name="naya_media_relative">DCIM/NAYA</string>
 
     <string name="mime_type_png">image/png</string>
+
+    <!--  sns share  -->
+    <string name="facebook_app_id">1320519775352968</string><string name="facebook_client_token">8179a4da11a463688558f24e6804df61</string>
 </resources>

@@ -197,6 +197,9 @@ dependencies {
 
     // FusedLocationProvideClient
     implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    //sns share
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 }
 
 kapt {
