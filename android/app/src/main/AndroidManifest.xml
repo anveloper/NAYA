@@ -124,6 +124,7 @@
 
         <activity
             android:name=".ocr.StillImageActivity"
+            android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"></activity>
 
         <!--  저버전 외부 저장소   -->
