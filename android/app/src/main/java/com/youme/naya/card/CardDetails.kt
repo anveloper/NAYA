@@ -1,23 +1,26 @@
 package com.youme.naya.card
 
+import android.app.Activity
+import android.content.Intent
+import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.youme.naya.CardDetailsScreen
 import com.youme.naya.components.OutlinedSmallButton
@@ -29,11 +32,29 @@ import com.youme.naya.ui.theme.fonts
 @Composable
 fun CardDetailsMainScreen(navController: NavHostController, cardId: Int) {
     val cardViewModel: CardViewModel = hiltViewModel()
+    val context = LocalContext.current as Activity
+    val intent = Intent(context, CardDetailsActivity::class.java)
 
     cardViewModel.getCardFromId(cardId)
     val card: Card? = cardViewModel.selectResult.collectAsState().value
 
+    val (isClickDelete, SetIsClickDelete) = remember { mutableStateOf(false) }
+
     if (card != null) {
+        if (isClickDelete) {
+            DeleteAlertDialog(
+                onDelete = {
+                    SetIsClickDelete(false)
+                    intent.putExtra("finish", 0)
+                    context.setResult(ComponentActivity.RESULT_OK, intent)
+                    context.finish()
+                    cardViewModel.removeCard(card)
+                    Toast.makeText(context, "명함을 삭제했어요", Toast.LENGTH_SHORT).show()
+                },
+                onCancel = { SetIsClickDelete(false) }
+            )
+        }
+
         Column(
             Modifier
                 .fillMaxSize()
@@ -95,7 +116,7 @@ fun CardDetailsMainScreen(navController: NavHostController, cardId: Int) {
                     )
                 }
                 OutlinedSmallButton(text = "삭제하기") {
-
+                    SetIsClickDelete(true)
                 }
             }
         }
