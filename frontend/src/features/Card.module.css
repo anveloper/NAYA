@@ -1,6 +1,7 @@
 .container {
-  width: 100vw;
-  height: 100vh;
+  position: sticky;
+  width: 99vw;
+  height: 99vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
