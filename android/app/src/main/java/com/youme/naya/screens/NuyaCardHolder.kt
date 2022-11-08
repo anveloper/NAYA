@@ -1,5 +1,10 @@
 package com.youme.naya.screens
 
+import android.app.Activity
+import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -20,6 +25,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +35,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.CustomCardStackView
 import com.youme.naya.database.viewModel.CardViewModel
+import com.youme.naya.ocr.DocumentScannerActivity
 import com.youme.naya.ui.theme.NeutralLightness
 import com.youme.naya.ui.theme.NeutralMedium
 import com.youme.naya.ui.theme.NeutralWhite
@@ -124,6 +131,15 @@ fun SearchInput() {
 fun MultiFloatingActionButton(
     navController: NavHostController
 ) {
+    val context = LocalContext.current
+    val activity = context as? Activity
+    val launcher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            Log.i("TEST Result", it.resultCode.toString())
+        }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -134,7 +150,14 @@ fun MultiFloatingActionButton(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             FloatingActionButton(
-                onClick = { /* TODO */ },
+                onClick = {
+                    launcher.launch(
+                        Intent(
+                            activity,
+                            DocumentScannerActivity::class.java
+                        )
+                    )
+                },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite
             ) {
