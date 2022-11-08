@@ -25,29 +25,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.chargemap.compose.numberpicker.AMPMHours
 import com.chargemap.compose.numberpicker.Hours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
-import com.youme.naya.BaseActivity
 import com.youme.naya.R
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Schedule
-import com.youme.naya.database.viewModel.ScheduleViewModel
+import com.youme.naya.schedule.edit.ScheduleEditViewModel
 import com.youme.naya.ui.theme.*
 import com.youme.naya.widgets.calendar.AnimatedCalendar
+import com.youme.naya.widgets.calendar.CalendarViewModel
 import com.youme.naya.widgets.calendar.scheduleCreate.*
 import com.youme.naya.widgets.calendar.scheduleCreate.component.*
 import com.youme.naya.widgets.common.HeaderBar
-import kotlin.time.Duration.Companion.days
 
 @OptIn(ExperimentalComposeUiApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleCreateScreen(
     navController: NavHostController,
-    viewModel: ScheduleViewModel = hiltViewModel()
+    viewModel: ScheduleEditViewModel = hiltViewModel()
 ) {
     val componentVariable = remember {
         mutableStateOf(0)
@@ -90,6 +90,10 @@ fun ScheduleCreateScreen(
     var showPickerDate2 by remember {
         mutableStateOf(false)
     }
+
+    val calendarViewModel = viewModel<CalendarViewModel>()
+    var selectedDate by remember { mutableStateOf(calendarViewModel.selectedDate) }
+
 
     Column {
         // 상단 바
@@ -134,6 +138,7 @@ fun ScheduleCreateScreen(
         // 캘린더
         AnimatedCalendar(
             false,
+            takeMeToDate = selectedDate.value
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -349,8 +354,8 @@ fun ScheduleCreateScreen(
                         )
                     }
                 }
+                })
 
-            })
             PrimaryBigButton(
                 text = when (componentVariable.value) {
                     4 -> "등록하기"
@@ -361,7 +366,7 @@ fun ScheduleCreateScreen(
                     when (componentVariable.value) {
                         0 -> { if (title == "") title = "제목 없음" else title = title}
                         5 -> {
-                            viewModel.insertSchedule(title, selectedColor)
+//                            viewModel.insertSchedule(title, selectedColor)
                             navController.navigate("schedule")
                         }
                     }

@@ -31,9 +31,9 @@ class ScheduleRepositoryImpl @Inject constructor(
         return dao.getMemberById(memberId)
     }
 
-    override suspend fun getScheduleWithMembers(scheduleId: Int): List<ScheduleWithMembers> {
-        return dao.getScheduleWithMembers(scheduleId)
-    }
+//    override suspend fun getScheduleWithMembers(scheduleId: Int): List<ScheduleWithMembers> {
+//        return dao.getScheduleWithMembers(scheduleId)
+//    }
 
     override suspend fun insertSchedule(schedule: Schedule) {
         return dao.insertSchedule(schedule)

@@ -57,7 +57,7 @@ fun FoldCalendar() {
         BottomShadow(alpha = 1f, height = 230.dp)
         Box(modifier = CornerShape) {
             Box( modifier = CalendarModifier) {
-                CustomCalendar(customCalendarType = CustomCalendarType.Fold(true))
+//                CustomCalendar(customCalendarType = CustomCalendarType.Fold(true))
             }
         }
     }

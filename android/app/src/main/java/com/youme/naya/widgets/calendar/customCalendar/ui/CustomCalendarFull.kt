@@ -6,22 +6,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModelProviders
-import com.youme.naya.database.entity.Card
-import com.youme.naya.database.entity.Schedule
-import com.youme.naya.database.viewModel.CardViewModel
-import com.youme.naya.database.viewModel.ScheduleViewModel
-import com.youme.naya.database.viewModel.ScheduleViewModel_Factory
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue
+import com.youme.naya.widgets.calendar.CalendarViewModel
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDay
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDayColors
 import com.youme.naya.widgets.calendar.customCalendar.component.header.CustomCalendarHeader
@@ -47,15 +39,15 @@ val WeekDays: List<String>
 @Composable
 fun CustomCalendarFull(
     customCalendarType: CustomCalendarType = CustomCalendarType.Fold(true),
-    takeMeToDate: LocalDate?,
     customCalendarDayColors: CustomCalendarDayColors,
+    takeMeToDate: LocalDate,
     customCalendarThemeColors: List<CustomCalendarThemeColor>,
     modifier: Modifier = Modifier,
     customCalendarHeaderConfig: CustomCalendarHeaderConfig? = null,
     customCalendarEvents: List<CustomCalendarEvent> = emptyList(),
     onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
 ) {
-    val selectedCustomCalendarDate = remember { mutableStateOf(Clock.System.todayIn(TimeZone.currentSystemDefault())) }
+    val selectedCustomCalendarDate = remember { mutableStateOf(takeMeToDate) }
     val displayedYear = remember {
         mutableStateOf(selectedCustomCalendarDate.value.year)
     }
@@ -85,6 +77,11 @@ fun CustomCalendarFull(
     val month = weekValue.value.last().month
     val year = weekValue.value.last().year
 
+    val calendarViewModel = viewModel<CalendarViewModel>()
+
+    val selectedDate = remember {
+        mutableStateOf(calendarViewModel.selectedDate)
+    }
 
     Column(
         modifier = modifier
@@ -159,6 +156,7 @@ fun CustomCalendarFull(
                         onCurrentDayClick = { customCalendarDay, events ->
                             selectedCustomCalendarDate.value = customCalendarDay.localDate
                             weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
+                            calendarViewModel.getSelectedDate(selectedCustomCalendarDate.value)
                             onCurrentDayClick(customCalendarDay, events)
                         },
                         customCalendarDayColors = customCalendarDayColors,
@@ -182,6 +180,7 @@ fun CustomCalendarFull(
                                     selectedCustomCalendarDate.value = customCalendarDay.localDate
                                     onDateChanged(selectedCustomCalendarDate.value)
                                     weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
+                                    calendarViewModel.getSelectedDate(selectedCustomCalendarDate.value)
                                     onCurrentDayClick(customCalendarDay, events)
                                 },
                                 selectedCustomCalendarDay = selectedCustomCalendarDate.value,

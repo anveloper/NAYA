@@ -52,7 +52,7 @@ fun MainCalendar() {
         BottomShadow(alpha = 1f, height = 490.dp)
         Box(modifier = CornerShape) {
             Box( modifier = CalendarModifier) {
-                CustomCalendar(customCalendarType = CustomCalendarType.Basic)
+//                CustomCalendar(customCalendarType = CustomCalendarType.Basic)
             }
         }
     }

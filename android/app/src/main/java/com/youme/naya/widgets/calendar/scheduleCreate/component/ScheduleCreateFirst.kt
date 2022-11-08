@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.repository.ScheduleRepository
-import com.youme.naya.database.viewModel.ScheduleViewModel
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.fonts
 

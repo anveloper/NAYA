@@ -10,7 +10,7 @@ import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.entity.relations.ScheduleWithMembers
 
 @Database(
-    entities = [Card::class, Schedule::class, Member::class, ScheduleWithMembers::class],
+    entities = [Card::class, Schedule::class, Member::class],
     version = 5,
     exportSchema = false
 )

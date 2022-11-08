@@ -94,15 +94,13 @@ fun MainScreen(
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
         topBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {  HeaderBar(navController = navController) }
+            if (currentDestination.toString() != "scheduleCreate") {
+                HeaderBar(navController = navController)
             }
         },
         bottomBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> { BottomBar(navController = navController) }
+            if (currentDestination.toString() != "scheduleCreate") {
+                BottomBar(navController = navController)
             }
         },
         modifier = Modifier
@@ -122,7 +120,6 @@ fun BottomBar(
         BottomBarScreen.Spacer,
         BottomBarScreen.NayaCard,
         BottomBarScreen.Calendar,
-//        BottomBarScreen.Settings
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

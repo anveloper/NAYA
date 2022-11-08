@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDayColors
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDayDefaultColors
@@ -22,13 +23,13 @@ import kotlinx.datetime.LocalDate
 @Composable
 fun CustomCalendar(
     modifier: Modifier = Modifier,
+    takeMeToDate: LocalDate,
     customCalendarType: CustomCalendarType = CustomCalendarType.Fold(true),
     customCalendarEvents: List<CustomCalendarEvent> = emptyList(),
     customCalendarThemeColors: List<CustomCalendarThemeColor> = CustomCalendarColors.defaultColors(),
     onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
     customCalendarDayColors: CustomCalendarDayColors = CustomCalendarDayDefaultColors.defaultColors(),
     customCalendarHeaderConfig: CustomCalendarHeaderConfig? = null,
-    takeMeToDate: LocalDate? = null,
 ) {
     CustomCalendarFull(
         modifier = modifier.wrapContentHeight(),
@@ -36,7 +37,7 @@ fun CustomCalendar(
         onCurrentDayClick = onCurrentDayClick,
         customCalendarDayColors = customCalendarDayColors,
         customCalendarThemeColors = customCalendarThemeColors,
-        takeMeToDate = takeMeToDate,
         customCalendarHeaderConfig = customCalendarHeaderConfig,
         customCalendarType = customCalendarType,
+        takeMeToDate = takeMeToDate,
     )}

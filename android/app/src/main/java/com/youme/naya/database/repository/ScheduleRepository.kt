@@ -15,7 +15,7 @@ interface ScheduleRepository {
     suspend fun getScheduleByDate(scheduleDate: String): Schedule?
     suspend fun getMemberById(memberId: Int): Member?
 
-    suspend fun getScheduleWithMembers(scheduleId: Int): List<ScheduleWithMembers>
+//    suspend fun getScheduleWithMembers(scheduleId: Int): List<ScheduleWithMembers>
 
     suspend fun insertSchedule(schedule: Schedule)
     suspend fun insertMember(member: Member)
