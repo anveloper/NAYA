@@ -10,4 +10,7 @@
     <string name="naya_media_relative">DCIM/NAYA</string>
 
     <string name="mime_type_png">image/png</string>
+
+    <!-- ocr -->
+    <string name="scanned_image">Scanned Image</string>
 </resources>

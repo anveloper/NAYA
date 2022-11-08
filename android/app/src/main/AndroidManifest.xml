@@ -26,6 +26,8 @@
     <!-- NFC 사용 권한 -->
     <uses-permission android:name="android.permission.NFC" />
 
+    <!--  HTTP 통신 인터넷 사용권한  -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <meta-data
         android:name="android.nfc.action.TECH_DISCOVERED"
@@ -42,6 +44,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Android"
         tools:targetApi="31">
+
+        <!-- text recognition -->
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" />
+        <!-- To use multiple models: android:value="ocr,model2,model3" -->
 
         <activity
             android:name=".MainActivity"
@@ -111,10 +119,12 @@
 
         <activity
             android:name=".ocr.DocumentScannerActivity"
+            android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ocr.StillImageActivity"
+            android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"></activity>
 
         <!--  저버전 외부 저장소   -->

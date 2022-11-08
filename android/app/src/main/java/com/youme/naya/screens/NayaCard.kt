@@ -1,7 +1,11 @@
 package com.youme.naya.screens
 
 
+import android.app.Activity
 import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +34,13 @@ fun NayaCardScreen(
 
     val context = LocalContext.current
 
-
+    val activity = context as? Activity
+    val launcher =
+        rememberLauncherForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) {
+            Log.i("TEST Result", it.resultCode.toString())
+        }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,7 +61,7 @@ fun NayaCardScreen(
             Text(text = "nfc", fontSize = 16.sp)
         }
         Button(onClick = {
-            context.startActivity(Intent(context, DocumentScannerActivity::class.java))
+            launcher.launch(Intent(activity, DocumentScannerActivity::class.java))
         }) {
             Text(text = "ocr", fontSize = 16.sp)
         }
