@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.youme.naya.share.ShareActivity
 
+
 private val CardModifier = Modifier
     .width(200.dp)
     .height(360.dp)
