@@ -14,7 +14,10 @@ const Card = () => {
   useEffect(() => {
     dispatch(getCardInfo({ userId, sendCardId }));
     console.log(userId, sendCardId);
-  }, []);
+  }, [dispatch, sendCardId, userId]);
+  useEffect(() => {
+    console.log(imageUrl);
+  }, [imageUrl]);
 
   // action
   const [rotateX, setRotateX] = useState(0.0);
