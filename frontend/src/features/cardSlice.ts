@@ -1,28 +1,29 @@
+import { RootState } from "./../app/store";
+import { client } from "./../app/Axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import Axios from "axios";
 
-interface CardConfig {
-  card: {
-    title: String;
-    name: String;
-  };
+export interface RequestParams {
+  userId: string;
+  sendCardId: number;
+}
 
+export interface CardConfig {
+  imageUrl: string;
   status: "idle" | "loading" | "success" | "failed";
 }
 
 const initialState: CardConfig = {
-  card: {
-    title: "",
-    name: "",
-  },
+  imageUrl: "",
   status: "idle",
 };
 
 export const getCardInfo = createAsyncThunk(
   "card/getCardInfo",
-  async (params: String, { rejectWithValue }) => {
+  async (params: RequestParams, { rejectWithValue }) => {
+    console.log(params);
     try {
-      const response = await Axios.get("/", { params });
+      const response = await client.get(`/sendCard`, { params });
+      console.log(response);
       return response.data;
     } catch (err) {
       return rejectWithValue(err);
@@ -41,7 +42,7 @@ const CardSlice = createSlice({
       })
       .addCase(getCardInfo.fulfilled, (state, { payload }) => {
         state.status = "success";
-        state.card = payload;
+        state.imageUrl = payload;
       })
       .addCase(getCardInfo.rejected, (state) => {
         state.status = "failed";
@@ -50,3 +51,5 @@ const CardSlice = createSlice({
 });
 
 export default CardSlice.reducer;
+
+export const selectImageUrl = (state: RootState) => state.card.imageUrl;

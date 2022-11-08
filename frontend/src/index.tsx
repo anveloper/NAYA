@@ -1,20 +1,22 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { store } from "./app/store";
-import App from "./App";
 import "./index.css";
+import Home from "./features/Home";
+import Card from "./features/Card";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
 
+const router = createBrowserRouter([
+  { path: "/", element: <Home /> },
+  { path: "/:userId/:sendCardId", element: <Card /> },
+]);
+
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <Router>
-        <App />
-      </Router>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );

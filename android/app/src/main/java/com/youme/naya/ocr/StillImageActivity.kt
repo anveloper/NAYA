@@ -3,25 +3,36 @@ package com.youme.naya.ocr
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Intent
+import android.content.res.AssetManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Pair
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
+import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.common.annotation.KeepName
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.*;
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
-import com.youme.naya.R
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.googlecode.tesseract.android.TessBaseAPI
 import org.sdase.submission.documentscanner.BitmapUtils
+import com.youme.naya.R
 import org.sdase.submission.documentscanner.GraphicOverlay
 import org.sdase.submission.documentscanner.VisionImageProcessor
 import org.sdase.submission.documentscanner.textdetector.TextRecognitionProcessor
-import java.io.IOException
+import java.io.*
 
+@KeepName
 class StillImageActivity : AppCompatActivity() {
     private var preview: ImageView? = null
     private var graphicOverlay: GraphicOverlay? = null
@@ -39,10 +50,14 @@ class StillImageActivity : AppCompatActivity() {
     private var imageMaxHeight = 0
     private var imageProcessor: VisionImageProcessor? = null
 
+    // Tess
+    lateinit var tess: TessBaseAPI
+    var dataPath: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_still_image)
-        findViewById<View>(R.id.select_image_button)
+//        findViewById<View>(R.id.select_image_button)
 //            .setOnClickListener { view: View ->
 //                // Menu for selecting either: a) take new photo b) select from existing
 //                val popup =
@@ -65,17 +80,59 @@ class StillImageActivity : AppCompatActivity() {
 //            }
         preview = findViewById(R.id.preview)
 
-        //TODO 4. 전달된 croppedImage가 잘 뜨는지 확인하기
-        val croppedImgUri = Uri.parse(intent.getStringExtra("croppedImgUri"))
-        preview?.setImageURI(croppedImgUri)
+        // 4. 전달된 savedImgAbsolutePath가 잘 뜨는지 확인하기
+        val savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
+        if (savedImgAbsolutePath != null) {
+            val bitmap = BitmapFactory.decodeFile(savedImgAbsolutePath)
+            preview?.setImageBitmap(bitmap)
+//            Log.i("savedImgAbsPathOnStill", savedImgAbsolutePath)
+        }
 
-        // TODO 5. 이미지가 잘 뜨면 해당 액티비티에서 OCR 돌리면 될 것 같다.
+        dataPath = "$filesDir/assets/"
+
+        checkFile(File(dataPath+"tessdata/"), "kor")
+        checkFile(File(dataPath+"tessdata/"), "eng")
+
+        val lang : String = "kor+eng"
+        tess = TessBaseAPI()
+        tess.init(dataPath, lang)
+
+        processImage(BitmapFactory.decodeFile(savedImgAbsolutePath))
+
+        // TODO 5. R.id.preview 이미지를 통해 OCR 돌린다.
+//        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+//        val image = InputImage.fromBitmap(BitmapFactory.decodeFile(savedImgAbsolutePath), 0)
+//        val result = recognizer.process(image)
+//            .addOnSuccessListener { visionText ->
+//                // Task completed successfully
+//            }
+//            .addOnFailureListener { e ->
+//                // Task failed with an exception
+//            }
+//        val resultText = result.text
+//        for(block in result.textBlocks) {
+//            val blockText = block.text
+//            val blockCornerPoints = block.cornerPoints
+//            val blockFrame = block.boundingBox
+//            Log.i("blockText", blockText)
+//            for(line in block.lines) {
+//                val lineText = line.text
+//                val lineCornerPoints = line.cornerPoints
+//                val lineFrame = line.boundingBox
+//                Log.i("lineText", lineText)
+//                for(element in line.elements) {
+//                    val elementText = element.text
+//                    val elementCornerPoints = element.cornerPoints
+//                    val elementFrame = element.boundingBox
+//                    Log.i("elementText", elementText)
+//                }
+//            }
+//        }
+
+        // TODO 6. OCR 결과를 정규표현식(regex) 이용해 파싱한 후 용도에 맞게 save
 
 
-        // TODO 6. 화이팅!!!!!!
-
-
-        graphicOverlay = findViewById(R.id.graphic_overlay)
+//        graphicOverlay = findViewById(R.id.graphic_overlay)
 
         populateFeatureSelector()
 
@@ -105,6 +162,61 @@ class StillImageActivity : AppCompatActivity() {
                     }
                 }
             })
+    }
+
+    private fun checkFile(dir: File, lang: String) {
+        // 파일의 존재여부 확인 후 내부로 복사
+        if(!dir.exists()&&dir.mkdirs()) {
+            copyFile(lang)
+        }
+        if(dir.exists()) {
+            val datafilePath : String = "$dataPath/tessdata/$lang.traineddata"
+            var dataFile : File = File(datafilePath)
+            if(!dataFile.exists()) {
+                copyFile(lang)
+            }
+        }
+    }
+
+    private fun copyFile(lang: String) {
+        try {
+            //언어데이타파일의 위치
+            val filePath: String = "$dataPath/tessdata/$lang.traineddata"
+
+            //AssetManager를 사용하기 위한 객체 생성
+            val assetManager: AssetManager = assets;
+
+            //byte 스트림을 읽기 쓰기용으로 열기
+            val inputStream: InputStream = assetManager.open("tessdata/$lang.traineddata")
+            val outStream: OutputStream = FileOutputStream(filePath)
+
+
+            //위에 적어둔 파일 경로쪽으로 해당 바이트코드 파일을 복사한다.
+            val buffer = ByteArray(1024)
+
+            var read: Int = 0
+            read = inputStream.read(buffer)
+            while (read != -1) {
+                outStream.write(buffer, 0, read)
+                read = inputStream.read(buffer)
+            }
+            outStream.flush()
+            outStream.close()
+            inputStream.close()
+
+        } catch (e: FileNotFoundException) {
+            Log.v("오류발생", e.toString())
+        } catch (e: IOException) {
+            Log.v("오류발생", e.toString())
+        }
+
+    }
+
+    private fun processImage(bitmap: Bitmap) {
+        var ocrResult : String? = null;
+        tess.setImage(bitmap)
+        ocrResult = tess.utF8Text
+        Log.i("ocrResult", ocrResult)
     }
 
     public override fun onResume() {
@@ -140,7 +252,7 @@ class StillImageActivity : AppCompatActivity() {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         // attaching data adapter to spinner
         featureSpinner.adapter = dataAdapter
-        featureSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        featureSpinner.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>,
                 selectedItemView: View?,
