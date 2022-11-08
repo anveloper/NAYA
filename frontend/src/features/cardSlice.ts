@@ -20,8 +20,10 @@ const initialState: CardConfig = {
 export const getCardInfo = createAsyncThunk(
   "card/getCardInfo",
   async (params: RequestParams, { rejectWithValue }) => {
+    console.log(params);
     try {
       const response = await client.get(`/sendCard`, { params });
+      console.log(response);
       return response.data;
     } catch (err) {
       return rejectWithValue(err);
