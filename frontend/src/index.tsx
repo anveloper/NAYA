@@ -12,7 +12,7 @@ const root = createRoot(container);
 
 const router = createBrowserRouter([
   { path: "/", element: <Home /> },
-  { path: "/:userId/:cardId", element: <Card /> },
+  { path: "/:userId/:sendCardId", element: <Card /> },
 ]);
 
 root.render(
