@@ -119,6 +119,7 @@
 
         <activity
             android:name=".ocr.DocumentScannerActivity"
+            android:theme="@style/Theme.AppCompat"
             android:screenOrientation="portrait"></activity>
 
         <activity
