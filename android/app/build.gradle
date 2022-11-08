@@ -89,6 +89,12 @@ dependencies {
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
     //implementation project(':opencv')
 
+
+    // text recognition
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    // OCR
+    implementation 'com.rmtheis:tess-two:9.1.0'
+
     // navigation
     def nav_version = "2.5.2"
     implementation "androidx.navigation:navigation-compose:$nav_version"
@@ -171,22 +177,35 @@ dependencies {
     implementation 'com.google.mlkit:object-detection:17.0.0'
     // implementation 'com.google.mlkit:vision-demo'
 
+    // Moshi
+    def moshi_version = '1.14.0'
+    implementation "com.squareup.moshi:moshi:$moshi_version"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+
     // Calendar
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
     implementation("com.himanshoe:kalendar:1.2.0")
 
     // db library
-    implementation("com.google.code.gson:gson:2.8.9")
+    // retrofit2 http 통신 디펜던시
+    implementation "com.google.code.gson:gson:2.8.9"
+    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
 
     // time picker
     implementation "com.chargemap.compose:numberpicker:1.0.3"
 
     // MapView
     implementation 'com.google.maps.android:maps-compose:2.7.2'
-    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
     // FusedLocationProvideClient
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
+    //sns share
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 }
 
 kapt {

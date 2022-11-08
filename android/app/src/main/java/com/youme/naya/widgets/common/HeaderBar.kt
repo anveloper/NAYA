@@ -1,7 +1,6 @@
 package com.youme.naya.widgets.common
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -16,21 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.youme.naya.R
-import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.NeutralWhite
-import com.youme.naya.ui.theme.PrimaryDark
-import com.youme.naya.ui.theme.fonts
 import com.youme.naya.widgets.calendar.SearchHeaderBar
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -57,9 +49,14 @@ fun HeaderBar(
             logo = true
             main = true
         }
-        "bCardEdit" -> {
+        "bCardCreate" -> {
             logo = false
-            title = "카드 직접 등록"
+            title = "카드 직접 입력"
+        }
+        "bCardModify/card={card}" -> {
+            logo = false
+            title = "카드 수정하기"
+            closeActivityButton = true
         }
         "details" -> {
             logo = false
