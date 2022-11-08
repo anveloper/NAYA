@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export interface RequestParams {
   userId: string;
-  cardId: number;
+  sendCardId: number;
 }
 
 export interface CardConfig {
@@ -13,8 +13,7 @@ export interface CardConfig {
 }
 
 const initialState: CardConfig = {
-  imageUrl:
-    "https://firebasestorage.googleapis.com/v0/b/naya-365407.appspot.com/o/naya%2FOxkibXM9LhYHtBAoLYaB7nQnF4s1%2FNAYA-MEDIA-1667740225913.png?alt=media&token=40dbfebb-3ce4-4872-8b9b-068723c12d62",
+  imageUrl: "",
   status: "idle",
 };
 
