@@ -6,19 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.compose.ui.platform.LocalView
-import androidx.navigation.findNavController
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.result.ActivityResult
 import com.loopeer.cardstack.CardStackView
 import com.loopeer.cardstack.StackAdapter
 import com.youme.naya.R
 import com.youme.naya.database.entity.Card
-import com.youme.naya.share.ShareActivity
 
-class CardStackAdapter(context: Context) : StackAdapter<Card>(context) {
+class CardStackAdapter(
+    context: Context,
+    launcher: ManagedActivityResultLauncher<Intent, ActivityResult>
+) : StackAdapter<Card>(context) {
+
+    private var activityLauncher = launcher
 
     override fun bindView(card: Card, position: Int, holder: CardStackView.ViewHolder) {
         val h = holder as ColorItemViewHolder
-        h.onBind(card)
+        h.onBind(card, activityLauncher)
     }
 
     override fun onCreateView(parent: ViewGroup, viewType: Int): CardStackView.ViewHolder {
@@ -63,25 +67,25 @@ class CardStackAdapter(context: Context) : StackAdapter<Card>(context) {
             mContainerContent.visibility = if (b) View.VISIBLE else View.GONE
         }
 
-        fun onBind(card: Card) {
+        fun onBind(card: Card, launcher: ManagedActivityResultLauncher<Intent, ActivityResult>) {
             mLayout.background
             mTextName.text = card.name
             mTextEngName.text = card.engName
             mTextCompany.text = card.company
-            val TeamAndRole = card.team + " | " + card.role
-            mTextTeamAndRole.text = TeamAndRole
+            val teamAndRole = card.team + " | " + card.role
+            mTextTeamAndRole.text = teamAndRole
             mTextAddress.text = card.address
             mTextMobile.text = card.mobile
             mTextEmail.text = card.email
             val summaryMain =
                 card.name + " | " + card.company + " | " + card.team + " | " + card.role
-            val summarySub = if (card.memo_content.isEmpty()) "메모를 등록하지 않았어요" else card.memo_content
+            val summarySub = card.memo_content.ifEmpty { "메모를 등록하지 않았어요" }
             mTextSummaryMain.text = summaryMain
             mTextSummarySub.text = summarySub
             mBtnDetails.setOnClickListener {
                 val intent = Intent(context, CardDetailsActivity::class.java)
                 intent.putExtra("cardId", card.NayaCardId)
-                context.startActivity(intent)
+                launcher.launch(intent)
             }
         }
     }

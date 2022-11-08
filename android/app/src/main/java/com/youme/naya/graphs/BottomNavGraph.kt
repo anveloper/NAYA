@@ -4,10 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.youme.naya.BottomBarScreen
 import com.youme.naya.screens.*
 import com.youme.naya.screens.schedule.ScheduleCreateScreen
@@ -42,8 +40,8 @@ fun BottomNavGraph(navController: NavHostController) {
 //            CameraScreen()
         }
         // Nuya 명함 생성 (직접 입력)
-        composable(route = "bCardEdit") { entry ->
-            BCardEditScreen(navController = navController)
+        composable(route = "bCardCreate") { entry ->
+            BCardCreateScreen(navController = navController)
         }
         composable(route = "scheduleCreate") {
             ScheduleCreateScreen(navController = navController)
