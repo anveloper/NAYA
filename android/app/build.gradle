@@ -89,6 +89,12 @@ dependencies {
     //implementation fileTree(dir: 'libs', include: ['*.jar'])
     //implementation project(':opencv')
 
+
+    // text recognition
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+    // OCR
+    implementation 'com.rmtheis:tess-two:9.1.0'
+
     // navigation
     def nav_version = "2.5.2"
     implementation "androidx.navigation:navigation-compose:$nav_version"
