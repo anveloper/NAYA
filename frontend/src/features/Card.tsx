@@ -4,15 +4,16 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
+import IMG from "../assets/sample_card.svg";
 const Card = () => {
-  const { userId, cardId }: any = useParams();
+  const { userId, sendCardId }: any = useParams();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const imageUrl = useSelector(selectImageUrl);
   const dispatch = useAppDispatch();
   // render
   useEffect(() => {
-    dispatch(getCardInfo({ userId, cardId }));
-    console.log(userId, cardId);
+    dispatch(getCardInfo({ userId, sendCardId }));
+    console.log(userId, sendCardId);
   }, []);
 
   // action
@@ -63,7 +64,7 @@ const Card = () => {
       >
         <img
           className={styles.cardImage}
-          src={imageUrl}
+          src={imageUrl ? imageUrl : IMG}
           alt=""
           style={{
             transform: `translateZ(${translateZ})`,
