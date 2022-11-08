@@ -5,6 +5,7 @@ import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
 import IMG from "../assets/sample_card.svg";
+import { Helmet } from "react-helmet-async";
 const Card = () => {
   const { userId, sendCardId }: any = useParams();
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -88,6 +89,10 @@ const Card = () => {
   });
   return (
     <div className={styles.container}>
+      <Helmet>
+        <title>{"나야(Naya) - 카드공유"}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Helmet>
       <div
         className={styles.content}
         ref={contentRef}
