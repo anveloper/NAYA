@@ -44,7 +44,6 @@ class CustomCameraX(
             it.setSurfaceProvider(previewView.surfaceProvider)
         }
         imageCapture = ImageCapture.Builder().build()
-
         val camSelector =
             CameraSelector.Builder().requireLensFacing(cameraSelector).build()
         try {
