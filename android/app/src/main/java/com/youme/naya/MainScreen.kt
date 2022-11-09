@@ -35,6 +35,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
@@ -81,6 +82,12 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                         onClick = {
                             when (currentDestination.toString()) {
                                 "schedule" -> navController.navigate("scheduleCreate")
+                                "naya" -> launcher.launch(
+                                    Intent(
+                                        activity,
+                                        MediaCardActivity::class.java
+                                    )
+                                )
                                 else -> {
                                     var intent = Intent(activity, ShareActivity::class.java)
                                     intent.putExtra("cardUri", card.uri.toString())
@@ -107,6 +114,7 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                             fun setCenterIcon(): Int {
                                 return when (currentDestination.toString()) {
                                     "schedule" -> R.drawable.nav_schedule_plus_icon
+                                    "naya" -> R.drawable.nav_naya_plus_icon
                                     else -> R.drawable.nav_send_icon
                                 }
                             }
