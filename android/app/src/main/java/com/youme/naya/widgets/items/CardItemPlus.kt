@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.youme.naya.R
 import com.youme.naya.custom.MediaCardActivity
+import com.youme.naya.ocr.DocumentScannerActivity
 import com.youme.naya.widgets.home.CardListViewModel
 
 private val CardModifier = Modifier
@@ -29,7 +30,7 @@ private val CardModifier = Modifier
     .shadow(elevation = 6.dp)
 
 @Composable
-fun CardItemPlus() {
+fun CardItemPlus(isBCard: Boolean = false) {
     val context = LocalContext.current
     val activity = context as? Activity
     val viewModel = viewModel<CardListViewModel>()
@@ -45,13 +46,16 @@ fun CardItemPlus() {
 
     Card(CardModifier) {
         IconButton(onClick = {
-            launcher.launch(Intent(activity, MediaCardActivity::class.java))
+            if (isBCard) {
+                launcher.launch(Intent(activity, DocumentScannerActivity::class.java))
+            } else {
+                launcher.launch(Intent(activity, MediaCardActivity::class.java))
+            }
         }) {
             Image(
                 painter = painterResource(R.drawable.card_icon_plus),
-                contentDescription = "import naya card",
+                contentDescription = if (isBCard) "import business card" else "import naya card",
             )
-
         }
     }
 }

@@ -37,7 +37,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         },
         ResponseType.IMAGE_FILE_PATH,
         true,
-        2
+        1
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         croppedImageView = findViewById(R.id.cropped_image_view)
 
         // ocr button
-        val go_ocr = findViewById(R.id.ocr_btn) as Button
+        val go_ocr = findViewById<Button>(R.id.ocr_btn)
 
         // start document scan
         documentScanner.startScan()
@@ -60,7 +60,8 @@ class DocumentScannerActivity : AppCompatActivity() {
         Log.i("cropped Image Bitmap", croppedImg.toString())
 
         go_ocr.setOnClickListener {
-            var intent = Intent(activity, StillImageActivity::class.java)
+//            val intent = Intent(activity, StillImageActivity::class.java)
+            val intent = Intent(activity, DocumentScannerActivity::class.java)
 
             // 1. R.id.cropped_image_view에 들어있는 이미지를 저장한다.
             val bitmap: Bitmap? = getBitmapFromView(croppedImageView)
@@ -70,11 +71,12 @@ class DocumentScannerActivity : AppCompatActivity() {
                 savedImgAbsolutePath = saveBitmapToJpeg(bitmap, "nayatempfile", this.baseContext)
             }
 
-            // 2. 저장된 이미지의 경로를 다음 Activity에 전달한다.
+            // 2. 저장된 이미지의 경로를 인텐트에 저장한다.
             intent.putExtra("savedImgAbsolutePath", savedImgAbsolutePath)
 
-            // 3. intent 받아서 다음 액티비티로 넘어간다.
-            startActivity(intent) // 넘어간 activity에서 croppedImgUri을 받아서, ImageView에 넣어준다.
+            // 3. 정상적으로 처리했음을 이전 액티비티에 알리고 종료한다.
+            setResult(RESULT_OK, intent)
+            finish()
         }
     }
 }

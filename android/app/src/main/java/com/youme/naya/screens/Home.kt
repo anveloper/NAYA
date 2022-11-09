@@ -7,11 +7,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.widgets.home.MyBCardList
 import com.youme.naya.widgets.home.MyNayaCardList
+
 
 private val HomeModifier = Modifier
     .fillMaxSize()
@@ -20,13 +22,15 @@ private val HomeModifier = Modifier
 
 @Composable
 fun HomeScreen() {
+    val context = LocalContext.current
     var (currentCardId, setCurrentCardId) = rememberSaveable {
         mutableStateOf(1)
     }
+
     Column(HomeModifier) {
         NayaBcardSwitchButtons(
-            nayaTab = { MyNayaCardList() },
-            bCardTab = { MyBCardList() }
+            nayaTab = { MyNayaCardList(context) },
+            bCardTab = { MyBCardList(context) }
         )
     }
 }
