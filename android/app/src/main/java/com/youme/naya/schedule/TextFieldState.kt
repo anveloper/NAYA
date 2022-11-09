@@ -1,4 +1,4 @@
-package com.youme.naya.schedule.edit
+package com.youme.naya.schedule
 
 data class TextFieldState(
     val text: String = ""

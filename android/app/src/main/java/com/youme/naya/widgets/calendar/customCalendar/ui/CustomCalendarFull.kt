@@ -10,10 +10,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue
-import com.youme.naya.widgets.calendar.CalendarViewModel
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDay
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDayColors
 import com.youme.naya.widgets.calendar.customCalendar.component.header.CustomCalendarHeader
@@ -29,7 +30,6 @@ import com.youme.naya.widgets.calendar.customCalendar.ui.basic.CustomCalendarThe
 import com.youme.naya.widgets.calendar.customCalendar.ui.basic.onDateChanged
 import com.youme.naya.widgets.calendar.customCalendar.ui.fold.data.getNext7Dates
 import com.youme.naya.widgets.calendar.customCalendar.ui.fold.data.getPrevious7Dates
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.datetime.*
 
 val WeekDays: List<String>
@@ -46,6 +46,7 @@ fun CustomCalendarFull(
     customCalendarHeaderConfig: CustomCalendarHeaderConfig? = null,
     customCalendarEvents: List<CustomCalendarEvent> = emptyList(),
     onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
     val selectedCustomCalendarDate = remember { mutableStateOf(takeMeToDate) }
     val displayedYear = remember {
@@ -76,12 +77,6 @@ fun CustomCalendarFull(
     val weekValue = remember { mutableStateOf(selectedCustomCalendarDate.value.getNext7Dates()) }
     val month = weekValue.value.last().month
     val year = weekValue.value.last().year
-
-    val calendarViewModel = viewModel<CalendarViewModel>()
-
-    val selectedDate = remember {
-        mutableStateOf(calendarViewModel.selectedDate)
-    }
 
     Column(
         modifier = modifier
@@ -156,7 +151,8 @@ fun CustomCalendarFull(
                         onCurrentDayClick = { customCalendarDay, events ->
                             selectedCustomCalendarDate.value = customCalendarDay.localDate
                             weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
-                            calendarViewModel.getSelectedDate(selectedCustomCalendarDate.value)
+                            viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
+                            viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
                             onCurrentDayClick(customCalendarDay, events)
                         },
                         customCalendarDayColors = customCalendarDayColors,
@@ -180,7 +176,8 @@ fun CustomCalendarFull(
                                     selectedCustomCalendarDate.value = customCalendarDay.localDate
                                     onDateChanged(selectedCustomCalendarDate.value)
                                     weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
-                                    calendarViewModel.getSelectedDate(selectedCustomCalendarDate.value)
+                                    viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
+                                    viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
                                     onCurrentDayClick(customCalendarDay, events)
                                 },
                                 selectedCustomCalendarDay = selectedCustomCalendarDate.value,

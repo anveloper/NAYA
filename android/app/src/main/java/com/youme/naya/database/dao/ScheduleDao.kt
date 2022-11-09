@@ -9,19 +9,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ScheduleDao {
 
-    @Query("SELECT * FROM schedule")
-    fun getSchedules(): Flow<List<Schedule>>
-
     @Query("SELECT * FROM member")
     fun getMembers(): Flow<List<Member>>
+
+    @Query("SELECT * FROM schedule WHERE scheduleDate = :scheduleDate")
+    fun getSchedulesByDate(scheduleDate: String): Flow<List<Schedule>>
 
     // 스케줄 id로 조회
     @Query("SELECT * FROM schedule WHERE scheduleId = :scheduleId")
     suspend fun getScheduleById(scheduleId: Int): Schedule?
-
-    // 스케줄 날짜로 조회
-    @Query("SELECT * FROM schedule WHERE scheduleDate = :scheduleDate")
-    suspend fun getScheduleByDate(scheduleDate: String): Schedule?
 
     @Query("SELECT * FROM member WHERE memberId = :memberId")
     suspend fun getMemberById(memberId: Int): Member?

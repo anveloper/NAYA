@@ -7,7 +7,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.youme.naya.database.entity.Schedule
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.Typography
 
@@ -16,7 +18,9 @@ import com.youme.naya.ui.theme.Typography
 fun ScheduleItem(
     modifier: Modifier = Modifier,
     schedule: Schedule,
-    onDetailSchedule: () -> Unit
+    selectedDate: String,
+    onDetailSchedule: () -> Unit,
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
     Card(
         modifier = modifier
@@ -32,10 +36,20 @@ fun ScheduleItem(
         ) {
             Column(verticalArrangement = Arrangement.Center) {
                 Text(
-                    text = "${schedule.title}, ${schedule.content}",
+                    text = "${selectedDate}",
+                    style = Typography.h6.copy(color= PrimaryDark)
+                )
+                Text(
+                    text = "${schedule.title}, ${schedule.description}",
                     style = Typography.h6.copy(color= PrimaryDark)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+                Checkbox(
+                    checked = schedule.isDone,
+                    onCheckedChange = { isChecked ->
+                        viewModel.onDoneChange(schedule, isChecked)
+                    }
+                )
             }
         }
     }

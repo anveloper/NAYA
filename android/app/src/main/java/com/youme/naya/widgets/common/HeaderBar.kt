@@ -15,20 +15,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.youme.naya.R
+import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.NeutralWhite
+import com.youme.naya.ui.theme.PrimaryDark
+import com.youme.naya.ui.theme.fonts
 import com.youme.naya.widgets.calendar.SearchHeaderBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeaderBar(
-    navController: NavHostController,
+    navController: NavController,
     title: String = ""
 ) {
     var title = title

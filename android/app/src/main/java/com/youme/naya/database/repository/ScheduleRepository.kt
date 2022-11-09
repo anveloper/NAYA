@@ -1,5 +1,6 @@
 package com.youme.naya.database.repository
 
+import androidx.compose.runtime.State
 import androidx.room.*
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
@@ -8,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface ScheduleRepository {
 
-    fun getSchedules() : Flow<List<Schedule>>
     fun getMembers(): Flow<List<Member>>
 
+    suspend fun getSchedulesByDate(scheduleDate: String) : Flow<List<Schedule>>
+
     suspend fun getScheduleById(id: Int) : Schedule?
-    suspend fun getScheduleByDate(scheduleDate: String): Schedule?
     suspend fun getMemberById(memberId: Int): Member?
 
 //    suspend fun getScheduleWithMembers(scheduleId: Int): List<ScheduleWithMembers>

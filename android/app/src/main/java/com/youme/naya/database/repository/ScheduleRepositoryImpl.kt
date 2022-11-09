@@ -1,30 +1,29 @@
 package com.youme.naya.database.repository
 
+import androidx.compose.runtime.State
 import com.youme.naya.database.dao.ScheduleDao
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
-import com.youme.naya.database.entity.relations.ScheduleWithMembers
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
     private val dao : ScheduleDao
     ) : ScheduleRepository {
 
-    override fun getSchedules(): Flow<List<Schedule>> {
-        return dao.getSchedules()
-    }
-
     override fun getMembers(): Flow<List<Member>> {
         return dao.getMembers()
     }
 
-    override suspend fun getScheduleById(id: Int): Schedule? {
-        return dao.getScheduleById(id)
+    override suspend fun getSchedulesByDate(scheduleDate: String): Flow<List<Schedule>> {
+        return dao.getSchedulesByDate(scheduleDate).flowOn(Dispatchers.IO).conflate()
     }
 
-    override suspend fun getScheduleByDate(scheduleDate: String): Schedule? {
-        return dao.getScheduleByDate(scheduleDate)
+    override suspend fun getScheduleById(id: Int): Schedule? {
+        return dao.getScheduleById(id)
     }
 
     override suspend fun getMemberById(memberId: Int): Member? {

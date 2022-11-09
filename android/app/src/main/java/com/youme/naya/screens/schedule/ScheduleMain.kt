@@ -7,17 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.youme.naya.schedule.main.ScheduleMainViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.widgets.calendar.AnimatedCalendar
-import com.youme.naya.widgets.calendar.CalendarViewModel
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.youme.naya.schedule.Screen
 import com.youme.naya.schedule.main.components.ScheduleItem
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -26,12 +23,9 @@ fun ScheduleMainScreen(
     navController: NavHostController,
     viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
-    val state = viewModel.state.value
-    var schedules = state.schedules
-
-    val calendarViewModel = viewModel<CalendarViewModel>()
-    var selectedDate by remember { mutableStateOf(calendarViewModel.selectedDate) }
-
+    val scope = rememberCoroutineScope()
+    var selectedDate by remember { mutableStateOf(viewModel.selectedDate) }
+    val schedules by remember { mutableStateOf(viewModel.schedules.value) }
 
        Column {
             AnimatedCalendar(
@@ -42,10 +36,10 @@ fun ScheduleMainScreen(
                items(schedules) { schedule ->
                    ScheduleItem(
                        schedule = schedule,
+                       selectedDate = selectedDate.value,
                        onDetailSchedule = {
-                           navController.navigate(
-                               route = Screen.ScheduleDetail.passId(schedule.scheduleId))
-                       }
+                           viewModel.onScheduleClick(schedule)
+                       },
                    )
                }
            }
