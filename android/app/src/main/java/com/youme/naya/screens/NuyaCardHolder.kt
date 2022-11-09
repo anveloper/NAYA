@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.CustomCardStackView
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ocr.DocumentScannerActivity
+import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.ui.theme.NeutralLightness
 import com.youme.naya.ui.theme.NeutralMedium
 import com.youme.naya.ui.theme.NeutralWhite
@@ -133,12 +134,37 @@ fun MultiFloatingActionButton(
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
-    val launcher =
+
+    val ocrLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        when (it.resultCode) {
+            Activity.RESULT_OK -> {
+                // OCR 문자열 인식 결과
+                val ocrResult = it.data?.getStringExtra("ocrResult")
+                Log.i("OCR RESULT >>>>>", ocrResult.toString())
+            }
+            Activity.RESULT_CANCELED -> {
+            }
+        }
+    }
+    val cameraLauncher =
         rememberLauncherForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            Log.i("TEST Result", it.resultCode.toString())
+            when (it.resultCode) {
+                Activity.RESULT_OK -> {
+                    // 임시 이미지 저장 경로
+                    val imgPath = it.data?.getStringExtra("savedImgAbsolutePath")
+                    val ocrIntent = Intent(activity, StillImageActivity::class.java)
+                    ocrIntent.putExtra("savedImgAbsolutePath", imgPath)
+                    ocrLauncher.launch(ocrIntent)
+                }
+                Activity.RESULT_CANCELED -> {
+                }
+            }
         }
+
 
     Box(
         modifier = Modifier
@@ -151,7 +177,7 @@ fun MultiFloatingActionButton(
         ) {
             FloatingActionButton(
                 onClick = {
-                    launcher.launch(
+                    cameraLauncher.launch(
                         Intent(
                             activity,
                             DocumentScannerActivity::class.java

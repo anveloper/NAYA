@@ -34,6 +34,8 @@ import java.io.*
 
 @KeepName
 class StillImageActivity : AppCompatActivity() {
+    private lateinit var context: Activity
+
     private var preview: ImageView? = null
     private var graphicOverlay: GraphicOverlay? = null
     private var selectedMode =
@@ -57,6 +59,8 @@ class StillImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_still_image)
+
+        context = this
 //        findViewById<View>(R.id.select_image_button)
 //            .setOnClickListener { view: View ->
 //                // Menu for selecting either: a) take new photo b) select from existing
@@ -217,6 +221,11 @@ class StillImageActivity : AppCompatActivity() {
         tess.setImage(bitmap)
         ocrResult = tess.utF8Text
         Log.i("ocrResult", ocrResult)
+
+        val intent = Intent(context, StillImageActivity::class.java)
+        intent.putExtra("ocrResult", ocrResult)
+        setResult(RESULT_OK, intent)
+        finish()
     }
 
     public override fun onResume() {
