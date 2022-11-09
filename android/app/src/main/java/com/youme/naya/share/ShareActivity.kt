@@ -13,7 +13,10 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.runtime.Composable
@@ -30,7 +33,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.facebook.FacebookSdk
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.youme.naya.BaseActivity
@@ -60,13 +62,16 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
         super.onCreate(savedInstanceState)
         setContent {
             val cardUri = intent.getStringExtra("cardUri")
-            val filename = intent.getStringExtra("filename")
+            var filename = intent.getStringExtra("filename")
             val activity = LocalContext.current as? Activity
             val (cardId, setCardId) = remember { mutableStateOf<Int?>(-1) }
             var (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
 
             if (uid != null && cardUri != null && filename != null) {
                 if (sharedUri == null) {
+                    if (filename == "") filename =
+                        "NAYA-MEDIA-" + System.currentTimeMillis().toString() + ".png"
+
                     uploadFirebase(uid, cardUri, filename) { uri ->
                         setSharedUri(uri)
                     }
@@ -230,17 +235,15 @@ fun ShareScreen(
             intent.putExtra("cardId", cardId)
             launcher.launch(intent)
         }
-        ShareTextButton(
-            R.drawable.ic_share_nfc,
-            "NFC 공유",
-            "NFC를 이용하여 근처 사용자에게 카드를 보내세요"
-        ) {
-//            context.startActivity(Intent(context, NfcActivity::class.java))
-            var intent = Intent(activity, NfcActivity::class.java)
-            intent.putExtra("userId", 123)
-//            intent.putExtra("cardId", cardId)
-            launcher.launch(intent)
-        }
+//        ShareTextButton(
+//            R.drawable.ic_share_nfc,
+//            "NFC 공유",
+//            "NFC를 이용하여 근처 사용자에게 카드를 보내세요"
+//        ) {
+//            var intent = Intent(activity, NfcActivity::class.java)
+//            intent.putExtra("userId", 123)
+//            launcher.launch(intent)
+//        }
         ShareTextButton(
             R.drawable.ic_share_beacon,
             "어플 공유",
@@ -264,8 +267,8 @@ fun ShareScreen(
                     intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                     launcher.launch(intent)
                 }
-            }catch (e:Exception){
-                Toast.makeText(activity,"인스타그램을 설치, 로그인 해주세요",Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(activity, "인스타그램을 설치, 로그인 해주세요", Toast.LENGTH_SHORT).show()
             }
         }
         Spacer(Modifier.height(8.dp))

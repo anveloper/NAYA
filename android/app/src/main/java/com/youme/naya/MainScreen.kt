@@ -1,8 +1,12 @@
 package com.youme.naya
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -35,17 +40,37 @@ import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
+import com.youme.naya.widgets.home.CardListViewModel
+import com.youme.naya.widgets.items.CurrentCard
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(navController: NavHostController = rememberNavController()) {
     val context = LocalContext.current
+    val activity = context as? Activity
     val focusManager = LocalFocusManager.current
 
     // 현재 위치 추적
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
+
+
+    // 선택된 카드 가져오기
+    val cardListViewModel = viewModel<CardListViewModel>()
+    val card = CurrentCard.getCurrentCard.value
+
+    val launcher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { it ->
+        Log.i("Activity Result", it.resultCode.toString())
+        when (it.resultCode) {
+            Activity.RESULT_OK -> {
+            }
+            Activity.RESULT_CANCELED -> {
+            }
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -55,9 +80,15 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                     FloatingActionButton(
                         onClick = {
                             when (currentDestination.toString()) {
-                                "schedule" ->  navController.navigate("scheduleCreate")
-                                else -> context.startActivity(Intent(context, ShareActivity::class.java))
-                            }},
+                                "schedule" -> navController.navigate("scheduleCreate")
+                                else -> {
+                                    var intent = Intent(activity, ShareActivity::class.java)
+                                    intent.putExtra("cardUri", card.uri.toString())
+                                    intent.putExtra("filename", card.filename)
+                                    launcher.launch(intent)
+                                }
+                            }
+                        },
                         backgroundColor = Color.Transparent,
                         shape = CircleShape,
                     ) {
@@ -98,13 +129,17 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         topBar = {
             when (currentDestination.toString()) {
                 "scheduleCreate" -> {}
-                else -> {  HeaderBar(navController = navController) }
+                else -> {
+                    HeaderBar(navController = navController)
+                }
             }
         },
         bottomBar = {
             when (currentDestination.toString()) {
                 "scheduleCreate" -> {}
-                else -> { BottomBar(navController = navController) }
+                else -> {
+                    BottomBar(navController = navController)
+                }
             }
         },
         modifier = Modifier
@@ -191,10 +226,12 @@ fun RowScope.AddItem(
         selectedContentColor = PrimaryBlue,
         unselectedContentColor = NeutralLight,
         onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            } // 홈에서 뒤로가기 누르면 앱 밖으로 이동
+            if (screen.route.isNotEmpty()) {
+                navController.navigate(screen.route) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
+                } // 홈에서 뒤로가기 누르면 앱 밖으로 이동
+            }
         }
     )
 }

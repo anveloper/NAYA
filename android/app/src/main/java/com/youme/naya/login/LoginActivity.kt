@@ -1,11 +1,15 @@
 package com.youme.naya.login
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -14,26 +18,54 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.youme.naya.BaseActivity
 import com.youme.naya.MainActivity
 import com.youme.naya.R
 import com.youme.naya.screens.LoginScreen
 import com.youme.naya.ui.theme.AndroidTheme
 
 
-class LoginActivity : ComponentActivity() {
+class LoginActivity : BaseActivity(TransitionMode.NONE) {
 
     // Firebase
     private lateinit var googleSignInClient: GoogleSignInClient
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val RC_SIGN_IN = 1
 
+    private var permissionList = listOf<String>(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA,
+        Manifest.permission.NFC,
+        Manifest.permission.INTERNET,
+    )
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val (permitted, setPermitted) = remember { mutableStateOf(false) }
+
             AndroidTheme {
-                LoginScreen() { googleLogin() }
+                LoginScreen(permitted, {
+                    setPermitted(checkPermission())
+                    Log.i("per", permitted.toString())
+                }) { googleLogin() }
             }
         }
+    }
+
+    private fun checkPermission(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return true;
+        for (permission in permissionList) {
+            if (checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
+                requestPermissions(permissionList.toTypedArray(), 0)
+                return false;
+            }
+            Log.i("Permission Check", "$permission processing")
+        }
+        return true;
     }
 
     // 로그인 객체 생성

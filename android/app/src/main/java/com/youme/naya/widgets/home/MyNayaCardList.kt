@@ -1,11 +1,8 @@
 package com.youme.naya.widgets.home
 
 import android.app.Activity
-import android.app.Application
-import android.content.ContentUris
-import android.net.Uri
-import android.provider.MediaStore
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -18,8 +15,6 @@ import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.youme.naya.widgets.items.CardItem
 import com.youme.naya.widgets.items.CardItemPlus
@@ -57,7 +51,7 @@ fun MyNayaCardList() {
 
     val viewModel = viewModel<CardListViewModel>()
     viewModel.fetchCards()
-    val cardList = viewModel.cardUris.value
+    val cardList = viewModel.viewCards.value
     val listSize = cardList.size
 
     Column(
@@ -72,10 +66,9 @@ fun MyNayaCardList() {
             horizontalArrangement = Arrangement.spacedBy(32.dp),
             state = currentCardId
         ) {
-            items(cardList) { value ->
-                CardItem(value.uri, value.filename)
+            items(cardList) { card ->
+                CardItem(card)
             }
-
             item() {
                 CardItemPlus()
             }
