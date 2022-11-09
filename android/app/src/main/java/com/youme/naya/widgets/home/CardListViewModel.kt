@@ -4,18 +4,21 @@ import android.app.Application
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 
-class ViewCard(uri: Uri, filename: String) {
+class ViewCard(id: Long, uri: Uri, filename: String) {
+    val id = id
     val uri = uri
     val filename = filename
 }
 
 class CardListViewModel(application: Application) : AndroidViewModel(application) {
-    private val _cardUris = mutableStateOf(emptyList<ViewCard>())
-    val cardUris: State<List<ViewCard>> = _cardUris
+    private val _viewCards = mutableStateOf(emptyList<ViewCard>())
+    val viewCards: State<List<ViewCard>> = _viewCards
+
 
     fun fetchCards() {
         val viewCards = mutableListOf<ViewCard>()
@@ -37,9 +40,10 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
                 val contentFilename = cursor.getString(
                     cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
                 )
-                viewCards.add(ViewCard(contentUri, contentFilename))
+                viewCards.add(ViewCard(id, contentUri, contentFilename))
             }
-            _cardUris.value = viewCards
+            _viewCards.value = viewCards
         }
     }
+
 }

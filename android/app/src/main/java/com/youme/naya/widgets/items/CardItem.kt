@@ -2,7 +2,6 @@ package com.youme.naya.widgets.items
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,8 +21,11 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.youme.naya.share.ShareActivity
+import com.youme.naya.widgets.home.CardListViewModel
+import com.youme.naya.widgets.home.ViewCard
 
 
 private val CardModifier = Modifier
@@ -33,11 +35,10 @@ private val CardModifier = Modifier
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CardItem(uri: Uri, filename: String) {
+fun CardItem(card: ViewCard) {
     val context = LocalContext.current
     val activity = context as? Activity
     var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
-
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -61,9 +62,8 @@ fun CardItem(uri: Uri, filename: String) {
                 state = rememberDraggableState { delta ->
                     if (delta < 0 && !isShareOpen) {
                         var intent = Intent(activity, ShareActivity::class.java)
-                        intent.putExtra("cardUri", uri.toString())
-                        intent.putExtra("filename", filename)
-//                        context.startActivity(intent)
+                        intent.putExtra("cardUri", card.uri.toString())
+                        intent.putExtra("filename", card.filename)
                         launcher.launch(intent)
                         setIsShareOpen(true)
                     }
@@ -72,18 +72,19 @@ fun CardItem(uri: Uri, filename: String) {
             .pointerInteropFilter {
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        Log.i("Card", "Down $uri")
+                        Log.i("Card", "Down ${card.uri}")
                     }
                     MotionEvent.ACTION_MOVE -> {
-                        Log.i("Card", "Move $uri")
+                        Log.i("Card", "Move ${card.uri}")
                     }
                     MotionEvent.ACTION_UP -> {
-                        Log.i("Card", "Up $uri")
+                        Log.i("Card", "Up ${card.uri}")
+                        CurrentCard.setCurrentCard(card)
                     }
                     else -> false
                 }
                 true
             }) {
-        Image(rememberImagePainter(data = uri), null, Modifier.fillMaxSize())
+        Image(rememberImagePainter(data = card.uri), null, Modifier.fillMaxSize())
     }
 }
