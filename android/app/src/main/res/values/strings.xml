@@ -17,4 +17,8 @@
 
     <!-- ocr -->
     <string name="scanned_image">Scanned Image</string>
+
+    <string name="privacy">
+
+    </string>
 </resources>

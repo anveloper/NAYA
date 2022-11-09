@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -40,32 +42,40 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
         Manifest.permission.INTERNET,
     )
 
+    private val viewModel: PermissionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val (permitted, setPermitted) = remember { mutableStateOf(false) }
-
+            val context = LocalContext.current
+            viewModel.loadTerms(context)
+            viewModel.loadPrivacy(context)
             AndroidTheme {
-                LoginScreen(permitted, {
+                LoginScreen(permitted,viewModel, {
                     setPermitted(checkPermission())
-                    Log.i("per", permitted.toString())
                 }) { googleLogin() }
             }
         }
     }
 
     private fun checkPermission(): Boolean {
+        var res = true
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
         for (permission in permissionList) {
+            // 28버전 이후에는 WRITE 방식이 변경됨
+            if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE
+                && Build.VERSION.SDK_INT > Build.VERSION_CODES.P
+            )
+                continue
             if (checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
+                res = false;
                 requestPermissions(permissionList.toTypedArray(), 0)
-                return false;
             }
-            Log.i("Permission Check", "$permission processing")
+            Log.i("Permission Check", "$permission processing -> $res")
         }
-        return true;
+        return res;
     }
 
     // 로그인 객체 생성

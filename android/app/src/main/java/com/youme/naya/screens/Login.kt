@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.youme.naya.R
 import com.youme.naya.login.PermissionSheet
+import com.youme.naya.login.PermissionViewModel
 import com.youme.naya.ui.theme.*
 import kotlinx.coroutines.launch
 
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     permitted: Boolean,
+    viewModel: PermissionViewModel,
     checkPermission: () -> Unit,
     signInGoogle: () -> Unit
 ) {
@@ -50,7 +52,7 @@ fun LoginScreen(
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            PermissionSheet(permitted, { checkPermission() }) {
+            PermissionSheet(permitted, viewModel, { checkPermission() }) {
                 setConfirmResult(ConfirmResult.Agree)
             }
         },
@@ -209,7 +211,7 @@ fun SignInGoogleButton(
 )
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(false, {}) {
+    LoginScreen(false, PermissionViewModel(), {}) {
 
     }
 }
