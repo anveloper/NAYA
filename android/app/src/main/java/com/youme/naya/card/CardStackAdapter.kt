@@ -79,7 +79,7 @@ class CardStackAdapter(
             mTextEmail.text = card.email
             val summaryMain =
                 card.name + " | " + card.company + " | " + card.team + " | " + card.role
-            val summarySub = card.memo_content.ifEmpty { "메모를 등록하지 않았어요" }
+            val summarySub = card.memoContent.ifEmpty { "메모를 등록하지 않았어요" }
             mTextSummaryMain.text = summaryMain
             mTextSummarySub.text = summarySub
             mBtnDetails.setOnClickListener {

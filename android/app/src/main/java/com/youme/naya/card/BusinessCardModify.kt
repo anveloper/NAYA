@@ -35,14 +35,14 @@ fun BusinessCardModifyScreen(navController: NavHostController, card: Card) {
     var memo1 by remember { mutableStateOf(card.memo1) }
     var memo2 by remember { mutableStateOf(card.memo2) }
     var memo3 by remember { mutableStateOf(card.memo3) }
-    var memoContent by remember { mutableStateOf(card.memo_content) }
+    var memoContent by remember { mutableStateOf(card.memoContent) }
 
     val isModified = name != card.name || engName != card.engName || email != card.email ||
             mobile != card.mobile || address != card.address || company != card.company ||
             team != card.team || role != card.role || fax != card.fax ||
             tel != card.tel || background != card.background || logo != card.logo ||
             memo1 != card.memo1 || memo2 != card.memo2 || memo3 != card.memo3 ||
-            memoContent != card.memo_content
+            memoContent != card.memoContent
 
     Column(
         Modifier.fillMaxSize(),
