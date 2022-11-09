@@ -4,7 +4,6 @@ package com.youme.naya.widgets.home
 import android.app.Activity
 import android.content.Context
 import android.util.DisplayMetrics
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -21,10 +20,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.youme.naya.widgets.items.CardItemPlus
 import com.youme.naya.widgets.items.CardItem
+import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
 
