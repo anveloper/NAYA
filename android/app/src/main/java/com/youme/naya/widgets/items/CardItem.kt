@@ -27,6 +27,7 @@ import com.youme.naya.share.ShareActivity
 import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.home.ViewCard
 
+
 private val CardModifier = Modifier
     .width(200.dp)
     .height(360.dp)

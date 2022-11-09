@@ -48,7 +48,7 @@ fun CustomCardStackView(
                     .padding(bottom = 56.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("보유 중인 명함이 없어요", color = NeutralLight)
+                Text("받은 명함이 없어요", color = NeutralLight)
             }
         } else {
             AndroidViewBinding(
@@ -73,7 +73,7 @@ fun CustomCardStackView(
                     .padding(bottom = 56.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text("보유 중인 나야 카드가 없어요", color = NeutralLight)
+                Text("받은 나야 카드가 없어요", color = NeutralLight)
             }
         } else {
             AndroidViewBinding(
