@@ -9,19 +9,20 @@ import androidx.navigation.compose.composable
 import com.youme.naya.AnimatedSplashScreen
 import com.youme.naya.MainScreen
 import com.youme.naya.SplashScreen
+import com.youme.naya.login.LoginViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RootNavigationGraph(navController: NavHostController) {
+fun RootNavigationGraph(navController: NavHostController,loginViewModel: LoginViewModel) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
         startDestination = SplashScreen.Splash.route,
     ) {
         composable(route = SplashScreen.Splash.route) {
-            AnimatedSplashScreen(navController)
+            AnimatedSplashScreen(navController, loginViewModel)
         }
-        composable(route = Graph.Bottom) {
+        composable(route = Graph.BOTTOM) {
             MainScreen()
         }
     }
@@ -29,5 +30,5 @@ fun RootNavigationGraph(navController: NavHostController) {
 
 object Graph {
     const val ROOT = "root_graph"
-    const val Bottom = "bottom_graph"
+    const val BOTTOM = "bottom_graph"
 }
