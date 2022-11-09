@@ -185,12 +185,13 @@ fun MultiFloatingActionButton(
         ) {
             FloatingActionButton(
                 onClick = {
-                    cameraLauncher.launch(
-                        Intent(
-                            activity,
-                            DocumentScannerActivity::class.java
-                        )
-                    )
+//                    cameraLauncher.launch(
+//                        Intent(
+//                            activity,
+//                            DocumentScannerActivity::class.java
+//                        )
+//                    )
+                    getTempOCRResult(navController)
                 },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite
@@ -212,4 +213,14 @@ fun MultiFloatingActionButton(
 @Preview
 fun NuyaCardHolderScreenPreview() {
     NuyaCardHolderScreen(rememberNavController())
+}
+
+fun getTempOCRResult(navController: NavHostController) {
+    val ocrResult = "문자열 1\n" +
+            "문자열 2\n" +
+            "" +
+            "문자열 3\n" +
+            "" +
+            "문자열 4"
+    navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
 }

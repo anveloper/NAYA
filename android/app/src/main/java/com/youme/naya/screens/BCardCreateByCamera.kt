@@ -23,6 +23,13 @@ import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
 
 
+fun isValid(fields: SnapshotStateList<String>, fieldsRequiredList: List<Boolean>): Boolean {
+    fields.forEachIndexed { index, field ->
+        if (fieldsRequiredList[index] && field.isBlank()) return false
+    }
+    return true
+}
+
 @Composable
 fun BCardCreateByCameraScreen(navController: NavHostController, result: String) {
     val cardViewModel: CardViewModel = hiltViewModel()
@@ -46,7 +53,6 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
         true, true, true, true, true, true, true, true,
         false, false, false, false, false, false, false
     )
-    val fieldsRequiredState = remember { fieldsRequiredList.toMutableStateList() }
 
     val fieldSelectedList = List(fieldsNameList.size) { _ -> false }
     val fieldSelectedState = remember { fieldSelectedList.toMutableStateList() }
@@ -54,22 +60,25 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
     val dropdownMenuList = List(fieldsNameList.size) { _ -> false }
     val dropdownMenuState = remember { dropdownMenuList.toMutableStateList() }
 
-    var name by remember { mutableStateOf("") }
-    var engName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var mobile by remember { mutableStateOf("") }
-    var address by remember { mutableStateOf("") }
-    var company by remember { mutableStateOf("") }
-    var team by remember { mutableStateOf("") }
-    var role by remember { mutableStateOf("") }
-    var fax by remember { mutableStateOf("") }
-    var tel by remember { mutableStateOf("") }
-    var background by remember { mutableStateOf("") }
-    var logo by remember { mutableStateOf("") }
-    var memo1 by remember { mutableStateOf("") }
-    var memo2 by remember { mutableStateOf("") }
-    var memo3 by remember { mutableStateOf("") }
-    var memoContent by remember { mutableStateOf("") }
+//    var name by remember { mutableStateOf("") }
+//    var engName by remember { mutableStateOf("") }
+//    var email by remember { mutableStateOf("") }
+//    var mobile by remember { mutableStateOf("") }
+//    var address by remember { mutableStateOf("") }
+//    var company by remember { mutableStateOf("") }
+//    var team by remember { mutableStateOf("") }
+//    var role by remember { mutableStateOf("") }
+//    var fax by remember { mutableStateOf("") }
+//    var tel by remember { mutableStateOf("") }
+//    var background by remember { mutableStateOf("") }
+//    var logo by remember { mutableStateOf("") }
+//    var memo1 by remember { mutableStateOf("") }
+//    var memo2 by remember { mutableStateOf("") }
+//    var memo3 by remember { mutableStateOf("") }
+//    var memoContent by remember { mutableStateOf("") }
+
+    var inputValueList = List(fieldsNameList.size) { _ -> ""}
+    var inputValueState = remember { inputValueList.toMutableStateList() }
 
     Column(
         Modifier
@@ -79,7 +88,15 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         BusinessCardTemplate(
-            name, engName, email, mobile, address, team, role, company, logo
+            name = inputValueState[0],
+            engName = inputValueState[1],
+            email = inputValueState[2],
+            mobile = inputValueState[3],
+            address = inputValueState[4],
+            company = inputValueState[5],
+            team = inputValueState[6],
+            role = inputValueState[7],
+            logo = inputValueState[11]
         )
 
         LazyColumn(
@@ -90,71 +107,29 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
             items(fieldsNameList.size) { index ->
                 FieldItem(name, "이름 *", 0, dropdownMenuState, fieldsLabelList) { name = it }
             }
-            item {
-                FieldItem(name, "이름 *", 0, dropdownMenuState, fieldsLabelList) { name = it }
-            }
-            item {
-                BasicTextField(text = engName, placeholder = "영어 이름 *", onChange = { engName = it })
-            }
-            item {
-                BasicTextField(text = email, placeholder = "이메일 *", onChange = { email = it })
-            }
-            item {
-                BasicTextField(text = mobile, placeholder = "휴대폰번호 *", onChange = { mobile = it })
-            }
-            item {
-                BasicTextField(text = address, placeholder = "주소 *", onChange = { address = it })
-            }
-            item {
-                BasicTextField(text = company, placeholder = "회사명 *", onChange = { company = it })
-            }
-            item {
-                BasicTextField(text = team, placeholder = "부서 *", onChange = { team = it })
-            }
-            item {
-                BasicTextField(text = role, placeholder = "직책 *", onChange = { role = it })
-            }
-            item {
-                BasicTextField(text = tel, placeholder = "전화번호", onChange = { tel = it })
-            }
-//            BasicTextField(text = fax, placeholder = "팩스번호", onChange = { fax = it })
-//            BasicTextField(text = background, placeholder = "뒷면 배경", onChange = { background = it })
-//            BasicTextField(text = logo, placeholder = "로고", onChange = { logo = it })
-//            BasicTextField(text = memo1, placeholder = "메모1", onChange = { memo1 = it })
-//            BasicTextField(text = memo2, placeholder = "메모2", onChange = { memo2 = it })
-//            BasicTextField(text = memo3, placeholder = "메모3", onChange = { memo3 = it })
-            item {
-                BasicTextField(
-                    text = memoContent,
-                    placeholder = "메모",
-                    onChange = { memoContent = it })
-            }
+
             item {
                 PrimaryBigButton(text = "저장") {
-                    val isValid = name.isNotEmpty() && engName.isNotEmpty() && email.isNotEmpty()
-                            && mobile.isNotEmpty() && address.isNotEmpty() && company.isNotEmpty()
-                            && team.isNotEmpty() && role.isNotEmpty()
-
-                    if (isValid) {
+                    if (isValid(fieldsValueState, fieldsRequiredList)) {
                         val card = Card(
                             0,
-                            name,
-                            engName,
+                            name = inputValueState[0],
+                            engName = inputValueState[1],
                             1,
-                            email,
-                            mobile,
-                            address,
-                            company,
-                            team,
-                            role,
-                            background,
-                            logo,
-                            fax,
-                            tel,
-                            memo1,
-                            memo2,
-                            memo3,
-                            memoContent
+                            email = inputValueState[2],
+                            mobile = inputValueState[3],
+                            address = inputValueState[4],
+                            company = inputValueState[5],
+                            team = inputValueState[6],
+                            role = inputValueState[7],
+                            fax = inputValueState[8],
+                            tel = inputValueState[9],
+                            background = inputValueState[10],
+                            logo = inputValueState[11],
+                            memo1 = inputValueState[12],
+                            memo2 = inputValueState[13],
+                            memo3 = inputValueState[14],
+                            memoContent = inputValueState[15]
                         )
 
                         cardViewModel.addCard(card)
@@ -164,11 +139,7 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
                         Toast.makeText(ctx, "필수 입력 양식을 채워주세요", Toast.LENGTH_SHORT).show()
                     }
                 }
-                Spacer(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(40.dp)
-                )
+                Spacer(Modifier.fillMaxWidth().height(40.dp))
             }
         }
     }
