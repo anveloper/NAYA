@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/business_card_vertical"
+    android:layout_width="360dp"
+    android:layout_height="200dp"
+    android:layout_margin="4dp"
+    android:background="@drawable/business_card"
+    android:elevation="4dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintDimensionRatio="H,9:5"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0">
+
+    <TextView
+        android:id="@+id/bcard_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/pretendard_bold"
+        android:textColor="@color/neutral_dark_gray"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/bcard_english_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="이름" />
+
+    <TextView
+        android:id="@+id/bcard_english_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:textColor="@color/neutral_metal"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bcard_name"
+        tools:text="영어 이름" />
+
+    <TextView
+        android:id="@+id/bcard_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/neutral_metal"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="이메일" />
+
+    <TextView
+        android:id="@+id/bcard_mobile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="14dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/neutral_metal"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/bcard_email"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="휴대폰 번호" />
+
+    <TextView
+        android:id="@+id/bcard_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="14dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/neutral_metal"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/bcard_mobile"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="주소" />
+
+    <TextView
+        android:id="@+id/bcard_team_and_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:textColor="@color/neutral_dark_gray"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/bcard_address"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="부서 - 직책" />
+
+    <TextView
+        android:id="@+id/bcard_company"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/pretendard_semibold"
+        android:textColor="@color/neutral_dark_gray"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/bcard_team_and_role"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="회사명" />
+
+    <TextView
+        android:id="@+id/bcard_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:textAlignment="textEnd"
+        android:textColor="@color/neutral_metal"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="로고 이미지" />
+
+    <TextView
+        android:id="@+id/bcard_qrcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/pretendard_medium"
+        android:textAlignment="textEnd"
+        android:textColor="@color/neutral_metal"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="QR코드 이미지" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
