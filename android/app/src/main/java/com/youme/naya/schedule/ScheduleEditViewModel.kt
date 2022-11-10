@@ -3,12 +3,14 @@ package com.youme.naya.schedule
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.repository.ScheduleRepository
 import com.youme.naya.ui.theme.SecondarySystemBlue
+import com.youme.naya.widgets.calendar.customCalendar.model.CustomCalendarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -18,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ScheduleEditViewModel @Inject constructor(
     private val repository: ScheduleRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
     private var currentScheduleId: Int? = null
@@ -49,11 +51,10 @@ class ScheduleEditViewModel @Inject constructor(
 
     private var recentlyDeletedSchedule: Schedule? = null
 
-    private val _uiEvent =  Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
-
     private val _isDone = mutableStateOf(false)
     val isDone: State<Boolean> = _isDone
+
+    var currentSchedule : Schedule? = null
 
     init {
         savedStateHandle.get<Int>("scheduleId")?.let { scheduleId ->
@@ -72,6 +73,7 @@ class ScheduleEditViewModel @Inject constructor(
                                 text = it
                             )
                         }!!
+                        currentSchedule = schedule
                     }
                 }
             }
@@ -116,8 +118,10 @@ class ScheduleEditViewModel @Inject constructor(
         _endTime.value = time
     }
 
-    suspend fun deleteSchedule(schedule: Schedule) {
-        repository.deleteSchedule(schedule)
+    suspend fun deleteSchedule(schedule: Schedule?) {
+        if (schedule != null) {
+            repository.deleteSchedule(schedule)
+        }
     }
 
     fun restoreSchedule() {
@@ -128,15 +132,6 @@ class ScheduleEditViewModel @Inject constructor(
         }
     }
 
-    fun onDoneChange(schedule: Schedule, isDone: Boolean) {
-        viewModelScope.launch {
-            repository.insertSchedule(
-                schedule.copy(
-                    isDone = isDone
-                )
-            )
-        }
-    }
 
     fun insertSchedule(schedule: Schedule? = null, selectedDate: String) {
         viewModelScope.launch {
@@ -154,17 +149,6 @@ class ScheduleEditViewModel @Inject constructor(
                     endTime = endTime.value,
                 )
             )
-            sendUiEvent(UiEvent.PopBackStack)
-        }
-    }
-
-    fun onEditClick(schedule: Schedule) {
-        sendUiEvent(UiEvent.Navigate(Screen.ScheduleEditScreen.passId(schedule.scheduleId)))
-    }
-
-    private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch {
-            _uiEvent.send(event)
         }
     }
 }

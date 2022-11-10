@@ -13,6 +13,7 @@ import com.youme.naya.screens.*
 import com.youme.naya.screens.schedule.ScheduleCreateScreen
 import com.youme.naya.screens.schedule.ScheduleDetailScreen
 import com.youme.naya.screens.schedule.ScheduleMainScreen
+import com.youme.naya.screens.schedule.ScheduleUpdateScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -58,6 +59,21 @@ fun BottomNavGraph(navController: NavHostController) {
             {
             val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
             ScheduleDetailScreen(
+                navController = navController,
+                scheduleId = scheduleId
+            )
+        }
+        composable(route = "scheduleEdit/{scheduleId}",
+            arguments = listOf(
+                navArgument(
+                    name = "scheduleId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },))
+        {
+            val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
+            ScheduleUpdateScreen(
                 navController = navController,
                 scheduleId = scheduleId
             )

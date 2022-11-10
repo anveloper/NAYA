@@ -1,5 +1,7 @@
 package com.youme.naya.schedule.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
@@ -17,6 +19,7 @@ import com.youme.naya.database.entity.Schedule
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ScheduleItem(

@@ -10,7 +10,7 @@ data class ScheduleWithMembers(
     @Embedded val schedule: Schedule,
     @Relation(
         parentColumn = "scheduleId",
-        entityColumn = "memberId"
+        entityColumn = "scheduleId"
     )
     val members: List<Member>
 )

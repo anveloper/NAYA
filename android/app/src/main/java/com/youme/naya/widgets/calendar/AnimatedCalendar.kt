@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.widgets.calendar.customCalendar.CustomCalendar
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDayColors
@@ -60,12 +62,13 @@ fun AnimatedCalendar(
     expanded: Boolean,
     takeMeToDate: LocalDate,
     modifier: Modifier = Modifier,
-    customCalendarEvents: List<CustomCalendarEvent> = emptyList(),
+    customCalendarEvents: List<CustomCalendarEvent>,
     customCalendarThemeColors: List<CustomCalendarThemeColor> = CustomCalendarColors.defaultColors(),
     onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
     customCalendarDayColors: CustomCalendarDayColors = CustomCalendarDayDefaultColors.defaultColors(),
     customCalendarHeaderConfig: CustomCalendarHeaderConfig? = null,
-    ) {
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
+) {
 
     var expanded by remember { mutableStateOf(expanded) }
 

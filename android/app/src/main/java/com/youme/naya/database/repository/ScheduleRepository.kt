@@ -9,22 +9,45 @@ import kotlinx.coroutines.flow.Flow
 
 interface ScheduleRepository {
 
-    fun getMembers(): Flow<List<Member>>
+    /**
+     * Schedule
+     */
 
-    suspend fun getSchedulesByDate(scheduleDate: String) : Flow<List<Schedule>>
-
-    suspend fun getScheduleById(id: Int) : Schedule?
-    suspend fun getMemberById(memberId: Int): Member?
-
-//    suspend fun getScheduleWithMembers(scheduleId: Int): List<ScheduleWithMembers>
+    fun getSchedules(): Flow<List<Schedule>>
 
     suspend fun insertSchedule(schedule: Schedule)
-    suspend fun insertMember(member: Member)
 
     suspend fun updateSchedule(schedule: Schedule)
-    suspend fun updateMember(member: Member)
 
     suspend fun deleteSchedule(schedule: Schedule)
+
+    suspend fun getScheduleById(scheduleId: Int): Schedule?
+
+    suspend fun getSchedulesByDate(scheduleDate: String): Flow<List<Schedule>>
+
+
+    /**
+     * Member
+     */
+
+    fun getMembers(): Flow<List<Member>>
+
+    suspend fun insertMember(member: Member)
+
+    suspend fun updateMember(member: Member)
+
     suspend fun deleteMember(member: Member)
+
+    suspend fun getMemberById(memberId: Int): Member?
+
+    /**
+     * Schedule and Member
+     */
+
+    fun getSchedulesWithMembers(): Flow<List<ScheduleWithMembers>>
+
+    fun getSchedulesWithMembersByDate(scheduleDate: String): Flow<List<ScheduleWithMembers>>
+
+    suspend fun getScheduleWithMembersById(scheduleId: Int): ScheduleWithMembers?
 
 }

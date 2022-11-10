@@ -51,7 +51,10 @@ fun MainScreen(
 
     Scaffold(
         floatingActionButton = {
-            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}") {
+            if (currentDestination.toString() != "scheduleCreate"
+                && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}"
+            ) {
                 FloatingActionButton(
                     onClick = {
                         when (currentDestination.toString()) {
@@ -94,12 +97,14 @@ fun MainScreen(
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
         topBar = {
-            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}") {
+            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
                 HeaderBar(navController = navController)
             }
         },
         bottomBar = {
-            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}") {
+            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
                 BottomBar(navController = navController)
             }
         },

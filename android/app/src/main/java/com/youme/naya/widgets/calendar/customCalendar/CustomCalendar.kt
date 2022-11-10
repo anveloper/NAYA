@@ -25,7 +25,7 @@ fun CustomCalendar(
     modifier: Modifier = Modifier,
     takeMeToDate: LocalDate,
     customCalendarType: CustomCalendarType = CustomCalendarType.Fold(true),
-    customCalendarEvents: List<CustomCalendarEvent> = emptyList(),
+    customCalendarEvents: List<CustomCalendarEvent>,
     customCalendarThemeColors: List<CustomCalendarThemeColor> = CustomCalendarColors.defaultColors(),
     onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
     customCalendarDayColors: CustomCalendarDayColors = CustomCalendarDayDefaultColors.defaultColors(),

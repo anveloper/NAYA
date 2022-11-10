@@ -1,19 +1,23 @@
 package com.youme.naya.screens.schedule
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.youme.naya.R
-import com.youme.naya.ui.theme.NeutralLight
-import com.youme.naya.ui.theme.NeutralWhite
+import com.youme.naya.ui.theme.*
 
 private val CalendarHeaderBtnGroupModifier = Modifier
     .fillMaxWidth()
@@ -36,13 +40,16 @@ fun ScheduleDetailScreen(
             elevation = 0.dp,
             contentPadding = PaddingValues(horizontal = 8.dp),
         ) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .height(24.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Image(
@@ -51,6 +58,16 @@ fun ScheduleDetailScreen(
                             colorFilter = ColorFilter.tint(NeutralLight)
                         )
                     }
+                    Text(
+                        "수정",
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = PrimaryBlue,
+                        modifier = Modifier.padding(horizontal = 8.dp).clickable(onClick = {
+                            navController.navigate("scheduleEdit/${scheduleId}")
+                        })
+                    )
             }
             }
         }

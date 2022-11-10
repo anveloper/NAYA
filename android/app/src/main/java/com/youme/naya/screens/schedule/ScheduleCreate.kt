@@ -87,7 +87,8 @@ fun ScheduleCreateScreen(
         // 캘린더
         AnimatedCalendar(
             false,
-            takeMeToDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            takeMeToDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+            customCalendarEvents = emptyList()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -219,15 +220,13 @@ fun ScheduleCreateScreen(
                             when (componentVariable.value) {
                                 5 -> {
                                     viewModel.insertSchedule(selectedDate = viewMainModel.selectedDate.value)
-
+                                    viewMainModel.getEventSchedule()
                                     navController.navigate("schedule")
                                 }
                             }
                         },
                     )
                 }
-
-
         })
     }
 
