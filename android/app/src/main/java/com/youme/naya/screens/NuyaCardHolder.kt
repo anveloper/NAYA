@@ -218,9 +218,9 @@ fun NuyaCardHolderScreenPreview() {
 fun getTempOCRResult(navController: NavHostController) {
     val ocrResult = "문자열 1\n" +
             "문자열 2\n" +
-            "" +
+            "\n" +
             "문자열 3\n" +
-            "" +
+            "\n" +
             "문자열 4"
     navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
 }

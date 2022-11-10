@@ -24,60 +24,53 @@ import com.youme.naya.database.viewModel.CardViewModel
 
 
 fun isValid(fields: SnapshotStateList<String>, fieldsRequiredList: List<Boolean>): Boolean {
+    var result = true
     fields.forEachIndexed { index, field ->
-        if (fieldsRequiredList[index] && field.isBlank()) return false
+        if (result && field == null) result = false
     }
-    return true
+    return result
+}
+
+val fieldsNameList = listOf(
+    "name", "engName", "email", "mobile", "address", "company", "team", "role",
+    "fax", "background", "logo", "memo1", "memo2", "memo3", "memoContent"
+)
+val fieldsLabelList = listOf(
+    "이름", "영어 이름", "이메일", "휴대폰 번호", "주소", "회사명", "부서", "직책",
+    "팩스 번호", "배경 이미지", "로고 이미지", "기타 1", "기타 2", "기타 3", "메모"
+)
+
+fun removeBlankLines(ocrResult: String): MutableList<String> {
+    val result = mutableListOf<String>()
+    ocrResult.lines().forEach { line ->
+        if (line.isNotBlank()) result.add(line)
+    }
+    return result
 }
 
 @Composable
 fun BCardCreateByCameraScreen(navController: NavHostController, result: String) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
-    val stringValues = Uri.decode(result).lines().iterator()
+    val stringValues = removeBlankLines(Uri.decode(result))
     var idx by remember { mutableStateOf(0) }
 
-    val fieldsNameList = listOf(
-        "name", "engName", "email", "mobile", "address", "company", "team", "role",
-        "fax", "background", "logo", "memo1", "memo2", "memo3", "memoContent"
-    )
-    val fieldsLabelList = listOf(
-        "이름", "영어 이름", "이메일", "휴대폰 번호", "주소", "회사명", "부서", "직책",
-        "팩스 번호", "배경 이미지", "로고 이미지", "기타 1", "기타 2", "기타 3", "메모"
-    )
 
+
+    // 필드 입력 값 리스트
     val fieldsValueList = List(fieldsNameList.size) { _ -> "" }
     val fieldsValueState = remember { fieldsValueList.toMutableStateList() }
 
-    val fieldsRequiredList = listOf(
-        true, true, true, true, true, true, true, true,
-        false, false, false, false, false, false, false
-    )
-
+    // 필드 선택 여부 리스트
     val fieldSelectedList = List(fieldsNameList.size) { _ -> false }
     val fieldSelectedState = remember { fieldSelectedList.toMutableStateList() }
 
+    // 각 드롭다운 메뉴의 오픈 상태 리스트
     val dropdownMenuList = List(fieldsNameList.size) { _ -> false }
     val dropdownMenuState = remember { dropdownMenuList.toMutableStateList() }
 
-//    var name by remember { mutableStateOf("") }
-//    var engName by remember { mutableStateOf("") }
-//    var email by remember { mutableStateOf("") }
-//    var mobile by remember { mutableStateOf("") }
-//    var address by remember { mutableStateOf("") }
-//    var company by remember { mutableStateOf("") }
-//    var team by remember { mutableStateOf("") }
-//    var role by remember { mutableStateOf("") }
-//    var fax by remember { mutableStateOf("") }
-//    var tel by remember { mutableStateOf("") }
-//    var background by remember { mutableStateOf("") }
-//    var logo by remember { mutableStateOf("") }
-//    var memo1 by remember { mutableStateOf("") }
-//    var memo2 by remember { mutableStateOf("") }
-//    var memo3 by remember { mutableStateOf("") }
-//    var memoContent by remember { mutableStateOf("") }
-
-    var inputValueList = List(fieldsNameList.size) { _ -> ""}
+    // fieldsNameList의 각 인덱스에 해당하는 입력 값
+    var inputValueList = List(fieldsNameList.size) { _ -> "" }
     var inputValueState = remember { inputValueList.toMutableStateList() }
 
     Column(
@@ -105,7 +98,35 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(fieldsNameList.size) { index ->
-                FieldItem(name, "이름 *", 0, dropdownMenuState, fieldsLabelList) { name = it }
+                if (stringValues.hasNext()) {
+                    // 문자열이 입력된 입력창
+                    val value = stringValues.next()
+                    if (value.isNotBlank()) {
+                        FieldItem(
+                            fieldsValueState[index],
+                            "",
+                            index,
+                            dropdownMenuState,
+                            inputValueState,
+                            fieldsLabelList
+                        ) {
+                            fieldsValueState[index] = it
+                        }
+                    } else {
+                        FieldItem(
+                            fieldsValueState[index],
+                            "",
+                            index,
+                            dropdownMenuState,
+                            inputValueState,
+                            fieldsLabelList
+                        ) {
+                            fieldsValueState[index] = it
+                        }
+                    }
+                } else {
+                    // 빈 입력창
+                }
             }
 
             item {
@@ -139,7 +160,10 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
                         Toast.makeText(ctx, "필수 입력 양식을 채워주세요", Toast.LENGTH_SHORT).show()
                     }
                 }
-                Spacer(Modifier.fillMaxWidth().height(40.dp))
+                Spacer(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(40.dp))
             }
         }
     }
@@ -151,11 +175,12 @@ fun FieldItem(
     placeholder: String,
     idx: Int,
     dropdownMenuState: SnapshotStateList<Boolean>,
+    inputValueState: SnapshotStateList<String>,
     fieldsLabelList: List<String>,
     onChange: (String) -> Unit
 ) {
     Row {
-        OutlinedSmallButton(text = "Dropdown Menu") {
+        OutlinedSmallButton(text = "선택") {
             dropdownMenuState[idx] = true
         }
         DropdownMenu(
@@ -166,6 +191,7 @@ fun FieldItem(
                 if (!state) {
                     DropdownMenuItem(onClick = {
                         dropdownMenuState[index] = false
+                        inputValueState[index] = text
                     }) {
                         Text(text = fieldsLabelList[index])
                     }
