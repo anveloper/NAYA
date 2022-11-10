@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.databinding.BusinessCardVerticalBinding
 import com.youme.naya.widgets.items.CardItemPlus
@@ -32,7 +33,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun MyBCardList(context: Context) {
+fun MyBCardList(context: Context, navController: NavHostController) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val businessCards = cardViewModel.businessCardList.collectAsState().value
 
@@ -96,7 +97,7 @@ fun MyBCardList(context: Context) {
                 }
             }
             item() {
-                CardItemPlus(true)
+                CardItemPlus(navController = navController, isBCard = true)
             }
         }
         Spacer(Modifier.height(16.dp))
