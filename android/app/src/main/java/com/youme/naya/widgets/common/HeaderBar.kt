@@ -51,9 +51,13 @@ fun HeaderBar(
         }
         "bCardCreate" -> {
             logo = false
-            title = "카드 직접 입력"
+            title = "명함 직접 입력"
         }
-        "bCardModify/card={card}" -> {
+        "bCardCreateByCamera?result={result}" -> {
+            logo = false
+            title = "카메라로 명함 등록"
+        }
+        "bCardModify?card={card}" -> {
             logo = false
             title = "카드 수정하기"
             closeActivityButton = true
