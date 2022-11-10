@@ -2,8 +2,13 @@ package com.youme.naya.screens
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_PICK
+import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,6 +23,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
@@ -33,6 +39,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.loader.content.CursorLoader
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.CustomCardStackView
@@ -45,6 +52,15 @@ import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 
+
+fun getPath(context: Context, uri: Uri): String {
+    val proj = arrayOf(MediaStore.Images.Media.DATA)
+    val cursorLoader = CursorLoader(context, uri, proj, null, null, null)
+    val cursor: Cursor = cursorLoader.loadInBackground()!!
+    val index: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+    cursor.moveToFirst()
+    return cursor.getString(index)
+}
 
 @Composable
 fun NuyaCardHolderScreen(navController: NavHostController) {
@@ -165,7 +181,18 @@ fun MultiFloatingActionButton(
                 ocrLauncher.launch(ocrIntent)
             }
         }
-
+    // 이미지 선택 액티비티
+    val mediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) {
+            val uri = it.data?.data as Uri
+            val imgPath = getPath(context, uri)
+            val ocrIntent = Intent(activity, StillImageActivity::class.java)
+            ocrIntent.putExtra("savedImgAbsolutePath", imgPath)
+            ocrLauncher.launch(ocrIntent)
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -173,8 +200,8 @@ fun MultiFloatingActionButton(
             .padding(16.dp), contentAlignment = Alignment.BottomEnd
     ) {
         Row(
-            modifier = Modifier.padding(bottom = 64.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier.padding(bottom = 80.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             FloatingActionButton(
                 onClick = {
@@ -184,7 +211,6 @@ fun MultiFloatingActionButton(
                             DocumentScannerActivity::class.java
                         )
                     )
-//                    getTempOCRResult(navController)
                 },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite
@@ -192,11 +218,22 @@ fun MultiFloatingActionButton(
                 Icon(Icons.Filled.AddAPhoto, Icons.Filled.AddAPhoto.toString())
             }
             FloatingActionButton(
+                onClick = {
+                    val intent = Intent(ACTION_PICK)
+                    intent.type = "image/*"
+                    mediaLauncher.launch(intent)
+                },
+                backgroundColor = PrimaryBlue,
+                contentColor = NeutralWhite
+            ) {
+                Icon(Icons.Filled.Image, Icons.Filled.Image.toString())
+            }
+            FloatingActionButton(
                 onClick = { navController.navigate("bCardCreate") },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite
             ) {
-                Icon(Icons.Filled.Keyboard, Icons.Filled.AddAPhoto.toString())
+                Icon(Icons.Filled.Keyboard, Icons.Filled.Keyboard.toString())
             }
         }
     }
@@ -206,14 +243,4 @@ fun MultiFloatingActionButton(
 @Preview
 fun NuyaCardHolderScreenPreview() {
     NuyaCardHolderScreen(rememberNavController())
-}
-
-fun getTempOCRResult(navController: NavHostController) {
-    val ocrResult = "문자열 1\n" +
-            "문자열 2\n" +
-            "\n" +
-            "문자열 3\n" +
-            "\n" +
-            "문자열 4"
-    navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
 }
