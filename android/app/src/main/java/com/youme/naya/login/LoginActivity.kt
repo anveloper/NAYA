@@ -34,13 +34,29 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val RC_SIGN_IN = 1
 
-    private var permissionList = listOf<String>(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.CAMERA,
-        Manifest.permission.NFC,
-        Manifest.permission.INTERNET,
-    )
+    private var permissionList =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            listOf<String>(
+                Manifest.permission.CAMERA,
+                Manifest.permission.NFC,
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_MEDIA_IMAGES,
+            )
+        else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
+            listOf<String>(
+                Manifest.permission.CAMERA,
+                Manifest.permission.NFC,
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+            )
+        else listOf<String>(
+            Manifest.permission.CAMERA,
+            Manifest.permission.NFC,
+            Manifest.permission.INTERNET,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, // 28이하에서만 요청해야함
+        )
+
 
     private val viewModel: PermissionViewModel by viewModels()
 
@@ -52,7 +68,7 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
             viewModel.loadTerms(context)
             viewModel.loadPrivacy(context)
             AndroidTheme {
-                LoginScreen(permitted,viewModel, {
+                LoginScreen(permitted, viewModel, {
                     setPermitted(checkPermission())
                 }) { googleLogin() }
             }
@@ -64,11 +80,6 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
         for (permission in permissionList) {
-            // 28버전 이후에는 WRITE 방식이 변경됨
-            if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE
-                && Build.VERSION.SDK_INT > Build.VERSION_CODES.P
-            )
-                continue
             if (checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
                 res = false;
                 requestPermissions(permissionList.toTypedArray(), 0)
@@ -79,7 +90,7 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
     }
 
     // 로그인 객체 생성
-    fun googleLogin() {
+    private fun googleLogin() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
