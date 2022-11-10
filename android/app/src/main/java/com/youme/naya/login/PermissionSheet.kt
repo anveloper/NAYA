@@ -70,8 +70,7 @@ fun PrivacyComp(
         )
         Column(
             Modifier
-                .fillMaxWidth(0.78f)
-                .height(282.dp), Arrangement.SpaceBetween, Alignment.CenterHorizontally
+                .fillMaxWidth(0.82f), Arrangement.SpaceBetween, Alignment.CenterHorizontally
         ) {
             TextButton(onClick = { setTerms(!terms) }) {
                 Row(Modifier.fillMaxWidth(), Arrangement.Start, Alignment.CenterVertically) {
@@ -179,8 +178,7 @@ fun PermissionComp(
         )
         Column(
             Modifier
-                .fillMaxWidth(0.78f)
-                .height(262.dp), Arrangement.SpaceBetween, Alignment.CenterHorizontally
+                .fillMaxWidth(0.82f), Arrangement.SpaceBetween, Alignment.CenterHorizontally
         ) {
             PermissionInfo(R.drawable.ic_permission_camera, "카메라", "명함과 관련한 사진/동영상 촬영을 위해 필요합니다.")
             PermissionInfo(R.drawable.ic_permission_gallery, "갤러리", "명함과 관련한 사진/동영상 정보를 위해 필요합니다.")
