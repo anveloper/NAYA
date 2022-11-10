@@ -1,6 +1,7 @@
 package com.youme.naya.screens
 
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -140,18 +141,14 @@ fun MultiFloatingActionButton(
     val ocrLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        when (it.resultCode) {
-            Activity.RESULT_OK -> {
-                // OCR 문자열 인식 결과
-                val ocrResult = it.data?.getStringExtra("ocrResult")
+        if (it.resultCode == RESULT_OK) {
+            // OCR 문자열 인식 결과
+            val ocrResult = it.data?.getStringExtra("ocrResult")
 
-                if (ocrResult.isNullOrBlank()) {
-                    Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
-                } else {
-                    navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
-                }
-            }
-            Activity.RESULT_CANCELED -> {
+            if (ocrResult.isNullOrBlank()) {
+                Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
+            } else {
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
             }
         }
     }
@@ -160,16 +157,12 @@ fun MultiFloatingActionButton(
         rememberLauncherForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) {
-            when (it.resultCode) {
-                Activity.RESULT_OK -> {
-                    // 임시 이미지 저장 경로
-                    val imgPath = it.data?.getStringExtra("savedImgAbsolutePath")
-                    val ocrIntent = Intent(activity, StillImageActivity::class.java)
-                    ocrIntent.putExtra("savedImgAbsolutePath", imgPath)
-                    ocrLauncher.launch(ocrIntent)
-                }
-                Activity.RESULT_CANCELED -> {
-                }
+            if (it.resultCode == RESULT_OK) {
+                // 임시 이미지 저장 경로
+                val imgPath = it.data?.getStringExtra("savedImgAbsolutePath")
+                val ocrIntent = Intent(activity, StillImageActivity::class.java)
+                ocrIntent.putExtra("savedImgAbsolutePath", imgPath)
+                ocrLauncher.launch(ocrIntent)
             }
         }
 

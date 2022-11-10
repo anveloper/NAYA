@@ -181,7 +181,7 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
                         Toast.makeText(ctx, "카드 생성이 완료되었어요", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     } else {
-                        Toast.makeText(ctx, "필수 입력 양식을 채워주세요", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(ctx, "적어도 하나 이상의 값을 입력해주세요", Toast.LENGTH_SHORT).show()
                     }
                 }
                 Spacer(
