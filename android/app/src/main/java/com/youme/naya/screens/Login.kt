@@ -28,11 +28,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LoginScreen(
-    permitted: Boolean,
     viewModel: PermissionViewModel,
-    checkPermission: () -> Unit,
+    checkPermission: () -> Boolean,
     signInGoogle: () -> Unit
 ) {
+    val (permitted, setPermitted) = remember { mutableStateOf(false) }
     val (confirmResult, setConfirmResult) = remember { mutableStateOf(ConfirmResult.Idle) }
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -48,12 +48,21 @@ fun LoginScreen(
         }
     }
 
-
+    fun onSheet() = coroutineScope.launch {
+        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
+            bottomSheetScaffoldState.bottomSheetState.expand()
+        }
+    }
+    
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
-            PermissionSheet(permitted, viewModel, { checkPermission() }) {
+            PermissionSheet(permitted, viewModel, {
+                setPermitted(checkPermission())
+                onSheet()
+            }) {
                 setConfirmResult(ConfirmResult.Agree)
+                onSheet()
             }
         },
         sheetShape = RoundedCornerShape(20.dp, 20.dp),
@@ -211,7 +220,7 @@ fun SignInGoogleButton(
 )
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(false, PermissionViewModel(), {}) {
+    LoginScreen(PermissionViewModel(), { true }) {
 
     }
 }

@@ -9,8 +9,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -63,14 +61,12 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val (permitted, setPermitted) = remember { mutableStateOf(false) }
+
             val context = LocalContext.current
             viewModel.loadTerms(context)
             viewModel.loadPrivacy(context)
             AndroidTheme {
-                LoginScreen(permitted, viewModel, {
-                    setPermitted(checkPermission())
-                }) { googleLogin() }
+                LoginScreen(viewModel, { checkPermission() }) { googleLogin() }
             }
         }
     }
