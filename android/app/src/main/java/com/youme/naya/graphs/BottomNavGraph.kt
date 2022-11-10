@@ -29,17 +29,13 @@ fun BottomNavGraph(navController: NavHostController) {
             NuyaCardHolderScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NayaCard.route) {
-            NayaCardScreen(navController = navController)
+            NayaCardScreen()
         }
         composable(route = BottomBarScreen.Calendar.route) {
             ScheduleMainScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Settings.route) {
             SettingsScreen()
-        }
-        // camera
-        composable(route = "camera") {
-//            CameraScreen()
         }
         // Nuya 명함 생성 (직접 입력)
         composable(route = "bCardCreate") { entry ->

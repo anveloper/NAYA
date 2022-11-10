@@ -1,5 +1,7 @@
 package com.youme.naya.widgets.home
 
+
+import android.app.Activity
 import android.content.Context
 import android.util.DisplayMetrics
 import androidx.compose.foundation.layout.*
@@ -18,32 +20,33 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.youme.naya.widgets.items.CardItemPlus
 import com.youme.naya.widgets.items.CardItem
+import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun MyNayaCardList(context: Context) {
-    val viewModel = viewModel<CardListViewModel>()
-    viewModel.fetchCards()
-    val cardList = viewModel.cardUris.value
-
-    // page를 이동하기 위한 상태 값
-    val currentCardId = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-
     // 처음 아이템의 padding을 정해주기 위한 식
+    val context = LocalContext.current
+    val activity = context as? Activity
     val display = context.resources?.displayMetrics
     val deviceWidth = display?.widthPixels
     val deviceHeight = display?.heightPixels
-
     fun px2dp(px: Int) =
         px / ((context.resources.displayMetrics.densityDpi?.toFloat()) / DisplayMetrics.DENSITY_DEFAULT)
 
     val listVerticalPadding = (px2dp(deviceWidth!!) - 200) / 2
+    // page를 이동하기 위한 상태 값
+    var currentCardId = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    val viewModel = viewModel<CardListViewModel>()
+    viewModel.fetchCards()
+    val cardList = viewModel.viewCards.value
     val listSize = cardList.size
 
     Column(
@@ -58,8 +61,8 @@ fun MyNayaCardList(context: Context) {
             horizontalArrangement = Arrangement.spacedBy(32.dp),
             state = currentCardId
         ) {
-            items(cardList) { value ->
-                CardItem(value.uri, value.filename)
+            items(cardList) { card ->
+                CardItem(card)
             }
             item() {
                 CardItemPlus()

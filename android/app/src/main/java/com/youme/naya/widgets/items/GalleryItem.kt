@@ -7,12 +7,8 @@ import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -21,21 +17,21 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.youme.naya.share.ShareActivity
-import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.home.ViewCard
 
 
-private val CardModifier = Modifier
-    .width(200.dp)
-    .height(360.dp)
+private val GalleryModifier = Modifier
+    .defaultMinSize(
+        minWidth = 100.dp,
+        minHeight = 180.dp
+    )
     .shadow(elevation = 6.dp)
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CardItem(card: ViewCard) {
+fun GalleryItem(card: ViewCard) {
     val context = LocalContext.current
     val activity = context as? Activity
     var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
@@ -56,19 +52,7 @@ fun CardItem(card: ViewCard) {
 
 
     Card(
-        CardModifier
-            .draggable(
-                orientation = Orientation.Vertical,
-                state = rememberDraggableState { delta ->
-                    if (delta < 0 && !isShareOpen) {
-                        var intent = Intent(activity, ShareActivity::class.java)
-                        intent.putExtra("cardUri", card.uri.toString())
-                        intent.putExtra("filename", card.filename)
-                        launcher.launch(intent)
-                        setIsShareOpen(true)
-                    }
-                }
-            )
+        GalleryModifier
             .pointerInteropFilter {
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {
@@ -78,8 +62,14 @@ fun CardItem(card: ViewCard) {
                         Log.i("Card", "Move ${card.uri}")
                     }
                     MotionEvent.ACTION_UP -> {
-                        Log.i("Card", "Up ${card.uri}")
-                        CurrentCard.setCurrentCard(card)
+                        if (!isShareOpen) {
+                            Log.i("Card", "Up ${card.uri}")
+                            var intent = Intent(activity, ShareActivity::class.java)
+                            intent.putExtra("cardUri", card.uri.toString())
+                            intent.putExtra("filename", card.filename)
+                            launcher.launch(intent)
+                            setIsShareOpen(true)
+                        }
                     }
                     else -> false
                 }

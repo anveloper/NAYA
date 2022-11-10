@@ -37,7 +37,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         },
         ResponseType.IMAGE_FILE_PATH,
         true,
-        2
+        1
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         croppedImageView = findViewById(R.id.cropped_image_view)
 
         // ocr button
-        val go_ocr = findViewById(R.id.ocr_btn) as Button
+        val go_ocr = findViewById<Button>(R.id.ocr_btn)
 
         // start document scan
         documentScanner.startScan()
