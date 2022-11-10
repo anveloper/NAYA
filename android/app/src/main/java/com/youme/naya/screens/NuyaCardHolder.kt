@@ -185,13 +185,13 @@ fun MultiFloatingActionButton(
         ) {
             FloatingActionButton(
                 onClick = {
-//                    cameraLauncher.launch(
-//                        Intent(
-//                            activity,
-//                            DocumentScannerActivity::class.java
-//                        )
-//                    )
-                    getTempOCRResult(navController)
+                    cameraLauncher.launch(
+                        Intent(
+                            activity,
+                            DocumentScannerActivity::class.java
+                        )
+                    )
+//                    getTempOCRResult(navController)
                 },
                 backgroundColor = PrimaryBlue,
                 contentColor = NeutralWhite

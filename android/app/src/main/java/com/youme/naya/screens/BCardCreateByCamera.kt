@@ -4,11 +4,15 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -23,23 +27,32 @@ import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
 
 
-fun isValid(fields: SnapshotStateList<String>, fieldsRequiredList: List<Boolean>): Boolean {
-    var result = true
-    fields.forEachIndexed { index, field ->
-        if (result && field == null) result = false
+//val fieldsNameList = listOf(
+//    "name", "engName", "email", "mobile", "address", "company", "team", "role",
+//    "fax", "background", "logo", "memo1", "memo2", "memo3", "memoContent"
+//)
+//val fieldsLabelList = listOf(
+//    "이름", "영어 이름", "이메일", "휴대폰 번호", "주소", "회사명", "부서", "직책",
+//    "팩스 번호", "배경 이미지", "로고 이미지", "기타 1", "기타 2", "기타 3", "메모"
+//)
+val fieldsNameList = listOf(
+    "name", "engName", "email", "mobile", "address", "company", "team", "role", "memoContent"
+)
+val fieldsLabelList = listOf(
+    "이름", "영어 이름", "이메일", "휴대폰 번호", "주소", "회사명", "부서", "직책", "메모"
+)
+
+fun isValid(mappedValueMap: SnapshotStateMap<String, String>): Boolean {
+    var result = false
+    mappedValueMap.values.forEach { value ->
+        if (value.isNotBlank()) result = true
     }
     return result
 }
 
-val fieldsNameList = listOf(
-    "name", "engName", "email", "mobile", "address", "company", "team", "role",
-    "fax", "background", "logo", "memo1", "memo2", "memo3", "memoContent"
-)
-val fieldsLabelList = listOf(
-    "이름", "영어 이름", "이메일", "휴대폰 번호", "주소", "회사명", "부서", "직책",
-    "팩스 번호", "배경 이미지", "로고 이미지", "기타 1", "기타 2", "기타 3", "메모"
-)
-
+/**
+ * 문자열을 개행 문자 기준으로 각 라인으로 나누고, 빈 라인을 제거 후 리스트 형식으로 반환하는 함수
+ */
 fun removeBlankLines(ocrResult: String): MutableList<String> {
     val result = mutableListOf<String>()
     ocrResult.lines().forEach { line ->
@@ -52,26 +65,34 @@ fun removeBlankLines(ocrResult: String): MutableList<String> {
 fun BCardCreateByCameraScreen(navController: NavHostController, result: String) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
-    val stringValues = removeBlankLines(Uri.decode(result))
-    var idx by remember { mutableStateOf(0) }
+    val resultLines = removeBlankLines(Uri.decode(result))
+//    var idx by remember { mutableStateOf(0) }
 
+    // 필드 입력 값 리스트 (입력 창 생성순)
+    val fieldsValueState = remember(resultLines) {
+        mutableStateListOf(*resultLines.map { line -> line }.toTypedArray())
+    }
 
+    // 각 드롭다운 메뉴의 오픈 상태 리스트 (입력 창 생성순)
+    val dropdownMenuState = remember(resultLines) {
+        mutableStateListOf(*resultLines.map { _ -> false }.toTypedArray())
+    }
 
-    // 필드 입력 값 리스트
-    val fieldsValueList = List(fieldsNameList.size) { _ -> "" }
-    val fieldsValueState = remember { fieldsValueList.toMutableStateList() }
+    // 각 입력 창과 매핑되는 필드 이름 맵
+    val mappedFieldNameMap = remember { mutableStateMapOf<Int, String>() }
 
-    // 필드 선택 여부 리스트
-    val fieldSelectedList = List(fieldsNameList.size) { _ -> false }
-    val fieldSelectedState = remember { fieldSelectedList.toMutableStateList() }
+    // 각 입력 창과 매핑되는 필드 레이블 맵
+    val mappedFieldLabelMap = remember { mutableStateMapOf<Int, String>() }
 
-    // 각 드롭다운 메뉴의 오픈 상태 리스트
-    val dropdownMenuList = List(fieldsNameList.size) { _ -> false }
-    val dropdownMenuState = remember { dropdownMenuList.toMutableStateList() }
+    // 필드 선택 여부 맵
+    val fieldSelectedMap = remember(fieldsNameList) {
+        mutableStateMapOf(*fieldsNameList.map { field -> field to false }.toTypedArray())
+    }
 
-    // fieldsNameList의 각 인덱스에 해당하는 입력 값
-    var inputValueList = List(fieldsNameList.size) { _ -> "" }
-    var inputValueState = remember { inputValueList.toMutableStateList() }
+    // fieldsNameList의 각 입력 값에 해당하는 필드의 실제 값
+    val mappedValueMap = remember(fieldsNameList) {
+        mutableStateMapOf(*fieldsNameList.map { field -> field to "" }.toTypedArray())
+    }
 
     Column(
         Modifier
@@ -81,15 +102,15 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         BusinessCardTemplate(
-            name = inputValueState[0],
-            engName = inputValueState[1],
-            email = inputValueState[2],
-            mobile = inputValueState[3],
-            address = inputValueState[4],
-            company = inputValueState[5],
-            team = inputValueState[6],
-            role = inputValueState[7],
-            logo = inputValueState[11]
+            name = mappedValueMap["name"],
+            engName = mappedValueMap["engName"],
+            email = mappedValueMap["email"],
+            mobile = mappedValueMap["mobile"],
+            address = mappedValueMap["address"],
+            company = mappedValueMap["company"],
+            team = mappedValueMap["team"],
+            role = mappedValueMap["role"],
+            logo = mappedValueMap["logo"]
         )
 
         LazyColumn(
@@ -97,60 +118,63 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(fieldsNameList.size) { index ->
-                if (stringValues.hasNext()) {
-                    // 문자열이 입력된 입력창
-                    val value = stringValues.next()
-                    if (value.isNotBlank()) {
-                        FieldItem(
-                            fieldsValueState[index],
-                            "",
-                            index,
-                            dropdownMenuState,
-                            inputValueState,
-                            fieldsLabelList
-                        ) {
-                            fieldsValueState[index] = it
-                        }
-                    } else {
-                        FieldItem(
-                            fieldsValueState[index],
-                            "",
-                            index,
-                            dropdownMenuState,
-                            inputValueState,
-                            fieldsLabelList
-                        ) {
-                            fieldsValueState[index] = it
+            itemsIndexed(resultLines) { idx, _ ->
+                Row {
+                    OutlinedSmallButton(text = mappedFieldLabelMap[idx] ?: "선택") {
+                        dropdownMenuState[idx] = true
+                    }
+                    DropdownMenu(
+                        expanded = dropdownMenuState[idx],
+                        onDismissRequest = { dropdownMenuState[idx] = false },
+                    ) {
+                        fieldsNameList.forEachIndexed { fieldIdx, fieldName ->
+                            if (!fieldSelectedMap[fieldName]!!) {
+                                DropdownMenuItem(onClick = {
+                                    dropdownMenuState[idx] = false
+                                    fieldSelectedMap[fieldName] = true
+                                    mappedFieldNameMap[idx] = fieldName
+                                    mappedFieldLabelMap[idx] = fieldsLabelList[fieldIdx]
+                                    mappedValueMap[fieldName] = fieldsValueState[idx]
+                                }) {
+                                    Text(text = fieldsLabelList[fieldIdx])
+                                }
+                            }
                         }
                     }
-                } else {
-                    // 빈 입력창
+                    BasicTextField(
+                        text = fieldsValueState[idx],
+                        placeholder = mappedFieldLabelMap[idx] ?: "",
+                        onChange = {
+                            fieldsValueState[idx] = it
+                            if (mappedFieldNameMap[idx] != null) {
+                                mappedValueMap[mappedFieldNameMap[idx]!!] = it
+                            }
+                        })
                 }
             }
 
             item {
                 PrimaryBigButton(text = "저장") {
-                    if (isValid(fieldsValueState, fieldsRequiredList)) {
+                    if (isValid(mappedValueMap)) {
                         val card = Card(
                             0,
-                            name = inputValueState[0],
-                            engName = inputValueState[1],
+                            name = mappedValueMap["name"],
+                            engName = mappedValueMap["engName"],
                             1,
-                            email = inputValueState[2],
-                            mobile = inputValueState[3],
-                            address = inputValueState[4],
-                            company = inputValueState[5],
-                            team = inputValueState[6],
-                            role = inputValueState[7],
-                            fax = inputValueState[8],
-                            tel = inputValueState[9],
-                            background = inputValueState[10],
-                            logo = inputValueState[11],
-                            memo1 = inputValueState[12],
-                            memo2 = inputValueState[13],
-                            memo3 = inputValueState[14],
-                            memoContent = inputValueState[15]
+                            email = mappedValueMap["email"],
+                            mobile = mappedValueMap["mobile"],
+                            address = mappedValueMap["address"],
+                            company = mappedValueMap["company"],
+                            team = mappedValueMap["team"],
+                            role = mappedValueMap["role"],
+                            tel = mappedValueMap["tel"],
+                            memoContent = mappedValueMap["memoContent"],
+//                            fax = mappedValueMap["fax"],
+//                            background = mappedValueMap["background"],
+//                            logo = mappedValueMap["logo"],
+//                            memo1 = mappedValueMap["memo1"],
+//                            memo2 = mappedValueMap["memo2"],
+//                            memo3 = mappedValueMap["memo3"],
                         )
 
                         cardViewModel.addCard(card)
@@ -163,41 +187,9 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
                 Spacer(
                     Modifier
                         .fillMaxWidth()
-                        .height(40.dp))
+                        .height(40.dp)
+                )
             }
         }
-    }
-}
-
-@Composable
-fun FieldItem(
-    text: String,
-    placeholder: String,
-    idx: Int,
-    dropdownMenuState: SnapshotStateList<Boolean>,
-    inputValueState: SnapshotStateList<String>,
-    fieldsLabelList: List<String>,
-    onChange: (String) -> Unit
-) {
-    Row {
-        OutlinedSmallButton(text = "선택") {
-            dropdownMenuState[idx] = true
-        }
-        DropdownMenu(
-            expanded = dropdownMenuState[idx],
-            onDismissRequest = { dropdownMenuState[idx] = false },
-        ) {
-            dropdownMenuState.forEachIndexed { index, state ->
-                if (!state) {
-                    DropdownMenuItem(onClick = {
-                        dropdownMenuState[index] = false
-                        inputValueState[index] = text
-                    }) {
-                        Text(text = fieldsLabelList[index])
-                    }
-                }
-            }
-        }
-        BasicTextField(text = text, placeholder = placeholder, onChange = onChange)
     }
 }
