@@ -38,11 +38,14 @@ class ScheduleEditViewModel @Inject constructor(
     private val _isOnAlarm = mutableStateOf(false)
     var isOnAlarm: State<Boolean> = _isOnAlarm
 
-    private val _startTime = mutableStateOf("00 : 00 AM")
+    private val _startTime = mutableStateOf("01 : 00 PM")
     var startTime: State<String> = _startTime
 
-    private val _endTime = mutableStateOf("00 : 00 AM")
+    private val _endTime = mutableStateOf("12 : 00 PM")
     var endTime: State<String> = _endTime
+
+    private val _alarmTime = mutableStateOf("시작 시간")
+    var alarmTime: State<String> = _alarmTime
 
     private var recentlyDeletedSchedule: Schedule? = null
 
@@ -101,6 +104,10 @@ class ScheduleEditViewModel @Inject constructor(
         _isOnAlarm.value = !isOnAlarm.value
     }
 
+    fun alarmTimeChange(alarmTime: String) {
+        _alarmTime.value = alarmTime
+    }
+
     fun onStartTimeChange(time: String) {
         _startTime.value = time
     }
@@ -131,7 +138,7 @@ class ScheduleEditViewModel @Inject constructor(
         }
     }
 
-    fun insertSchedule(schedule: Schedule, selectedDate: String) {
+    fun insertSchedule(schedule: Schedule? = null, selectedDate: String) {
         viewModelScope.launch {
             repository.insertSchedule(
                 Schedule(
@@ -152,7 +159,7 @@ class ScheduleEditViewModel @Inject constructor(
     }
 
     fun onEditClick(schedule: Schedule) {
-        sendUiEvent(UiEvent.Navigate(Screen.ScheduleEdit.passId(schedule.scheduleId)))
+        sendUiEvent(UiEvent.Navigate(Screen.ScheduleEditScreen.passId(schedule.scheduleId)))
     }
 
     private fun sendUiEvent(event: UiEvent) {

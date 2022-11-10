@@ -1,7 +1,9 @@
 package com.youme.naya.schedule.component
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,7 +28,12 @@ import com.youme.naya.ui.theme.fonts
 fun ScheduleCreateFinal(
     viewModel: ScheduleEditViewModel = hiltViewModel()
 ) {
-
+    Column(
+        modifier = Modifier
+            .width(300.dp)
+            .height(320.dp)
+            .verticalScroll(rememberScrollState()),
+        content = {
     val keyboardController = LocalSoftwareKeyboardController.current
     // focus
     val focusRequester = remember { FocusRequester() }
@@ -52,4 +59,4 @@ fun ScheduleCreateFinal(
             })
         )
     }
-}
+})}

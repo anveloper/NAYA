@@ -4,14 +4,14 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,13 +27,12 @@ import com.youme.naya.widgets.common.HeaderBar
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import com.youme.naya.schedule.ScheduleEditViewModel
 import com.youme.naya.schedule.component.*
+import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleCreateScreen(
@@ -44,15 +43,6 @@ fun ScheduleCreateScreen(
     val componentVariable = remember {
         mutableStateOf(0)
     }
-
-    var scheduleDate by remember { mutableStateOf( viewMainModel.selectedDate ) }
-
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    // focus
-    val focusRequester = remember { FocusRequester() }
-
-
 
     Column {
         // 상단 바
@@ -109,36 +99,134 @@ fun ScheduleCreateScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             content = {
 
-            Column(modifier = Modifier
-                .width(300.dp)
-                .height(320.dp)
-                .verticalScroll(rememberScrollState()),
-                content = {
+
                 when (componentVariable.value) {
                     0 -> ScheduleCreateFirst()
                     1 -> ScheduleCreateSecond()
                     2 -> ScheduleCreateThird()
-                    3 -> ScheduleCreateFourth()
-                    4 -> ScheduleCreateFinal()
-                }})
-
-
-            PrimaryBigButton(
-                text = when (componentVariable.value) {
-                    4 -> "등록하기"
-                    else -> "다음"
-                },
-                onClick = {
-                    componentVariable.value = componentVariable.value + 1
-                    when (componentVariable.value) {
-//                        0 -> { if (title == "") title = "제목 없음" else title = title}
-                        5 -> {
-//                            viewModel.insertSchedule(title, selectedColor)
-                            navController.navigate("schedule")
-                        }
+                    3 -> {
+                        Column(
+                            modifier = Modifier
+                                .width(300.dp)
+                                .fillMaxHeight(),
+                            content = {
+                                val bottomSheetState =
+                                    rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+                                val coroutineScope = rememberCoroutineScope()
+                                ModalBottomSheetLayout(
+                                    sheetContent = {
+                                        LazyColumn {
+                                            item {
+                                                Box(modifier = Modifier
+                                                    .clickable {
+                                                        coroutineScope.launch {
+                                                            bottomSheetState.hide()
+                                                        }
+                                                    }
+                                                    .padding(vertical = 4.dp)
+                                                    .fillMaxWidth()
+                                                    .height(48.dp),
+                                                    contentAlignment = Alignment.Center) {
+                                                    Text(
+                                                        text = "Naya에서 가져오기",
+                                                        color = PrimaryBlue,
+                                                        style = Typography.body1,
+                                                    )
+                                                }
+                                                Box(modifier = Modifier
+                                                    .clickable {
+                                                        coroutineScope.launch {
+                                                            bottomSheetState.hide()
+                                                        }
+                                                    }
+                                                    .padding(vertical = 4.dp)
+                                                    .fillMaxWidth()
+                                                    .height(48.dp),
+                                                    contentAlignment = Alignment.Center) {
+                                                    Text(
+                                                        text = "전화번호부에서 가져오기",
+                                                        color = PrimaryBlue,
+                                                        style = Typography.body1,
+                                                    )
+                                                }
+                                                Box(modifier = Modifier
+                                                    .clickable {
+                                                        coroutineScope.launch {
+                                                            bottomSheetState.hide()
+                                                        }
+                                                    }
+                                                    .padding(vertical = 4.dp)
+                                                    .fillMaxWidth()
+                                                    .height(48.dp),
+                                                    contentAlignment = Alignment.Center) {
+                                                    Text(
+                                                        text = "직접 입력",
+                                                        color = PrimaryBlue,
+                                                        style = Typography.body1,
+                                                    )
+                                                }
+                                        }}},
+                                    sheetState = bottomSheetState,
+                                    scrimColor = Color(0XCCFFFFFF),
+                                ) {
+                                    Column {
+                                        Column(
+                                            modifier = Modifier
+                                                .width(300.dp).height(320.dp)
+                                        ) {
+                                            Text("멤버 등록",
+                                                modifier = Modifier.padding(vertical = 12.dp),
+                                                color = PrimaryDark,
+                                                fontFamily = fonts,
+                                                fontWeight = FontWeight.Bold,
+                                                fontSize = 16.sp
+                                            )
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            Image(
+                                                painter = painterResource(R.drawable.schedule_member_register_icon),
+                                                contentDescription = "",
+                                                modifier = Modifier
+                                                    .width(64.dp)
+                                                    .height(64.dp)
+                                                    .clickable(
+                                                        enabled = true,
+                                                        onClick = {
+                                                            coroutineScope.launch {
+                                                                bottomSheetState.show()
+                                                            }
+                                                        }
+                                                    )
+                                            )}
+                                        PrimaryBigButton(
+                                            text = "다음",
+                                            onClick = {
+                                                componentVariable.value = componentVariable.value + 1
+                                            },
+                                        ) } }
+                            })
                     }
-                },
-            )
+                    4 -> ScheduleCreateFinal()
+                }
+
+                if (componentVariable.value != 3) {
+                    PrimaryBigButton(
+                        text = when (componentVariable.value) {
+                            4 -> "등록하기"
+                            else -> "다음"
+                        },
+                        onClick = {
+                            componentVariable.value = componentVariable.value + 1
+                            when (componentVariable.value) {
+                                5 -> {
+                                    viewModel.insertSchedule(selectedDate = viewMainModel.selectedDate.value)
+
+                                    navController.navigate("schedule")
+                                }
+                            }
+                        },
+                    )
+                }
+
 
         })
     }

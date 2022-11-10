@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.repository.ScheduleRepository
-import com.youme.naya.schedule.Screen
-import com.youme.naya.schedule.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -60,7 +58,7 @@ class ScheduleMainViewModel @Inject constructor(
     }
 
     fun onScheduleClick(schedule: Schedule) {
-        sendUiEvent(UiEvent.Navigate(Screen.ScheduleDetail.passId(schedule.scheduleId)))
+        sendUiEvent(UiEvent.Navigate(Screen.ScheduleDetailScreen.passId(schedule.scheduleId)))
     }
 
     fun onDoneChange(schedule: Schedule, isDone: Boolean) {

@@ -1,6 +1,5 @@
 package com.youme.naya.database.repository
 
-import androidx.compose.runtime.State
 import com.youme.naya.database.dao.ScheduleDao
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
