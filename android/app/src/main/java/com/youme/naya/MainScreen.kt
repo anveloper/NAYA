@@ -48,7 +48,9 @@ import com.youme.naya.widgets.share.ShareButtonDialog
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController()) {
+fun MainScreen(
+    navController: NavHostController = rememberNavController(),
+) {
     val context = LocalContext.current
     val activity = context as? Activity
     val focusManager = LocalFocusManager.current
@@ -75,11 +77,12 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     Scaffold(
         floatingActionButton = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    FloatingActionButton(
-                        onClick = {
+            if (currentDestination.toString() != "scheduleCreate"
+                && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}"
+            ) {
+                FloatingActionButton(
+                    onClick = {
                             when (currentDestination.toString()) {
                                 "schedule" -> navController.navigate("scheduleCreate")
                                 "naya" -> launcher.launch(
@@ -134,7 +137,6 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                                 tint = NeutralWhite
                             )
                         }
-                    }
 
                 }
             }
@@ -142,19 +144,15 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
         topBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    HeaderBar(navController = navController)
-                }
+            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
+                HeaderBar(navController = navController)
             }
         },
         bottomBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    BottomBar(navController = navController)
-                }
+            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
+                BottomBar(navController = navController)
             }
         },
         modifier = Modifier
@@ -179,7 +177,6 @@ fun BottomBar(
         BottomBarScreen.Spacer,
         BottomBarScreen.NayaCard,
         BottomBarScreen.Calendar,
-//        BottomBarScreen.Settings
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
