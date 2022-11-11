@@ -18,14 +18,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.widgets.calendar.customCalendar.CustomCalendar
+import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDayColors
+import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDayDefaultColors
+import com.youme.naya.widgets.calendar.customCalendar.component.header.config.CustomCalendarHeaderConfig
+import com.youme.naya.widgets.calendar.customCalendar.model.CustomCalendarDay
+import com.youme.naya.widgets.calendar.customCalendar.model.CustomCalendarEvent
 import com.youme.naya.widgets.calendar.customCalendar.model.CustomCalendarType
-import kotlinx.coroutines.selects.select
-import kotlinx.datetime.Clock
+import com.youme.naya.widgets.calendar.customCalendar.ui.basic.CustomCalendarColors
+import com.youme.naya.widgets.calendar.customCalendar.ui.basic.CustomCalendarThemeColor
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
 
 @Composable
 private fun BottomShadow(alpha: Float = 0.1f, height: Dp = 8.dp) {
@@ -50,14 +55,22 @@ private val CornerShape =
             bottomEndPercent = 10)
     )
 
-
+@Composable
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun AnimatedCalendar(expanded: Boolean, selectedDate: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())) {
+fun AnimatedCalendar(
+    expanded: Boolean,
+    takeMeToDate: LocalDate,
+    modifier: Modifier = Modifier,
+    customCalendarEvents: List<CustomCalendarEvent>,
+    customCalendarThemeColors: List<CustomCalendarThemeColor> = CustomCalendarColors.defaultColors(),
+    onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
+    customCalendarDayColors: CustomCalendarDayColors = CustomCalendarDayDefaultColors.defaultColors(),
+    customCalendarHeaderConfig: CustomCalendarHeaderConfig? = null,
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
+) {
+
     var expanded by remember { mutableStateOf(expanded) }
-    var selectedDate by remember {
-        mutableStateOf(selectedDate) }
 
     Surface (
         modifier = CornerShape,
@@ -112,7 +125,13 @@ fun AnimatedCalendar(expanded: Boolean, selectedDate: LocalDate = Clock.System.t
             customCalendarType =
                 if (expanded) CustomCalendarType.Basic
                 else CustomCalendarType.Fold(true),
-            takeMeToDate = selectedDate
+            modifier = modifier.wrapContentHeight(),
+            customCalendarEvents = customCalendarEvents,
+            onCurrentDayClick = onCurrentDayClick,
+            customCalendarDayColors = customCalendarDayColors,
+            customCalendarThemeColors = customCalendarThemeColors,
+            customCalendarHeaderConfig = customCalendarHeaderConfig,
+            takeMeToDate = takeMeToDate,
         )
     }
 }
