@@ -96,52 +96,52 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
 /**
  * 검색 창 컴포저블
  */
-@Composable
-fun SearchInput() {
-    var textState by remember {
-        mutableStateOf(TextFieldValue())
-    }
-    val source = remember {
-        MutableInteractionSource()
-    }
-    var focused by remember {
-        mutableStateOf(false)
-    }
-    val focusRequester by remember {
-        mutableStateOf(FocusRequester())
-    }
-    val focusManager = LocalFocusManager.current
+// @Composable
+// fun SearchInput() {
+//     var textState by remember {
+//         mutableStateOf(TextFieldValue())
+//     }
+//     val source = remember {
+//         MutableInteractionSource()
+//     }
+//     var focused by remember {
+//         mutableStateOf(false)
+//     }
+//     val focusRequester by remember {
+//         mutableStateOf(FocusRequester())
+//     }
+//     val focusManager = LocalFocusManager.current
 
-    BasicTextField(
-        value = textState, onValueChange = { textState = it },
-        singleLine = true,
-        interactionSource = source,
-        modifier = Modifier
-            .padding(horizontal = 16.dp)
-            .focusRequester(focusRequester)
-            .onFocusChanged { focused = it.isFocused },
-        keyboardActions = KeyboardActions(
-            onDone = { focusManager.clearFocus() }),
-    ) { innerTextField ->
-        Row(
-            Modifier
-                .background(NeutralLightness, RoundedCornerShape(percent = 20))
-                .padding(16.dp)
-                .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Search,
-                contentDescription = Icons.Outlined.Search.name,
-                modifier = Modifier.padding(end = 16.dp)
-            )
+//     BasicTextField(
+//         value = textState, onValueChange = { textState = it },
+//         singleLine = true,
+//         interactionSource = source,
+//         modifier = Modifier
+//             .padding(horizontal = 16.dp)
+//             .focusRequester(focusRequester)
+//             .onFocusChanged { focused = it.isFocused },
+//         keyboardActions = KeyboardActions(
+//             onDone = { focusManager.clearFocus() }),
+//     ) { innerTextField ->
+//         Row(
+//             Modifier
+//                 .background(NeutralLightness, RoundedCornerShape(percent = 20))
+//                 .padding(16.dp)
+//                 .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+//         ) {
+//             Icon(
+//                 imageVector = Icons.Outlined.Search,
+//                 contentDescription = Icons.Outlined.Search.name,
+//                 modifier = Modifier.padding(end = 16.dp)
+//             )
 
-            if (!focused && textState.text.isEmpty()) {
-                Text("이름, 전화번호, 회사명, 직책으로 검색", color = NeutralMedium)
-            }
-            innerTextField()
-        }
-    }
-}
+//             if (!focused && textState.text.isEmpty()) {
+//                 Text("이름, 전화번호, 회사명, 직책으로 검색", color = NeutralMedium)
+//             }
+//             innerTextField()
+//         }
+//     }
+// }
 
 /**
  * 우측 하단에 위치한 카드 추가 버튼
