@@ -20,7 +20,7 @@ import com.youme.naya.databinding.CardStackViewMainBinding
 import com.youme.naya.ui.theme.NeutralLight
 
 @Composable
-fun CustomCardListView(
+fun BusinessCardStackList(
     context: Context,
     cardViewModel: CardViewModel = viewModel(),
 ) {

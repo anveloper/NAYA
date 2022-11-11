@@ -73,7 +73,8 @@ fun HeaderBar(
             closeActivityButton = true
         }
         "schedule" -> {
-            main = false
+            logo = true
+            main = true
         }
     }
 
