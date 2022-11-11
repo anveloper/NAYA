@@ -23,10 +23,10 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NuyaCardHolder.route) {
-            NuyaCardHolderScreen(navController = navController)
+            NuyaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NayaCard.route) {
             NayaCardScreen(navController = navController)
@@ -37,13 +37,18 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarScreen.Settings.route) {
             SettingsScreen()
         }
-        // camera
-        composable(route = "camera") {
-//            CameraScreen()
-        }
         // Nuya 명함 생성 (직접 입력)
         composable(route = "bCardCreate") { entry ->
             BCardCreateScreen(navController = navController)
+        }
+        // Nuya 명함 생성 (카메라 촬영)
+        composable(route = "bCardCreateByCamera?result={result}", arguments = listOf(
+            navArgument("result") {
+                type = NavType.StringType
+            }
+        )) {
+            val result = it.arguments?.getString("result")!!
+            BCardCreateByCameraScreen(navController = navController, result = result)
         }
         composable(route = "scheduleCreate") {
             ScheduleCreateScreen(navController = navController)

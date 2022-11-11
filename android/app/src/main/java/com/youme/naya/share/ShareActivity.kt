@@ -30,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.facebook.FacebookSdk
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.youme.naya.BaseActivity
@@ -60,13 +59,19 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
         super.onCreate(savedInstanceState)
         setContent {
             val cardUri = intent.getStringExtra("cardUri")
-            val filename = intent.getStringExtra("filename")
+            var filename = intent.getStringExtra("filename")
             val activity = LocalContext.current as? Activity
             val (cardId, setCardId) = remember { mutableStateOf<Int?>(-1) }
-            var (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
+            val (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
+
+            // Share Loading tmp
+            val (isLoading, setIsLoading) = remember { mutableStateOf(true) }
 
             if (uid != null && cardUri != null && filename != null) {
                 if (sharedUri == null) {
+                    if (filename == "") filename =
+                        "NAYA-MEDIA-" + System.currentTimeMillis().toString() + ".png"
+
                     uploadFirebase(uid, cardUri, filename) { uri ->
                         setSharedUri(uri)
                     }
@@ -98,6 +103,7 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
                                         response.body()?.sendCardId.toString()
                                     )
                                     setCardId(response.body()?.sendCardId)
+                                    setIsLoading(false)
                                 }
                             })
                     }
@@ -106,10 +112,39 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
                 Log.i("Share Some", "is null")
             }
             AndroidTheme() {
+
                 ShareScreen(cardUri, uid, cardId) {
                     intent.putExtra("finish", 0)
                     setResult(RESULT_OK, intent)
                     activity?.finish()
+                }
+                if (isLoading) {
+                    // tmp loading box
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color(0xDD000000)), // 임시
+                        Alignment.Center
+                    ) {
+                        Column(Modifier.fillMaxWidth(0.8f)) {
+                            Text(
+                                text = "URL을 생성중입니다.",
+                                color = NeutralLightness,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                fontFamily = fonts
+                            ) // 임시
+                            Spacer(Modifier.height(4.dp))
+                            LinearProgressIndicator(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(8.dp),
+                                backgroundColor = NeutralMedium,
+                                color = NeutralLightness
+                            ) // 임시
+                        }
+                    }
+                    // 공유 임시 로딩
                 }
             }
         }
@@ -230,17 +265,15 @@ fun ShareScreen(
             intent.putExtra("cardId", cardId)
             launcher.launch(intent)
         }
-        ShareTextButton(
-            R.drawable.ic_share_nfc,
-            "NFC 공유",
-            "NFC를 이용하여 근처 사용자에게 카드를 보내세요"
-        ) {
-//            context.startActivity(Intent(context, NfcActivity::class.java))
-            var intent = Intent(activity, NfcActivity::class.java)
-            intent.putExtra("userId", 123)
-//            intent.putExtra("cardId", cardId)
-            launcher.launch(intent)
-        }
+//        ShareTextButton(
+//            R.drawable.ic_share_nfc,
+//            "NFC 공유",
+//            "NFC를 이용하여 근처 사용자에게 카드를 보내세요"
+//        ) {
+//            var intent = Intent(activity, NfcActivity::class.java)
+//            intent.putExtra("userId", 123)
+//            launcher.launch(intent)
+//        }
         ShareTextButton(
             R.drawable.ic_share_beacon,
             "어플 공유",
@@ -249,9 +282,9 @@ fun ShareScreen(
             // 비콘 실행 로직
         }
         ShareTextButton(
-            R.drawable.ic_share_sns,
-            "어플/SNS 공유",
-            "Naya 외 다양한 어플/SNS로 프로필 카드를 공유해보세요"
+            R.drawable.ic_share_insta,
+            "Instagram 공유",
+            "Instagram 스토리로 프로필 카드를 공유해보세요"
         ) {
             // SNS 공유
             try {
@@ -264,8 +297,8 @@ fun ShareScreen(
                     intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                     launcher.launch(intent)
                 }
-            }catch (e:Exception){
-                Toast.makeText(activity,"인스타그램을 설치, 로그인 해주세요",Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(activity, "인스타그램을 설치, 로그인 해주세요", Toast.LENGTH_SHORT).show()
             }
         }
         Spacer(Modifier.height(8.dp))

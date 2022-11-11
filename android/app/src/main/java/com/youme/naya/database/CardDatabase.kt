@@ -10,7 +10,7 @@ import com.youme.naya.database.entity.Schedule
 
 @Database(
     entities = [Card::class, Schedule::class, Member::class],
-    version = 9,
+    version = 5,
     exportSchema = false
 )
 abstract class CardDatabase: RoomDatabase() {

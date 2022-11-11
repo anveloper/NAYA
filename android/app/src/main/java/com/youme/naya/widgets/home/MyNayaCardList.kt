@@ -1,10 +1,8 @@
 package com.youme.naya.widgets.home
 
+
 import android.app.Activity
-import android.app.Application
-import android.content.ContentUris
-import android.net.Uri
-import android.provider.MediaStore
+import android.content.Context
 import android.util.DisplayMetrics
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -18,29 +16,20 @@ import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.youme.naya.widgets.items.CardItem
 import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
-private val NayaCardContainerModifier = Modifier
-    .fillMaxSize()
-private val NayaCardListModifier = Modifier
-    .fillMaxWidth()
-
 
 @Composable
-fun MyNayaCardList() {
+fun MyNayaCardList(context: Context) {
     // 처음 아이템의 padding을 정해주기 위한 식
     val context = LocalContext.current
     val activity = context as? Activity
@@ -57,25 +46,24 @@ fun MyNayaCardList() {
 
     val viewModel = viewModel<CardListViewModel>()
     viewModel.fetchCards()
-    val cardList = viewModel.cardUris.value
+    val cardList = viewModel.viewCards.value
     val listSize = cardList.size
 
     Column(
-        NayaCardContainerModifier,
+        Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         LazyRow(
-            NayaCardListModifier,
+            Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             contentPadding = PaddingValues(horizontal = listVerticalPadding.dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp),
             state = currentCardId
         ) {
-            items(cardList) { value ->
-                CardItem(value.uri, value.filename)
+            items(cardList) { card ->
+                CardItem(card)
             }
-
             item() {
                 CardItemPlus()
             }
@@ -83,7 +71,7 @@ fun MyNayaCardList() {
         Spacer(Modifier.height(16.dp))
         Row {
             if (listSize == 0) {
-                Text(text = "명함을 등록해 보세요", color = Color(0xFFCED3D6))
+                Text(text = "카드를 등록해 보세요", color = Color(0xFFCED3D6))
             } else {
                 if (listSize > 2) {
                     IconButton(onClick = {
@@ -126,11 +114,4 @@ fun MyNayaCardList() {
             }
         }
     }
-}
-
-
-@Composable
-@Preview
-fun HomeScreenPreview() {
-    MyNayaCardList()
 }
