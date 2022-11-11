@@ -20,15 +20,15 @@ import com.youme.naya.ui.theme.*
 
 @Composable
 fun BusinessCardTemplate(
-    name: String,
-    engName: String,
-    email: String,
-    mobile: String,
-    address: String,
-    team: String,
-    role: String,
-    company: String,
-    logo: String
+    name: String?,
+    engName: String?,
+    email: String?,
+    mobile: String?,
+    address: String?,
+    team: String?,
+    role: String?,
+    company: String?,
+    logo: String?
 ) {
     Box(
         Modifier
@@ -48,68 +48,81 @@ fun BusinessCardTemplate(
                     strokeWidth
                 )
             }) {
+        if (name != null) {
+            Text(
+                name.ifEmpty { "이름" },
+                fontSize = 16.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Bold,
+                color = NeutralDarkGray,
+                modifier = Modifier
+                    .align(
+                        Alignment.TopStart
+                    )
+                    .padding(top = 24.dp, start = 24.dp)
+            )
+        }
+        if (engName != null) {
+            Text(
+                engName.ifEmpty { "영어 이름" },
+                fontSize = 11.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Medium,
+                color = NeutralMetal,
+                modifier = Modifier
+                    .align(
+                        Alignment.TopStart
+                    )
+                    .padding(top = 48.dp, start = 24.dp)
+            )
+        }
+        if (email != null) {
+            Text(
+                email.ifEmpty { "이메일" },
+                fontSize = 10.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Normal,
+                color = NeutralMetal,
+                modifier = Modifier
+                    .align(
+                        Alignment.BottomStart
+                    )
+                    .padding(bottom = 24.dp, start = 24.dp)
+            )
+        }
+        if (mobile != null) {
+            Text(
+                mobile.ifEmpty { "휴대폰 번호" },
+                fontSize = 10.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Normal,
+                color = NeutralMetal,
+                modifier = Modifier
+                    .align(
+                        Alignment.BottomStart
+                    )
+                    .padding(bottom = 38.dp, start = 24.dp)
+            )
+        }
+        if (address != null) {
+            Text(
+                address.ifEmpty { "주소" },
+                fontSize = 10.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Normal,
+                color = NeutralMetal,
+                modifier = Modifier
+                    .align(
+                        Alignment.BottomStart
+                    )
+                    .padding(bottom = 52.dp, start = 24.dp)
+            )
+        }
+        val teamAndRole = mutableListOf<String>()
+        if (team != null) teamAndRole.add(team.ifBlank { "부서" })
+        if (role != null) teamAndRole.add(role.ifBlank { "직책" })
         Text(
-            name.ifEmpty { "이름" },
-            fontSize = 16.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.Bold,
-            color = NeutralDarkGray,
-            modifier = Modifier
-                .align(
-                    Alignment.TopStart
-                )
-                .padding(top = 24.dp, start = 24.dp)
-        )
-        Text(
-            engName.ifEmpty { "영어 이름" },
-            fontSize = 11.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.Medium,
-            color = NeutralMetal,
-            modifier = Modifier
-                .align(
-                    Alignment.TopStart
-                )
-                .padding(top = 48.dp, start = 24.dp)
-        )
-        Text(
-            email.ifEmpty { "이메일" },
-            fontSize = 10.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.Normal,
-            color = NeutralMetal,
-            modifier = Modifier
-                .align(
-                    Alignment.BottomStart
-                )
-                .padding(bottom = 24.dp, start = 24.dp)
-        )
-        Text(
-            mobile.ifEmpty { "휴대폰 번호" },
-            fontSize = 10.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.Normal,
-            color = NeutralMetal,
-            modifier = Modifier
-                .align(
-                    Alignment.BottomStart
-                )
-                .padding(bottom = 38.dp, start = 24.dp)
-        )
-        Text(
-            address.ifEmpty { "주소" },
-            fontSize = 10.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.Normal,
-            color = NeutralMetal,
-            modifier = Modifier
-                .align(
-                    Alignment.BottomStart
-                )
-                .padding(bottom = 52.dp, start = 24.dp)
-        )
-        Text(
-            if (team.isNotEmpty() && role.isNotEmpty()) "$team - $role" else "부서 - 직책",
+            teamAndRole.joinToString(" | "),
             fontSize = 12.sp,
             fontFamily = fonts,
             fontWeight = FontWeight.Medium,
@@ -120,43 +133,47 @@ fun BusinessCardTemplate(
                 )
                 .padding(bottom = 68.dp, start = 24.dp)
         )
-        Text(
-            company.ifEmpty { "회사명" },
-            fontSize = 12.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.SemiBold,
-            color = NeutralDarkGray,
-            modifier = Modifier
-                .align(
-                    Alignment.BottomStart
-                )
-                .padding(bottom = 84.dp, start = 24.dp)
-        )
-        Text(
-            logo.ifEmpty { "로고 이미지" },
-            fontSize = 12.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.End,
-            color = NeutralMetal,
-            modifier = Modifier
-                .align(
-                    Alignment.TopEnd
-                )
-                .padding(top = 24.dp, end = 24.dp)
-        )
-        Text(
-            "QR 코드",
-            fontSize = 12.sp,
-            fontFamily = fonts,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.End,
-            color = NeutralMetal,
-            modifier = Modifier
-                .align(
-                    Alignment.BottomEnd
-                )
-                .padding(bottom = 24.dp, end = 24.dp)
-        )
+        if (company != null) {
+            Text(
+                company.ifEmpty { "회사명" },
+                fontSize = 12.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.SemiBold,
+                color = NeutralDarkGray,
+                modifier = Modifier
+                    .align(
+                        Alignment.BottomStart
+                    )
+                    .padding(bottom = 84.dp, start = 24.dp)
+            )
+        }
+        if (logo != null) {
+            Text(
+                logo.ifEmpty { "로고 이미지" },
+                fontSize = 12.sp,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.End,
+                color = NeutralMetal,
+                modifier = Modifier
+                    .align(
+                        Alignment.TopEnd
+                    )
+                    .padding(top = 24.dp, end = 24.dp)
+            )
+        }
+//        Text(
+//            "QR 코드",
+//            fontSize = 12.sp,
+//            fontFamily = fonts,
+//            fontWeight = FontWeight.Medium,
+//            textAlign = TextAlign.End,
+//            color = NeutralMetal,
+//            modifier = Modifier
+//                .align(
+//                    Alignment.BottomEnd
+//                )
+//                .padding(bottom = 24.dp, end = 24.dp)
+//        )
     }
 }
