@@ -28,7 +28,7 @@ fun CustomCardStackView(
     val context = LocalContext.current
     var isCardTypeBCard by remember { mutableStateOf(isBCard) }
 
-    val launcher = rememberLauncherForActivityResult(
+    val cardStackLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         when (it.resultCode) {
@@ -60,7 +60,7 @@ fun CustomCardStackView(
                     // Material Design 기준 Bottom Navigation 최소 높이는 56dp
                     .padding(start = 16.dp, end = 16.dp, bottom = 56.dp)
             ) {
-                val mCardStackAdapter = CardStackAdapter(context, launcher);
+                val mCardStackAdapter = CardStackAdapter(context, cardStackLauncher);
                 stackviewMain.setAdapter(mCardStackAdapter)
                 mCardStackAdapter.updateData(businessCards)
             }
@@ -76,19 +76,19 @@ fun CustomCardStackView(
                 Text("받은 나야 카드가 없어요", color = NeutralLight)
             }
         } else {
-            AndroidViewBinding(
-                { inflater, parent, _ ->
-                    CardStackViewMainBinding.inflate(inflater, parent)
-                },
-                Modifier
-                    .fillMaxSize()
-                    // Material Design 기준 Bottom Navigation 최소 높이는 56dp
-                    .padding(start = 16.dp, end = 16.dp, bottom = 56.dp)
-            ) {
-                val mCardStackAdapter = CardStackAdapter(context, launcher);
-                stackviewMain.setAdapter(mCardStackAdapter)
-                mCardStackAdapter.updateData(nayaCards)
-            }
+//            AndroidViewBinding(
+//                { inflater, parent, _ ->
+//                    CardStackViewMainBinding.inflate(inflater, parent)
+//                },
+//                Modifier
+//                    .fillMaxSize()
+//                    // Material Design 기준 Bottom Navigation 최소 높이는 56dp
+//                    .padding(start = 16.dp, end = 16.dp, bottom = 56.dp)
+//            ) {
+//                val mCardStackAdapter = CardStackAdapter(context, launcher);
+//                stackviewMain.setAdapter(mCardStackAdapter)
+//                mCardStackAdapter.updateData(nayaCards)
+//            }
         }
     }
 }
