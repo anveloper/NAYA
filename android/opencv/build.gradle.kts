@@ -3,11 +3,16 @@ plugins {
 }
 
 android {
-    compileSdk = Dependencies.COMPILE_SDK
+//    compileSdk = Dependencies.COMPILE_SDK
+    compileSdk = 33
 
     defaultConfig {
-        minSdk = Dependencies.MIN_SDK
-        targetSdk = Dependencies.TARGET_SDK
+//        minSdk = Dependencies.MIN_SDK
+//        targetSdk = Dependencies.TARGET_SDK
+        minSdk = 21
+        targetSdk = 33
+
+        multiDexEnabled = true
 
         externalNativeBuild {
             cmake {
