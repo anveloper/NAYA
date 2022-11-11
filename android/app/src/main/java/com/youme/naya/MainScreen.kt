@@ -18,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -41,8 +42,8 @@ import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
-import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.items.CurrentCard
+import com.youme.naya.widgets.share.ShareButtonDialog
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -55,10 +56,9 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     // 현재 위치 추적
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
-
+    val (shareAlert, setShareAlert) = remember { mutableStateOf(false) }
 
     // 선택된 카드 가져오기
-    val cardListViewModel = viewModel<CardListViewModel>()
     val card = CurrentCard.getCurrentCard.value
 
     val launcher = rememberLauncherForActivityResult(
@@ -89,10 +89,11 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                                     )
                                 )
                                 else -> {
-                                    var intent = Intent(activity, ShareActivity::class.java)
-                                    intent.putExtra("cardUri", card.uri.toString())
-                                    intent.putExtra("filename", card.filename)
-                                    launcher.launch(intent)
+//                                    var intent = Intent(activity, ShareActivity::class.java)
+//                                    intent.putExtra("cardUri", card.uri.toString())
+//                                    intent.putExtra("filename", card.filename)
+//                                    launcher.launch(intent)
+                                    setShareAlert(true)
                                 }
                             }
                         },
@@ -154,6 +155,11 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
             .addFocusCleaner(focusManager)
     ) {
         BottomNavGraph(navController = navController)
+        if (shareAlert) {
+            ShareButtonDialog(activity!!) {
+                setShareAlert(false)
+            }
+        }
     }
 }
 
