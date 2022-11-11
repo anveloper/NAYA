@@ -26,10 +26,10 @@ fun BottomNavGraph(navController: NavHostController) {
             HomeScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NuyaCardHolder.route) {
-            NuyaCardHolderScreen(navController = navController)
+            NuyaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NayaCard.route) {
-            NayaCardScreen()
+            NayaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Calendar.route) {
             ScheduleMainScreen(navController = navController)

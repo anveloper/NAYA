@@ -2,13 +2,9 @@ package com.youme.naya.screens
 
 import android.app.Activity
 import android.app.Activity.RESULT_OK
-import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_PICK
-import android.database.Cursor
 import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,10 +35,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.loader.content.CursorLoader
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.youme.naya.card.CustomCardStackView
+import com.youme.naya.card.CustomCardListView
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ocr.DocumentScannerActivity
 import com.youme.naya.ocr.StillImageActivity
@@ -50,20 +45,12 @@ import com.youme.naya.ui.theme.NeutralLightness
 import com.youme.naya.ui.theme.NeutralMedium
 import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.ui.theme.PrimaryBlue
+import com.youme.naya.utils.convertUri2Path
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 
 
-fun getPath(context: Context, uri: Uri): String {
-    val proj = arrayOf(MediaStore.Images.Media.DATA)
-    val cursorLoader = CursorLoader(context, uri, proj, null, null, null)
-    val cursor: Cursor = cursorLoader.loadInBackground()!!
-    val index: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-    cursor.moveToFirst()
-    return cursor.getString(index)
-}
-
 @Composable
-fun NuyaCardHolderScreen(navController: NavHostController) {
+fun NuyaCardScreen(navController: NavHostController) {
     val cardViewModel: CardViewModel = hiltViewModel()
     var isBCard by remember { mutableStateOf(false) }
 
@@ -79,16 +66,16 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
             NayaBcardSwitchButtons(
                 nayaTab = {
                     isBCard = false
-                    CustomCardStackView(cardViewModel, false)
+                    CustomCardListView(cardViewModel, false)
                 },
                 bCardTab = {
                     isBCard = true
-                    CustomCardStackView(cardViewModel, true)
+                    CustomCardListView(cardViewModel, true)
                 }
             )
         }
         if (isBCard) {
-            MultiFloatingActionButton(navController)
+            NuyaFloatingActionButtons(navController)
         }
     }
 }
@@ -147,7 +134,7 @@ fun SearchInput() {
  * 우측 하단에 위치한 카드 추가 버튼
  */
 @Composable
-fun MultiFloatingActionButton(
+fun NuyaFloatingActionButtons(
     navController: NavHostController
 ) {
     val context = LocalContext.current
@@ -187,7 +174,7 @@ fun MultiFloatingActionButton(
     ) {
         if (it.resultCode == RESULT_OK) {
             val uri = it.data?.data as Uri
-            val imgPath = getPath(context, uri)
+            val imgPath = convertUri2Path(context, uri)
             val ocrIntent = Intent(activity, StillImageActivity::class.java)
             ocrIntent.putExtra("savedImgAbsolutePath", imgPath)
             ocrLauncher.launch(ocrIntent)
@@ -228,19 +215,12 @@ fun MultiFloatingActionButton(
             ) {
                 Icon(Icons.Filled.Image, Icons.Filled.Image.toString())
             }
-            FloatingActionButton(
-                onClick = { navController.navigate("bCardCreate") },
-                backgroundColor = PrimaryBlue,
-                contentColor = NeutralWhite
-            ) {
-                Icon(Icons.Filled.Keyboard, Icons.Filled.Keyboard.toString())
-            }
         }
     }
 }
 
 @Composable
 @Preview
-fun NuyaCardHolderScreenPreview() {
-    NuyaCardHolderScreen(rememberNavController())
+fun NuyaCardScreenPreview() {
+    NuyaCardScreen(rememberNavController())
 }
