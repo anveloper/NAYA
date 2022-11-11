@@ -24,12 +24,6 @@ fun SearchHeaderBar() {
     ) {
         IconButton(onClick = { /*TODO*/ }) {
             Image(
-                painter = painterResource(R.drawable.home_icon_search),
-                contentDescription = "home alarm button"
-            )
-        }
-        IconButton(onClick = { /*TODO*/ }) {
-            Image(
                 painter = painterResource(R.drawable.home_icon_alarm),
                 contentDescription = "home alarm button"
             )

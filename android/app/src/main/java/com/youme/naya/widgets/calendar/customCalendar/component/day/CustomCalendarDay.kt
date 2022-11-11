@@ -74,7 +74,7 @@ fun CustomCalendarDay(
                 val dayEvents = if (customCalendarEventForDay.count() > 3) customCalendarEventForDay.take(3) else customCalendarEventForDay
                 dayEvents.forEachIndexed { index, _ ->
                     CustomCalendarDots(
-                        modifier = Modifier, index = index, size = size, color = dotColor
+                        modifier = Modifier, index = index, size = size, color = Color(dayEvents[index].eventColor)
                     )
                 }
             }

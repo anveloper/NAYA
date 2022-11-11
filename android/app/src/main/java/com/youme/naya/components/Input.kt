@@ -25,6 +25,7 @@ fun BasicTextField(
     placeholder: String,
     isHintVisible: Boolean = true,
     leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     onChange: (String) -> Unit = {},
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -38,6 +39,7 @@ fun BasicTextField(
         value = text,
         onValueChange = onChange,
         leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
         textStyle = TextStyle(
             fontSize = 14.sp,
             fontFamily = fonts,
