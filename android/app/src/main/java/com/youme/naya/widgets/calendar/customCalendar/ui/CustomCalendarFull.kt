@@ -6,13 +6,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.widgets.calendar.customCalendar.component.day.config.CustomCalendarDay
@@ -39,17 +39,16 @@ val WeekDays: List<String>
 @Composable
 fun CustomCalendarFull(
     customCalendarType: CustomCalendarType = CustomCalendarType.Fold(true),
-    takeMeToDate: LocalDate?,
     customCalendarDayColors: CustomCalendarDayColors,
+    takeMeToDate: LocalDate,
     customCalendarThemeColors: List<CustomCalendarThemeColor>,
     modifier: Modifier = Modifier,
     customCalendarHeaderConfig: CustomCalendarHeaderConfig? = null,
     customCalendarEvents: List<CustomCalendarEvent> = emptyList(),
     onCurrentDayClick: (CustomCalendarDay, List<CustomCalendarEvent>) -> Unit = { _, _ -> },
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
-
-    val selectedCustomCalendarDate = remember { mutableStateOf(Clock.System.todayIn(TimeZone.currentSystemDefault())) }
-
+    val selectedCustomCalendarDate = remember { mutableStateOf(takeMeToDate) }
     val displayedYear = remember {
         mutableStateOf(selectedCustomCalendarDate.value.year)
     }
@@ -152,6 +151,8 @@ fun CustomCalendarFull(
                         onCurrentDayClick = { customCalendarDay, events ->
                             selectedCustomCalendarDate.value = customCalendarDay.localDate
                             weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
+                            viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
+                            viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
                             onCurrentDayClick(customCalendarDay, events)
                         },
                         customCalendarDayColors = customCalendarDayColors,
@@ -175,6 +176,8 @@ fun CustomCalendarFull(
                                     selectedCustomCalendarDate.value = customCalendarDay.localDate
                                     onDateChanged(selectedCustomCalendarDate.value)
                                     weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
+                                    viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
+                                    viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
                                     onCurrentDayClick(customCalendarDay, events)
                                 },
                                 selectedCustomCalendarDay = selectedCustomCalendarDate.value,

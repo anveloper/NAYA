@@ -4,8 +4,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.youme.naya.BottomBarScreen
 import com.youme.naya.screens.*
 import com.youme.naya.screens.schedule.ScheduleCreateScreen
@@ -21,10 +23,10 @@ fun BottomNavGraph(navController: NavHostController) {
         startDestination = BottomBarScreen.Home.route
     ) {
         composable(route = BottomBarScreen.Home.route) {
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NuyaCardHolder.route) {
-            NuyaCardHolderScreen(navController = navController)
+            NuyaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NayaCard.route) {
             NayaCardScreen(navController = navController)
@@ -35,22 +37,51 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarScreen.Settings.route) {
             SettingsScreen()
         }
-        // camera
-        composable(route = "camera") {
-//            CameraScreen()
-        }
         // Nuya 명함 생성 (직접 입력)
         composable(route = "bCardCreate") { entry ->
             BCardCreateScreen(navController = navController)
         }
+        // Nuya 명함 생성 (카메라 촬영)
+        composable(route = "bCardCreateByCamera?result={result}", arguments = listOf(
+            navArgument("result") {
+                type = NavType.StringType
+            }
+        )) {
+            val result = it.arguments?.getString("result")!!
+            BCardCreateByCameraScreen(navController = navController, result = result)
+        }
         composable(route = "scheduleCreate") {
             ScheduleCreateScreen(navController = navController)
         }
-        composable(route = "scheduleUpdate") {
-            ScheduleUpdateScreen()
+        composable(route = "scheduleDetail/{scheduleId}",
+        arguments = listOf(
+            navArgument(
+            name = "scheduleId"
+        ) {
+            type = NavType.IntType
+            defaultValue = -1
+        },))
+            {
+            val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
+            ScheduleDetailScreen(
+                navController = navController,
+                scheduleId = scheduleId
+            )
         }
-        composable(route = "scheduleDetail") {
-            ScheduleDetailScreen()
+        composable(route = "scheduleEdit/{scheduleId}",
+            arguments = listOf(
+                navArgument(
+                    name = "scheduleId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },))
+        {
+            val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
+            ScheduleUpdateScreen(
+                navController = navController,
+                scheduleId = scheduleId
+            )
         }
     }
 }
