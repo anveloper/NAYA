@@ -6,4 +6,5 @@ data class CustomCalendarEvent(
     val date: LocalDate,
     val eventName: String,
     val eventDescription: String? = null,
+    val eventColor: Int,
 )

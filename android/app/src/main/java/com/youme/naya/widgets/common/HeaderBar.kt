@@ -15,20 +15,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.youme.naya.R
+import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.NeutralWhite
+import com.youme.naya.ui.theme.PrimaryDark
+import com.youme.naya.ui.theme.fonts
 import com.youme.naya.widgets.calendar.SearchHeaderBar
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeaderBar(
-    navController: NavHostController,
+    navController: NavController,
     title: String = ""
 ) {
     var title = title
@@ -136,7 +143,8 @@ fun HeaderBar(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Image(
                             painter = painterResource(R.drawable.ic_baseline_arrow_back_ios_24),
-                            contentDescription = "Prev page button"
+                            contentDescription = "Prev page button",
+                            colorFilter = ColorFilter.tint(NeutralLight)
                         )
                     }
                     Text(
@@ -144,7 +152,11 @@ fun HeaderBar(
                         modifier = if (closeActivityButton) Modifier else Modifier
                             .fillMaxWidth()
                             .padding(end = 48.dp),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 15.sp,
+                        color = PrimaryDark
                     )
                     if (closeActivityButton) {
                         IconButton(

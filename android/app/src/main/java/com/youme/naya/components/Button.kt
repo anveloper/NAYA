@@ -85,6 +85,37 @@ fun PrimarySmallButton(
     }
 }
 
+@Composable
+fun PrimaryTinySmallButton(
+    text: String,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .width(72.dp)
+            .height(32.dp),
+        shape = Shapes.large,
+        onClick = { onClick() },
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = PrimaryBlue,
+            contentColor = NeutralWhite,
+            disabledBackgroundColor = PrimaryBlue
+                .copy(alpha = 0.7f),
+            disabledContentColor = NeutralWhite
+                .copy(alpha = 0.3f)
+        ),
+        contentPadding = PaddingValues(),
+    )
+    {
+        Text(
+            text = text,
+            style = Typography.button)
+    }
+}
+
+
 
 @Composable
 fun OutlinedBigButton(
@@ -124,6 +155,33 @@ fun OutlinedSmallButton(
         modifier = Modifier
             .width(120.dp)
             .height(48.dp),
+        shape = Shapes.large,
+        onClick = { onClick() },
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = NeutralWhite,
+            contentColor = PrimaryBlue,
+        ),
+        contentPadding = PaddingValues(),
+        border = BorderStroke(1.dp, SecondaryLightBlue),
+    )
+    {
+        Text(
+            text = text,
+            style = Typography.button)
+    }
+}
+
+@Composable
+fun OutlinedTinySmallButton(
+    text: String,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .width(72.dp)
+            .height(32.dp),
         shape = Shapes.large,
         onClick = { onClick() },
         enabled = enabled,
