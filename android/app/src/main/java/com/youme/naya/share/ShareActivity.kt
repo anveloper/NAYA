@@ -62,7 +62,7 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
             var filename = intent.getStringExtra("filename")
             val activity = LocalContext.current as? Activity
             val (cardId, setCardId) = remember { mutableStateOf<Int?>(-1) }
-            var (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
+            val (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
 
             // Share Loading tmp
             val (isLoading, setIsLoading) = remember { mutableStateOf(true) }

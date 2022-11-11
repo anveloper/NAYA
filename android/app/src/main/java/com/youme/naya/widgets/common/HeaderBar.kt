@@ -106,23 +106,23 @@ fun HeaderBar(
                             modifier = Modifier.fillMaxHeight()
                         )
                     }
-                    Row(
-                        Modifier.height(24.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Image(
-                                painter = painterResource(R.drawable.home_icon_alarm),
-                                contentDescription = "Alarm button"
-                            )
-                        }
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Image(
-                                painter = painterResource(R.drawable.home_icon_setting),
-                                contentDescription = "Settings button"
-                            )
-                        }
-                    }
+                    // Row(
+                    //     Modifier.height(24.dp),
+                    //     verticalAlignment = Alignment.CenterVertically
+                    // ) {
+                    //     IconButton(onClick = { /*TODO*/ }) {
+                    //         Image(
+                    //             painter = painterResource(R.drawable.home_icon_alarm),
+                    //             contentDescription = "Alarm button"
+                    //         )
+                    //     }
+                    //     IconButton(onClick = { /*TODO*/ }) {
+                    //         Image(
+                    //             painter = painterResource(R.drawable.home_icon_setting),
+                    //             contentDescription = "Settings button"
+                    //         )
+                    //     }
+                    // }
                 }
                 else {
                 Row(
