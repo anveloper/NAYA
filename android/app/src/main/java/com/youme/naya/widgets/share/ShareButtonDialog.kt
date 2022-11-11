@@ -45,7 +45,7 @@ fun ShareButtonDialog(
             ) {
                 Spacer(Modifier.height(8.dp))
                 Text(
-                    text = "공유할 사진을 선택하세요.",
+                    text = "공유할 사진을 선택하세요",
                     color = PrimaryDark,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
