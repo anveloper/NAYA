@@ -25,7 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.youme.naya.card.CustomCardListView
+import com.youme.naya.card.BusinessCardStackList
+import com.youme.naya.card.NayaCardGridList
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ocr.DocumentScannerActivity
 import com.youme.naya.ocr.StillImageActivity
@@ -37,6 +38,7 @@ import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 @Composable
 fun NayaCardScreen(navController: NavHostController) {
     val cardViewModel: CardViewModel = hiltViewModel()
+    val context = LocalContext.current
     var isBCard by remember { mutableStateOf(false) }
 
     Box(
@@ -50,11 +52,11 @@ fun NayaCardScreen(navController: NavHostController) {
             NayaBcardSwitchButtons(
                 nayaTab = {
                     isBCard = false
-                    CustomCardListView(cardViewModel, false)
+                    NayaCardGridList(context)
                 },
                 bCardTab = {
                     isBCard = true
-                    CustomCardListView(cardViewModel, true)
+                    BusinessCardStackList(context, cardViewModel)
                 }
             )
         }

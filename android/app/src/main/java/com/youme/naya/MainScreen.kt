@@ -125,6 +125,7 @@ fun MainScreen(
                                 return when (currentDestination.toString()) {
                                     "schedule" -> R.drawable.nav_schedule_plus_icon
                                     "naya" -> R.drawable.nav_naya_plus_icon
+                                    "nuya" -> R.drawable.nav_naya_plus_icon
                                     else -> R.drawable.nav_send_icon
                                 }
                             }
