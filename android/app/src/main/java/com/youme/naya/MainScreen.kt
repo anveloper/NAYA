@@ -88,6 +88,12 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                                         MediaCardActivity::class.java
                                     )
                                 )
+                                "nuya" -> launcher.launch(
+                                    Intent(
+                                        activity,
+                                        MediaCardActivity::class.java
+                                    )
+                                )
                                 else -> {
 //                                    var intent = Intent(activity, ShareActivity::class.java)
 //                                    intent.putExtra("cardUri", card.uri.toString())
