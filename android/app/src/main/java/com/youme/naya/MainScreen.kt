@@ -77,11 +77,12 @@ fun MainScreen(
 
     Scaffold(
         floatingActionButton = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    FloatingActionButton(
-                        onClick = {
+            if (currentDestination.toString() != "scheduleCreate"
+                && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}"
+            ) {
+                FloatingActionButton(
+                    onClick = {
                             when (currentDestination.toString()) {
                                 "schedule" -> navController.navigate("scheduleCreate")
                                 "naya" -> launcher.launch(
@@ -135,27 +136,8 @@ fun MainScreen(
                                     .height(40.dp),
                                 tint = NeutralWhite
                             )
-                            .background(
-                                SecondaryGradientBrush,
-                                CircleShape
-                            ), Alignment.Center
-                    ) {
-                        // 아이콘 상황에 따라 변하게
-                        fun setCenterIcon(): Int {
-                            return when (currentDestination.toString()) {
-                                "schedule" -> R.drawable.nav_schedule_plus_icon
-                                else -> R.drawable.nav_send_icon
-                            }
                         }
-                        Icon(
-                            painter = painterResource(setCenterIcon()),
-                            contentDescription = "send",
-                            modifier = Modifier
-                                .width(40.dp)
-                                .height(40.dp),
-                            tint = NeutralWhite
-                        )
-                    }
+
                 }
             }
         },
