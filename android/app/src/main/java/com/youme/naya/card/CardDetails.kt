@@ -83,6 +83,7 @@ fun CardDetailsMainScreen(navController: NavHostController, cardId: Int) {
                 listOf("부서", card.team),
                 listOf("직책", card.role),
                 listOf("회사명", card.company),
+                listOf("메모", card.memoContent),
             )
 
             LazyColumn(
@@ -90,10 +91,11 @@ fun CardDetailsMainScreen(navController: NavHostController, cardId: Int) {
                     .fillMaxWidth()
                     .padding(horizontal = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 itemsIndexed(cardData) { index, item ->
-                    CardDetailsItem(item[0], item[1])
+                    if (!item[1].isNullOrBlank()) {
+                        CardDetailsItem(item[0]!!, item[1]!!)
+                    }
                 }
             }
 
@@ -129,7 +131,7 @@ fun CardDetailsItem(
     fieldValue: String
 ) {
     Row(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth().padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = fieldName, fontFamily = fonts, fontWeight = FontWeight.Bold)

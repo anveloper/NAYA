@@ -13,10 +13,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.runtime.Composable
@@ -65,7 +62,10 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
             var filename = intent.getStringExtra("filename")
             val activity = LocalContext.current as? Activity
             val (cardId, setCardId) = remember { mutableStateOf<Int?>(-1) }
-            var (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
+            val (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
+
+            // Share Loading tmp
+            val (isLoading, setIsLoading) = remember { mutableStateOf(true) }
 
             if (uid != null && cardUri != null && filename != null) {
                 if (sharedUri == null) {
@@ -103,6 +103,7 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
                                         response.body()?.sendCardId.toString()
                                     )
                                     setCardId(response.body()?.sendCardId)
+                                    setIsLoading(false)
                                 }
                             })
                     }
@@ -111,10 +112,39 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
                 Log.i("Share Some", "is null")
             }
             AndroidTheme() {
+
                 ShareScreen(cardUri, uid, cardId) {
                     intent.putExtra("finish", 0)
                     setResult(RESULT_OK, intent)
                     activity?.finish()
+                }
+                if (isLoading) {
+                    // tmp loading box
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color(0xDD000000)), // 임시
+                        Alignment.Center
+                    ) {
+                        Column(Modifier.fillMaxWidth(0.8f)) {
+                            Text(
+                                text = "URL을 생성중입니다.",
+                                color = NeutralLightness,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                fontFamily = fonts
+                            ) // 임시
+                            Spacer(Modifier.height(4.dp))
+                            LinearProgressIndicator(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(8.dp),
+                                backgroundColor = NeutralMedium,
+                                color = NeutralLightness
+                            ) // 임시
+                        }
+                    }
+                    // 공유 임시 로딩
                 }
             }
         }
@@ -252,9 +282,9 @@ fun ShareScreen(
             // 비콘 실행 로직
         }
         ShareTextButton(
-            R.drawable.ic_share_sns,
-            "어플/SNS 공유",
-            "Naya 외 다양한 어플/SNS로 프로필 카드를 공유해보세요"
+            R.drawable.ic_share_insta,
+            "Instagram 공유",
+            "Instagram 스토리로 프로필 카드를 공유해보세요"
         ) {
             // SNS 공유
             try {

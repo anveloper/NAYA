@@ -70,8 +70,7 @@ fun PrivacyComp(
         )
         Column(
             Modifier
-                .fillMaxWidth(0.78f)
-                .height(282.dp), Arrangement.SpaceBetween, Alignment.CenterHorizontally
+                .fillMaxWidth(0.82f), Arrangement.SpaceBetween, Alignment.CenterHorizontally
         ) {
             TextButton(onClick = { setTerms(!terms) }) {
                 Row(Modifier.fillMaxWidth(), Arrangement.Start, Alignment.CenterVertically) {
@@ -179,14 +178,13 @@ fun PermissionComp(
         )
         Column(
             Modifier
-                .fillMaxWidth(0.78f)
-                .height(262.dp), Arrangement.SpaceBetween, Alignment.CenterHorizontally
+                .fillMaxWidth(0.82f), Arrangement.SpaceBetween, Alignment.CenterHorizontally
         ) {
-            PermissionInfo(R.drawable.ic_permission_camera, "카메라", "명함과 관련한 사진/동영상 촬영을 위해 필요합니다.")
-            PermissionInfo(R.drawable.ic_permission_gallery, "갤러리", "명함과 관련한 사진/동영상 정보를 위해 필요합니다.")
-            PermissionInfo(R.drawable.ic_permission_call, "연락처", "연락처 저장 및 정보와 명함 연동을 위해 필요합니다.")
-            PermissionInfo(R.drawable.ic_permission_location, "위치", "일정 관리를 위한 현위치 정보를 위해 필요합니다.")
-            PermissionInfo(R.drawable.ic_permission_noti, "알림", "일정 정보에 대한 알림이 포함될 수 있습니다.")
+            PermissionInfo(R.drawable.ic_permission_camera, "카메라", "명함 사진/동영상 촬영을 위해 필요합니다.")
+            PermissionInfo(R.drawable.ic_permission_gallery, "갤러리", "명함 사진/동영상 접근을 위해 필요합니다.")
+            PermissionInfo(R.drawable.ic_permission_call, "연락처", "연락처 저장 및 명함 연동을 위해 필요합니다.")
+            PermissionInfo(R.drawable.ic_permission_location, "위치", "일정과 연동된 위치 정보를 위해 필요합니다.")
+            PermissionInfo(R.drawable.ic_permission_noti, "알림", "일정에 대한 알림이 포함될 수 있습니다.")
         }
         PrimaryBigButton(text = "계속하기") {
             checkPermission()

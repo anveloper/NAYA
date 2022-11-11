@@ -18,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,25 +30,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
-import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.items.CurrentCard
+import com.youme.naya.widgets.share.ShareButtonDialog
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(navController: NavHostController = rememberNavController()) {
+fun MainScreen(
+    navController: NavHostController = rememberNavController(),
+) {
     val context = LocalContext.current
     val activity = context as? Activity
     val focusManager = LocalFocusManager.current
@@ -54,10 +58,9 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
     // 현재 위치 추적
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
-
+    val (shareAlert, setShareAlert) = remember { mutableStateOf(false) }
 
     // 선택된 카드 가져오기
-    val cardListViewModel = viewModel<CardListViewModel>()
     val card = CurrentCard.getCurrentCard.value
 
     val launcher = rememberLauncherForActivityResult(
@@ -74,18 +77,32 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
 
     Scaffold(
         floatingActionButton = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    FloatingActionButton(
-                        onClick = {
+            if (currentDestination.toString() != "scheduleCreate"
+                && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}"
+            ) {
+                FloatingActionButton(
+                    onClick = {
                             when (currentDestination.toString()) {
                                 "schedule" -> navController.navigate("scheduleCreate")
+                                "naya" -> launcher.launch(
+                                    Intent(
+                                        activity,
+                                        MediaCardActivity::class.java
+                                    )
+                                )
+                                "nuya" -> launcher.launch(
+                                    Intent(
+                                        activity,
+                                        MediaCardActivity::class.java
+                                    )
+                                )
                                 else -> {
-                                    var intent = Intent(activity, ShareActivity::class.java)
-                                    intent.putExtra("cardUri", card.uri.toString())
-                                    intent.putExtra("filename", card.filename)
-                                    launcher.launch(intent)
+//                                    var intent = Intent(activity, ShareActivity::class.java)
+//                                    intent.putExtra("cardUri", card.uri.toString())
+//                                    intent.putExtra("filename", card.filename)
+//                                    launcher.launch(intent)
+                                    setShareAlert(true)
                                 }
                             }
                         },
@@ -107,6 +124,8 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                             fun setCenterIcon(): Int {
                                 return when (currentDestination.toString()) {
                                     "schedule" -> R.drawable.nav_schedule_plus_icon
+                                    "naya" -> R.drawable.nav_naya_plus_icon
+                                    "nuya" -> R.drawable.nav_naya_plus_icon
                                     else -> R.drawable.nav_send_icon
                                 }
                             }
@@ -119,7 +138,6 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
                                 tint = NeutralWhite
                             )
                         }
-                    }
 
                 }
             }
@@ -127,25 +145,26 @@ fun MainScreen(navController: NavHostController = rememberNavController()) {
         isFloatingActionButtonDocked = true,
         floatingActionButtonPosition = FabPosition.Center,
         topBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    HeaderBar(navController = navController)
-                }
+            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
+                HeaderBar(navController = navController)
             }
         },
         bottomBar = {
-            when (currentDestination.toString()) {
-                "scheduleCreate" -> {}
-                else -> {
-                    BottomBar(navController = navController)
-                }
+            if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
+                BottomBar(navController = navController)
             }
         },
         modifier = Modifier
             .addFocusCleaner(focusManager)
     ) {
         BottomNavGraph(navController = navController)
+        if (shareAlert) {
+            ShareButtonDialog(activity!!) {
+                setShareAlert(false)
+            }
+        }
     }
 }
 
@@ -159,7 +178,6 @@ fun BottomBar(
         BottomBarScreen.Spacer,
         BottomBarScreen.NayaCard,
         BottomBarScreen.Calendar,
-//        BottomBarScreen.Settings
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

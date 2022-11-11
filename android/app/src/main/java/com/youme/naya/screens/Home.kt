@@ -10,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.widgets.home.MyBCardList
 import com.youme.naya.widgets.home.MyNayaCardList
@@ -21,7 +23,7 @@ private val HomeModifier = Modifier
     .padding(bottom = 80.dp) // main 전체에 한번에 주는게 맞는 듯합니다.
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavHostController) {
     val context = LocalContext.current
     var (currentCardId, setCurrentCardId) = rememberSaveable {
         mutableStateOf(1)
@@ -30,7 +32,7 @@ fun HomeScreen() {
     Column(HomeModifier) {
         NayaBcardSwitchButtons(
             nayaTab = { MyNayaCardList(context) },
-            bCardTab = { MyBCardList(context) }
+            bCardTab = { MyBCardList(context, navController = navController) }
         )
     }
 }
@@ -38,5 +40,5 @@ fun HomeScreen() {
 @Composable
 @Preview
 fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(rememberNavController())
 }
