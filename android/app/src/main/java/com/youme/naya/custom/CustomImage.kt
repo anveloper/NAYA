@@ -1,6 +1,5 @@
 package com.youme.naya.custom
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.*
@@ -20,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.consumeAllChanges
@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.sp
 import com.godaddy.android.colorpicker.ClassicColorPicker
 import com.godaddy.android.colorpicker.HsvColor
 import com.youme.naya.ui.theme.*
-import dev.shreyaspatil.capturable.controller.CaptureController
 import kotlin.math.roundToInt
 
 @Composable
@@ -56,6 +55,19 @@ fun CustomImage(
             .fillMaxSize()
             .background(Color.Black)
     ) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(top = 12.dp), Alignment.Center
+        ) {
+            Text(
+                text = " ✌ 사진 수정 ☝ 글자 수정 ",
+                fontFamily = fonts,
+                color = PrimaryDark,
+                fontSize = 12.sp,
+                modifier = Modifier.background(NeutralLightness, RoundedCornerShape(4.dp))
+            )
+        }
         Image(
             bitmap.asImageBitmap(), null,
             Modifier
@@ -89,7 +101,7 @@ fun CardInfoTools() {
             .fillMaxSize(), Alignment.Center
     ) {
         var items = rememberSaveable { mutableListOf<InfoItem>() }
-
+        val keyboardController = LocalSoftwareKeyboardController.current
         // 정보 붙히는 곳
         Box(Modifier.fillMaxSize(), Alignment.Center) {
             CardFrame(items)
@@ -98,16 +110,15 @@ fun CardInfoTools() {
         Box(
             Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(16.dp),
             Alignment.BottomCenter
         ) {
             var (newColor, setNewColor) = remember { mutableStateOf<Color>(PrimaryBlue) }
             var (newContent, setNewContent) = remember { mutableStateOf<String>("") }
             Column() {
-                val keyboardController = LocalSoftwareKeyboardController.current
-
                 TextField(
                     value = newContent,
+                    placeholder = { Text(text = "카드에 넣을 내용 입력") },
                     onValueChange = {
                         setNewContent(it)
                     },
@@ -116,17 +127,18 @@ fun CardInfoTools() {
                             Icon(Icons.Outlined.Clear, null)
                         }
                     },
-                    modifier = Modifier.border(
-                        BorderStroke(
-                            width = 4.dp,
-                            brush = PrimaryGradientBrush
+                    modifier = Modifier
+                        .scale(0.8f)
+                        .border(
+                            BorderStroke(
+                                width = 4.dp,
+                                brush = PrimaryGradientBrush
+                            ),
                         ),
-                        shape = RoundedCornerShape(50)
-                    ),
                     colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
+                        backgroundColor = NeutralWhiteTrans,
+                        focusedIndicatorColor = PrimaryDark,
+                        unfocusedIndicatorColor = NeutralGray
                     ),
                     keyboardActions = KeyboardActions(onDone = {
                         if (newContent.trim().isNotEmpty())
