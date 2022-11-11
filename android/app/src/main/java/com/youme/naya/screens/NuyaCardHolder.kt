@@ -75,7 +75,7 @@ fun NuyaCardHolderScreen(navController: NavHostController) {
         Column(
             Modifier.fillMaxSize()
         ) {
-            SearchInput()
+//            SearchInput()
             NayaBcardSwitchButtons(
                 nayaTab = {
                     isBCard = false
