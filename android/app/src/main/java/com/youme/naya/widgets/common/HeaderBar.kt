@@ -45,6 +45,10 @@ fun HeaderBar(
             logo = true
             main = true
         }
+        "naya" -> {
+            logo = true
+            main = true
+        }
         "nuya" -> {
             logo = true
             main = true
