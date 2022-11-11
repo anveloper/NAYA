@@ -85,7 +85,7 @@ fun CustomCardListView(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(cardList) { card ->
-                GalleryItem(card)
+                GalleryItem(context as Activity, card)
             }
         }
 //        if (nayaCards.isEmpty()) {
