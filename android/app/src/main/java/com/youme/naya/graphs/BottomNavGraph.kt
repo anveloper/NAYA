@@ -26,10 +26,10 @@ fun BottomNavGraph(navController: NavHostController) {
             HomeScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NuyaCardHolder.route) {
-            NuyaCardHolderScreen(navController = navController)
+            NuyaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.NayaCard.route) {
-            NayaCardScreen()
+            NayaCardScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Calendar.route) {
             ScheduleMainScreen(navController = navController)
@@ -53,11 +53,35 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = "scheduleCreate") {
             ScheduleCreateScreen(navController = navController)
         }
-        composable(route = "scheduleUpdate") {
-            ScheduleUpdateScreen()
+        composable(route = "scheduleDetail/{scheduleId}",
+        arguments = listOf(
+            navArgument(
+            name = "scheduleId"
+        ) {
+            type = NavType.IntType
+            defaultValue = -1
+        },))
+            {
+            val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
+            ScheduleDetailScreen(
+                navController = navController,
+                scheduleId = scheduleId
+            )
         }
-        composable(route = "scheduleDetail") {
-            ScheduleDetailScreen()
+        composable(route = "scheduleEdit/{scheduleId}",
+            arguments = listOf(
+                navArgument(
+                    name = "scheduleId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },))
+        {
+            val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
+            ScheduleUpdateScreen(
+                navController = navController,
+                scheduleId = scheduleId
+            )
         }
     }
 }
