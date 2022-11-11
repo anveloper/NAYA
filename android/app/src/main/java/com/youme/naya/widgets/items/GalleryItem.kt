@@ -15,7 +15,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInteropFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.youme.naya.share.ShareActivity
@@ -24,16 +23,17 @@ import com.youme.naya.widgets.home.ViewCard
 
 private val GalleryModifier = Modifier
     .defaultMinSize(
-        minWidth = 100.dp,
-        minHeight = 180.dp
+        minWidth = 50.dp,
+        minHeight = 90.dp
     )
     .shadow(elevation = 6.dp)
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun GalleryItem(card: ViewCard) {
-    val context = LocalContext.current
-    val activity = context as? Activity
+fun GalleryItem(
+    activity: Activity,
+    card: ViewCard
+) {
     var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(

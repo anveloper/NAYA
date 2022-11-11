@@ -20,29 +20,31 @@ fun BusinessCardModifyScreen(navController: NavHostController, card: Card) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
 
-    var name by remember { mutableStateOf(card.name) }
-    var engName by remember { mutableStateOf(card.engName) }
-    var email by remember { mutableStateOf(card.email) }
-    var mobile by remember { mutableStateOf(card.mobile) }
-    var address by remember { mutableStateOf(card.address) }
-    var company by remember { mutableStateOf(card.company) }
-    var team by remember { mutableStateOf(card.team) }
-    var role by remember { mutableStateOf(card.role) }
-    var fax by remember { mutableStateOf(card.fax) }
-    var tel by remember { mutableStateOf(card.tel) }
-    var background by remember { mutableStateOf(card.background) }
-    var logo by remember { mutableStateOf(card.logo) }
-    var memo1 by remember { mutableStateOf(card.memo1) }
-    var memo2 by remember { mutableStateOf(card.memo2) }
-    var memo3 by remember { mutableStateOf(card.memo3) }
-    var memoContent by remember { mutableStateOf(card.memo_content) }
+    var name by remember { mutableStateOf(card.name ?: "") }
+    var engName by remember { mutableStateOf(card.engName ?: "") }
+    var email by remember { mutableStateOf(card.email ?: "") }
+    var mobile by remember { mutableStateOf(card.mobile ?: "") }
+    var address by remember { mutableStateOf(card.address ?: "") }
+    var company by remember { mutableStateOf(card.company ?: "") }
+    var team by remember { mutableStateOf(card.team ?: "") }
+    var role by remember { mutableStateOf(card.role ?: "") }
+//    var fax by remember { mutableStateOf(card.fax ?: "") }
+    var tel by remember { mutableStateOf(card.tel ?: "") }
+//    var background by remember { mutableStateOf(card.background ?: "") }
+//    var logo by remember { mutableStateOf(card.logo ?: "") }
+//    var memo1 by remember { mutableStateOf(card.memo1 ?: "") }
+//    var memo2 by remember { mutableStateOf(card.memo2 ?: "") }
+//    var memo3 by remember { mutableStateOf(card.memo3 ?: "") }
+    var memoContent by remember { mutableStateOf(card.memoContent ?: "") }
 
-    val isModified = name != card.name || engName != card.engName || email != card.email ||
-            mobile != card.mobile || address != card.address || company != card.company ||
-            team != card.team || role != card.role || fax != card.fax ||
-            tel != card.tel || background != card.background || logo != card.logo ||
-            memo1 != card.memo1 || memo2 != card.memo2 || memo3 != card.memo3 ||
-            memoContent != card.memo_content
+    val isModified =
+        name != (card.name ?: "") || engName != (card.engName ?: "") || email != (card.email
+            ?: "") || mobile != (card.mobile ?: "") || address != (card.address
+            ?: "") || company != (card.company ?: "") || team != (card.team
+            ?: "") || role != (card.role ?: "") || tel != (card.tel
+            ?: "") || memoContent != (card.memoContent ?: "")
+//            fax != card.fax || background != card.background || logo != card.logo ||
+//            memo1 != card.memo1 || memo2 != card.memo2 || memo3 != card.memo3 ||
 
     Column(
         Modifier.fillMaxSize(),
@@ -50,7 +52,7 @@ fun BusinessCardModifyScreen(navController: NavHostController, card: Card) {
         verticalArrangement = Arrangement.spacedBy(32.dp)
     ) {
         BusinessCardTemplate(
-            name, engName, email, mobile, address, team, role, company, logo
+            name, engName, email, mobile, address, team, role, company, null
         )
 
         LazyColumn(
@@ -61,28 +63,28 @@ fun BusinessCardModifyScreen(navController: NavHostController, card: Card) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                BasicTextField(text = name, placeholder = "이름 *", onChange = { name = it })
+                BasicTextField(text = name, placeholder = "이름", onChange = { name = it })
             }
             item {
-                BasicTextField(text = engName, placeholder = "영어 이름 *", onChange = { engName = it })
+                BasicTextField(text = engName, placeholder = "영어 이름", onChange = { engName = it })
             }
             item {
-                BasicTextField(text = email, placeholder = "이메일 *", onChange = { email = it })
+                BasicTextField(text = email, placeholder = "이메일", onChange = { email = it })
             }
             item {
-                BasicTextField(text = mobile, placeholder = "휴대폰번호 *", onChange = { mobile = it })
+                BasicTextField(text = mobile, placeholder = "휴대폰번호", onChange = { mobile = it })
             }
             item {
-                BasicTextField(text = address, placeholder = "주소 *", onChange = { address = it })
+                BasicTextField(text = address, placeholder = "주소", onChange = { address = it })
             }
             item {
-                BasicTextField(text = company, placeholder = "회사명 *", onChange = { company = it })
+                BasicTextField(text = company, placeholder = "회사명", onChange = { company = it })
             }
             item {
-                BasicTextField(text = team, placeholder = "부서 *", onChange = { team = it })
+                BasicTextField(text = team, placeholder = "부서", onChange = { team = it })
             }
             item {
-                BasicTextField(text = role, placeholder = "직책 *", onChange = { role = it })
+                BasicTextField(text = role, placeholder = "직책", onChange = { role = it })
             }
             item {
                 BasicTextField(text = tel, placeholder = "전화번호", onChange = { tel = it })
@@ -101,30 +103,31 @@ fun BusinessCardModifyScreen(navController: NavHostController, card: Card) {
             }
             item {
                 PrimaryBigButton(text = "수정", enabled = isModified) {
-                    val isValid = name.isNotEmpty() && engName.isNotEmpty() && email.isNotEmpty()
-                            && mobile.isNotEmpty() && address.isNotEmpty() && company.isNotEmpty()
-                            && team.isNotEmpty() && role.isNotEmpty()
+                    val isValid = name.isNotBlank() || engName.isNotBlank() || email.isNotBlank()
+                            || mobile.isNotBlank() || address.isNotBlank() || company.isNotBlank()
+                            || team.isNotBlank() || role.isNotBlank()
+                            || tel.isNotBlank() || memoContent.isNotBlank()
 
                     if (isValid) {
                         val newCard = Card(
-                            card.NayaCardId,
-                            name,
-                            engName,
-                            kind = 1,
-                            email,
-                            mobile,
-                            address,
-                            company,
-                            team,
-                            role,
-                            background,
-                            logo,
-                            fax,
-                            tel,
-                            memo1,
-                            memo2,
-                            memo3,
-                            memoContent
+                            NayaCardId = card.NayaCardId,
+                            name = name.ifBlank { null },
+                            engName = engName.ifBlank { null },
+                            kind = card.kind,
+                            email = email.ifBlank { null },
+                            mobile = mobile.ifBlank { null },
+                            address = address.ifBlank { null },
+                            company = company.ifBlank { null },
+                            team = team.ifBlank { null },
+                            role = role.ifBlank { null },
+                            tel = tel.ifBlank { null },
+                            memoContent = memoContent.ifBlank { null }
+//                            background,
+//                            logo,
+//                            fax,
+//                            memo1,
+//                            memo2,
+//                            memo3,
                         )
 
                         cardViewModel.updateCard(newCard)

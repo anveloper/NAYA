@@ -2,6 +2,7 @@ package com.youme.naya.card
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -72,16 +73,25 @@ class CardStackAdapter(
             mTextName.text = card.name
             mTextEngName.text = card.engName
             mTextCompany.text = card.company
-            val teamAndRole = card.team + " | " + card.role
-            mTextTeamAndRole.text = teamAndRole
+
+            val teamAndRole = mutableListOf<String>()
+            if (!card.team.isNullOrBlank()) teamAndRole.add(card.team)
+            if (!card.role.isNullOrBlank()) teamAndRole.add(card.role)
+            mTextTeamAndRole.text = teamAndRole.joinToString(" | ")
             mTextAddress.text = card.address
             mTextMobile.text = card.mobile
             mTextEmail.text = card.email
-            val summaryMain =
-                card.name + " | " + card.company + " | " + card.team + " | " + card.role
-            val summarySub = card.memo_content.ifEmpty { "메모를 등록하지 않았어요" }
-            mTextSummaryMain.text = summaryMain
+
+            val summaryMain = mutableListOf<String>()
+            if (!card.name.isNullOrBlank()) summaryMain.add(card.name)
+            if (!card.company.isNullOrBlank()) summaryMain.add(card.company)
+            if (!card.team.isNullOrBlank()) summaryMain.add(card.team)
+            if (!card.role.isNullOrBlank()) summaryMain.add(card.role)
+            mTextSummaryMain.text = summaryMain.joinToString(" | ")
+
+            val summarySub = card.memoContent ?: "메모를 등록하지 않았어요"
             mTextSummarySub.text = summarySub
+
             mBtnDetails.setOnClickListener {
                 val intent = Intent(context, CardDetailsActivity::class.java)
                 intent.putExtra("cardId", card.NayaCardId)
