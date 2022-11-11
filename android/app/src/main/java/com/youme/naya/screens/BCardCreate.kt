@@ -1,5 +1,6 @@
 package com.youme.naya.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,13 +31,13 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
     var company by remember { mutableStateOf("") }
     var team by remember { mutableStateOf("") }
     var role by remember { mutableStateOf("") }
-    var fax by remember { mutableStateOf("") }
+//    var fax by remember { mutableStateOf("") }
     var tel by remember { mutableStateOf("") }
-    var background by remember { mutableStateOf("") }
-    var logo by remember { mutableStateOf("") }
-    var memo1 by remember { mutableStateOf("") }
-    var memo2 by remember { mutableStateOf("") }
-    var memo3 by remember { mutableStateOf("") }
+//    var background by remember { mutableStateOf("") }
+//    var logo by remember { mutableStateOf("") }
+//    var memo1 by remember { mutableStateOf("") }
+//    var memo2 by remember { mutableStateOf("") }
+//    var memo3 by remember { mutableStateOf("") }
     var memoContent by remember { mutableStateOf("") }
 
     Column(
@@ -47,7 +48,7 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         BusinessCardTemplate(
-            name, engName, email, mobile, address, team, role, company, logo
+            name, engName, email, mobile, address, team, role, company, null
         )
 
         LazyColumn(
@@ -56,28 +57,28 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
-                BasicTextField(text = name, placeholder = "이름 *", onChange = { name = it })
+                BasicTextField(text = name, placeholder = "이름", onChange = { name = it })
             }
             item {
-                BasicTextField(text = engName, placeholder = "영어 이름 *", onChange = { engName = it })
+                BasicTextField(text = engName, placeholder = "영어 이름", onChange = { engName = it })
             }
             item {
-                BasicTextField(text = email, placeholder = "이메일 *", onChange = { email = it })
+                BasicTextField(text = email, placeholder = "이메일", onChange = { email = it })
             }
             item {
-                BasicTextField(text = mobile, placeholder = "휴대폰번호 *", onChange = { mobile = it })
+                BasicTextField(text = mobile, placeholder = "휴대폰번호", onChange = { mobile = it })
             }
             item {
-                BasicTextField(text = address, placeholder = "주소 *", onChange = { address = it })
+                BasicTextField(text = address, placeholder = "주소", onChange = { address = it })
             }
             item {
-                BasicTextField(text = company, placeholder = "회사명 *", onChange = { company = it })
+                BasicTextField(text = company, placeholder = "회사명", onChange = { company = it })
             }
             item {
-                BasicTextField(text = team, placeholder = "부서 *", onChange = { team = it })
+                BasicTextField(text = team, placeholder = "부서", onChange = { team = it })
             }
             item {
-                BasicTextField(text = role, placeholder = "직책 *", onChange = { role = it })
+                BasicTextField(text = role, placeholder = "직책", onChange = { role = it })
             }
             item {
                 BasicTextField(text = tel, placeholder = "전화번호", onChange = { tel = it })
@@ -96,37 +97,38 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
             }
             item {
                 PrimaryBigButton(text = "저장") {
-                    val isValid = name.isNotEmpty() && engName.isNotEmpty() && email.isNotEmpty()
-                            && mobile.isNotEmpty() && address.isNotEmpty() && company.isNotEmpty()
-                            && team.isNotEmpty() && role.isNotEmpty()
+                    val isValid = name.isNotBlank() || engName.isNotBlank() || email.isNotBlank()
+                            || mobile.isNotBlank() || address.isNotBlank() || company.isNotBlank()
+                            || team.isNotBlank() || role.isNotBlank()
+                            || tel.isNotBlank() || memoContent.isNotBlank()
 
                     if (isValid) {
                         val card = Card(
-                            0,
-                            name,
-                            engName,
-                            kind,
-                            email,
-                            mobile,
-                            address,
-                            company,
-                            team,
-                            role,
-                            background,
-                            logo,
-                            fax,
-                            tel,
-                            memo1,
-                            memo2,
-                            memo3,
-                            memoContent
+                            NayaCardId = 0,
+                            name = name.ifBlank { null },
+                            engName = engName.ifBlank { null },
+                            kind = kind,
+                            email = email.ifBlank { null },
+                            mobile = mobile.ifBlank { null },
+                            address = address.ifBlank { null },
+                            company = company.ifBlank { null },
+                            team = team.ifBlank { null },
+                            role = role.ifBlank { null },
+                            tel = tel.ifBlank { null },
+                            memoContent = memoContent.ifBlank { null }
+//                            background,
+//                            logo,
+//                            fax,
+//                            memo1,
+//                            memo2,
+//                            memo3,
                         )
 
                         cardViewModel.addCard(card)
                         Toast.makeText(ctx, "카드 생성이 완료되었어요", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     } else {
-                        Toast.makeText(ctx, "필수 입력 양식을 채워주세요", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(ctx, "적어도 하나 이상의 값을 입력해주세요", Toast.LENGTH_SHORT).show()
                     }
                 }
                 Spacer(
