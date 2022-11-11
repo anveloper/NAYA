@@ -118,15 +118,19 @@ class ScheduleEditViewModel @Inject constructor(
         _endTime.value = time
     }
 
-    suspend fun deleteSchedule(schedule: Schedule?) {
-        if (schedule != null) {
-            repository.deleteSchedule(schedule)
+    suspend fun deleteSchedule(scheduleId: Int?) {
+        if (scheduleId != null) {
+            val schedule =  repository.getScheduleById(scheduleId)
+            if (schedule != null) {
+                repository.deleteSchedule(schedule)
+            }
         }
     }
 
     fun restoreSchedule() {
       viewModelScope.launch {
             repository.insertSchedule(
+
                 recentlyDeletedSchedule ?: return@launch)
             recentlyDeletedSchedule = null
         }

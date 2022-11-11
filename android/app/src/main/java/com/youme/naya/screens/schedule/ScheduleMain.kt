@@ -73,7 +73,6 @@ fun ScheduleMainScreen(
                        )
                    }
                    Spacer(modifier = Modifier.height(16.dp))
-                   Text(viewModel.eventList.value.toString())
                    if (viewModel.schedules.value.isNotEmpty()) {
                        LazyColumn (
                            state = rememberLazyListState(),

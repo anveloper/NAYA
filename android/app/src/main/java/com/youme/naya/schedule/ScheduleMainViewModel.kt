@@ -1,25 +1,21 @@
 package com.youme.naya.schedule
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.youme.naya.database.entity.Schedule
-import com.youme.naya.database.entity.relations.ScheduleWithMembers
 import com.youme.naya.database.repository.ScheduleRepository
 import com.youme.naya.widgets.calendar.customCalendar.model.CustomCalendarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
