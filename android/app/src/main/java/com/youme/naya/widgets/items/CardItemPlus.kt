@@ -43,7 +43,7 @@ fun CardItemPlus(
     val activity = context as? Activity
     val viewModel = viewModel<CardListViewModel>()
 
-    // 미디어 카드 액티비티
+    // 미디어 카드 액티비티 런처
     val mediaCameraLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {

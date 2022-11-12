@@ -19,10 +19,11 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
-fun saveCardImage(context: Context, bitmap: Bitmap, isBcard: Boolean = false) {
+fun saveCardImage(context: Context, bitmap: Bitmap, isBcard: Boolean = false): String? {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        saveImageOnAboveAndroidQ(context, bitmap, isBcard)
+        val path = saveImageOnAboveAndroidQ(context, bitmap, isBcard)
         Toast.makeText(context, "이미지 저장이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+        return path
     } else {
         val writePermission = ActivityCompat.checkSelfPermission(
             context as Activity,
@@ -30,8 +31,9 @@ fun saveCardImage(context: Context, bitmap: Bitmap, isBcard: Boolean = false) {
         )
 
         if (writePermission == PackageManager.PERMISSION_GRANTED) {
-            saveImageOnUnderAndroidQ(context, bitmap, isBcard)
+            val path = saveImageOnUnderAndroidQ(context, bitmap, isBcard)
             Toast.makeText(context, "이미지 저장이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            return path
         } else {
             val requestExternalStorageCode = 1
 
@@ -40,16 +42,17 @@ fun saveCardImage(context: Context, bitmap: Bitmap, isBcard: Boolean = false) {
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             ActivityCompat.requestPermissions(
-                context as Activity,
+                context,
                 permissionStorage,
                 requestExternalStorageCode
             )
         }
     }
+    return null
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
-private fun saveImageOnAboveAndroidQ(context: Context, bitmap: Bitmap, isBcard: Boolean) {
+private fun saveImageOnAboveAndroidQ(context: Context, bitmap: Bitmap, isBcard: Boolean): String? {
     val fileName = "NAYA-${if (isBcard) "BUSINESS" else "MEDIA"}-" + System.currentTimeMillis()
         .toString() + ".png"
 
@@ -79,6 +82,8 @@ private fun saveImageOnAboveAndroidQ(context: Context, bitmap: Bitmap, isBcard: 
                 context.contentResolver.update(uri, contentValues, null, null)
 
                 image.close()
+
+                return convertUri2Path(context, uri)
             }
         }
     } catch (e: FileNotFoundException) {
@@ -88,10 +93,12 @@ private fun saveImageOnAboveAndroidQ(context: Context, bitmap: Bitmap, isBcard: 
     } catch (e: Exception) {
         e.printStackTrace()
     }
+
+    return null
 }
 
 
-private fun saveImageOnUnderAndroidQ(context: Context, bitmap: Bitmap, isBcard: Boolean) {
+private fun saveImageOnUnderAndroidQ(context: Context, bitmap: Bitmap, isBcard: Boolean): String? {
     val fileName = "NAYA-${if (isBcard) "BUSINESS" else "MEDIA"}-" + System.currentTimeMillis()
         .toString() + ".png"
     val externalStorage = Environment.getExternalStorageDirectory().absolutePath
@@ -112,6 +119,8 @@ private fun saveImageOnUnderAndroidQ(context: Context, bitmap: Bitmap, isBcard: 
         fos.close()
 
         context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(fileItem)))
+
+        return fileItem.absolutePath
     } catch (e: FileNotFoundException) {
         e.printStackTrace()
     } catch (e: IOException) {
@@ -119,4 +128,6 @@ private fun saveImageOnUnderAndroidQ(context: Context, bitmap: Bitmap, isBcard: 
     } catch (e: Exception) {
         e.printStackTrace()
     }
+
+    return null
 }

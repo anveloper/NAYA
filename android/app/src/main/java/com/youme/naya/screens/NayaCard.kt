@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.youme.naya.card.BusinessCardGridList
 import com.youme.naya.card.BusinessCardStackList
 import com.youme.naya.card.NayaCardGridList
 import com.youme.naya.database.viewModel.CardViewModel
@@ -56,7 +57,8 @@ fun NayaCardScreen(navController: NavHostController) {
                 },
                 bCardTab = {
                     isBCard = true
-                    BusinessCardStackList(context, cardViewModel)
+//                    BusinessCardStackList(context, cardViewModel)
+                    BusinessCardGridList(context, cardViewModel)
                 }
             )
         }

@@ -104,7 +104,7 @@ private fun saveBitmapToPng(bitmap: Bitmap, name: String, context: Context): Str
         // 자동으로 빈 파일을 생성합니다.
         tempFile.createNewFile()
 
-        // 파일을 쓸 수 있는 스트림을 준비합니다.
+        // 파일을 쓸 수 있는 스트림을 준비합니다.h
         val out = FileOutputStream(tempFile)
 
         // compress 함수를 사용해 스트림에 비트맵을 저장합니다.

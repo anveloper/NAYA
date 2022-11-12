@@ -188,6 +188,8 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
             item {
                 PrimaryBigButton(text = "저장") {
                     if (isValid(mappedValueMap)) {
+                        val newPath = saveCardImage(ctx, cardImageBitmap, true)
+
                         val card = Card(
                             0,
                             name = mappedValueMap["name"],
@@ -207,12 +209,10 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
 //                            memo1 = mappedValueMap["memo1"],
 //                            memo2 = mappedValueMap["memo2"],
 //                            memo3 = mappedValueMap["memo3"],
-                            path = path
+                            path = newPath
                         )
 
                         cardViewModel.addCard(card)
-                        saveCardImage(ctx, cardImageBitmap, true)
-
                         Toast.makeText(ctx, "카드 생성이 완료되었어요", Toast.LENGTH_SHORT).show()
                         navController.popBackStack()
                     } else {
