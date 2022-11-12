@@ -68,7 +68,7 @@ class DocumentScannerActivity : AppCompatActivity() {
             var savedImgAbsolutePath: String? = null
 
             if (bitmap != null) {
-                savedImgAbsolutePath = saveBitmapToJpeg(bitmap, "nayatempfile", this.baseContext)
+                savedImgAbsolutePath = saveBitmapToPng(bitmap, "nayatempfile", this.baseContext)
             }
 
             // 2. 저장된 이미지의 경로를 인텐트에 저장한다.
@@ -89,13 +89,13 @@ fun getBitmapFromView(v: View): Bitmap? {
     return b
 }
 
-private fun saveBitmapToJpeg(bitmap: Bitmap, name: String, context: Context): String? {
+private fun saveBitmapToPng(bitmap: Bitmap, name: String, context: Context): String? {
 
     //내부저장소 캐시 경로를 받아옵니다.
     val storage: File = context.cacheDir
 
     //저장할 파일 이름
-    val fileName = "$name.jpg"
+    val fileName = "$name.png"
 
     //storage 에 파일 인스턴스를 생성합니다.
     val tempFile = File(storage, fileName)
@@ -104,16 +104,16 @@ private fun saveBitmapToJpeg(bitmap: Bitmap, name: String, context: Context): St
         // 자동으로 빈 파일을 생성합니다.
         tempFile.createNewFile()
 
-        // 파일을 쓸 수 있는 스트림을 준비합니다.
+        // 파일을 쓸 수 있는 스트림을 준비합니다.h
         val out = FileOutputStream(tempFile)
 
         // compress 함수를 사용해 스트림에 비트맵을 저장합니다.
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
 
         // 스트림 사용후 닫아줍니다.
         out.close()
 
-        Log.i("saveBitmapToJpeg", tempFile.absolutePath)
+        Log.i("saveBitmapToPng", tempFile.absolutePath)
         return tempFile.absolutePath
     } catch (e: Exception) {
         e.printStackTrace()

@@ -1,21 +1,23 @@
 package com.youme.naya.card
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.youme.naya.R
 import com.youme.naya.ui.theme.*
 
 @Composable
@@ -147,33 +149,43 @@ fun BusinessCardTemplate(
                     .padding(bottom = 84.dp, start = 24.dp)
             )
         }
-        if (logo != null) {
-            Text(
-                logo.ifEmpty { "로고 이미지" },
-                fontSize = 12.sp,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.End,
-                color = NeutralMetal,
-                modifier = Modifier
-                    .align(
-                        Alignment.TopEnd
-                    )
-                    .padding(top = 24.dp, end = 24.dp)
-            )
-        }
-//        Text(
-//            "QR 코드",
-//            fontSize = 12.sp,
-//            fontFamily = fonts,
-//            fontWeight = FontWeight.Medium,
-//            textAlign = TextAlign.End,
-//            color = NeutralMetal,
-//            modifier = Modifier
-//                .align(
-//                    Alignment.BottomEnd
-//                )
-//                .padding(bottom = 24.dp, end = 24.dp)
-//        )
+//        if (logo != null) {
+//            Text(
+//                logo.ifEmpty { "로고 이미지" },
+//                fontSize = 12.sp,
+//                fontFamily = fonts,
+//                fontWeight = FontWeight.Medium,
+//                textAlign = TextAlign.End,
+//                color = NeutralMetal,
+//                modifier = Modifier
+//                    .align(
+//                        Alignment.TopEnd
+//                    )
+//                    .padding(top = 24.dp, end = 24.dp)
+//            )
+//        }
+        Image(
+            painter = painterResource(R.drawable.login_naya_icon),
+            contentDescription = "logo",
+            modifier = Modifier
+                .size(64.dp)
+                .align(
+                    Alignment.TopEnd
+                )
+                .padding(top = 16.dp, end = 16.dp)
+        )
+        Text(
+            "QR 코드",
+            fontSize = 12.sp,
+            fontFamily = fonts,
+            fontWeight = FontWeight.Medium,
+            textAlign = TextAlign.End,
+            color = NeutralMetal,
+            modifier = Modifier
+                .align(
+                    Alignment.BottomEnd
+                )
+                .padding(bottom = 24.dp, end = 24.dp)
+        )
     }
 }
