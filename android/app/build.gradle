@@ -14,8 +14,8 @@ android {
         applicationId "com.youme.naya"
         minSdk 21
         targetSdk 33
-        versionCode 2
-        versionName "1.0"
+        versionCode 3
+        versionName "1.1"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -68,7 +68,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
     // 17.0.0 버전이 오류라는 배포시 경고가 있는데, 사용중이지 않은 디펜던시..
-    // implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
+    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
