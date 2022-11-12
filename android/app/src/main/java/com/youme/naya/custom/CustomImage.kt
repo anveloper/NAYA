@@ -19,12 +19,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -32,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.godaddy.android.colorpicker.ClassicColorPicker
 import com.godaddy.android.colorpicker.HsvColor
 import com.youme.naya.ui.theme.*
@@ -53,8 +56,25 @@ fun CustomImage(
     Box(
         Modifier
             .fillMaxSize()
+            .zIndex(100f)
             .background(Color.Black)
     ) {
+        Image(
+            bitmap.asImageBitmap(), null,
+            Modifier
+                .fillMaxSize()
+                .transformable(state = state)
+                .graphicsLayer(
+                    scaleX = scale,
+                    scaleY = scale,
+                    rotationZ = rotation,
+                    translationX = offset.x,
+                    translationY = offset.y
+                )
+        )
+        // tools
+        CardInfoTools()
+
         Box(
             Modifier
                 .fillMaxWidth()
@@ -65,33 +85,31 @@ fun CustomImage(
                 fontFamily = fonts,
                 color = PrimaryDark,
                 fontSize = 12.sp,
-                modifier = Modifier.background(NeutralLightness, RoundedCornerShape(4.dp))
+                modifier = Modifier
+                    .background(NeutralLightness, RoundedCornerShape(4.dp))
             )
         }
-        Image(
-            bitmap.asImageBitmap(), null,
-            Modifier
-                .graphicsLayer(
-                    scaleX = scale,
-                    scaleY = scale,
-                    rotationZ = rotation,
-                    translationX = offset.x,
-                    translationY = offset.y
-                )
-                .transformable(state = state)
-                .fillMaxSize()
-        )
-        CardInfoTools()
+
     }
 }
 
-data class InfoItem(
+data class TextItem(
     var content: String,
     var fontColor: Color = PrimaryBlue,
     var offsetX: Float = 0.0f,
     var offsetY: Float = 0.0f,
+    var rotate: Float = 0.0f,
     var fontSize: Int = 24,
 )
+
+data class StickerItem(
+    var image: Int,
+    var offsetX: Float = 0.0f,
+    var offsetY: Float = 0.0f,
+    var rotate: Float = 0.0f,
+    var scale: Float = 24f,
+)
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -100,11 +118,12 @@ fun CardInfoTools() {
         Modifier
             .fillMaxSize(), Alignment.Center
     ) {
-        var items = rememberSaveable { mutableListOf<InfoItem>() }
+        var texts = rememberSaveable { mutableListOf<TextItem>() }
+        var stickers = rememberSaveable { mutableListOf<StickerItem>() }
         val keyboardController = LocalSoftwareKeyboardController.current
         // 정보 붙히는 곳
         Box(Modifier.fillMaxSize(), Alignment.Center) {
-            CardFrame(items)
+            CardFrame(texts, stickers)
         }
         // 정보 내용 수정하는 곳
         Box(
@@ -113,9 +132,8 @@ fun CardInfoTools() {
                 .padding(16.dp),
             Alignment.BottomCenter
         ) {
-            var (newColor, setNewColor) = remember { mutableStateOf<Color>(PrimaryBlue) }
             var (newContent, setNewContent) = remember { mutableStateOf<String>("") }
-            Column() {
+            Row(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterVertically) {
                 TextField(
                     value = newContent,
                     placeholder = { Text(text = "카드에 넣을 내용 입력") },
@@ -142,12 +160,15 @@ fun CardInfoTools() {
                     ),
                     keyboardActions = KeyboardActions(onDone = {
                         if (newContent.trim().isNotEmpty())
-                            items.add(InfoItem(newContent))
+                            texts.add(TextItem(newContent))
                         setNewContent("")
                         keyboardController?.hide()
                     }),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                 )
+                IconButton(onClick = { /*TODO*/ }) {
+
+                }
             }
         }
     }
@@ -155,7 +176,9 @@ fun CardInfoTools() {
 
 
 @Composable
-fun CardFrame(items: List<InfoItem>) {
+fun CardFrame(
+    texts: List<TextItem>, stickers: List<StickerItem>
+) {
     Box(Modifier.fillMaxSize(), Alignment.Center) {
         Box(
             Modifier
@@ -166,7 +189,7 @@ fun CardFrame(items: List<InfoItem>) {
                 .padding(8.dp)
         ) {
 
-            items.forEach { item ->
+            texts.forEach { item ->
                 if (item.content.isNotEmpty()) {
                     var offsetX by remember { mutableStateOf(item.offsetX) }
                     var offsetY by remember { mutableStateOf(item.offsetX) }
@@ -175,6 +198,7 @@ fun CardFrame(items: List<InfoItem>) {
 
                     var (content, setContent) = remember { mutableStateOf(item.content) }
                     var (fontSize, setFontSize) = remember { mutableStateOf(item.fontSize) }
+                    var (rotate, setRotate) = remember { mutableStateOf(item.rotate) }
                     var (fontColor, setFontColor) = remember { mutableStateOf(item.fontColor) }
                     if (isSelected) {
                         FontTool(
@@ -183,6 +207,8 @@ fun CardFrame(items: List<InfoItem>) {
                             setContent,
                             fontSize,
                             setFontSize,
+                            rotate,
+                            setRotate,
                             fontColor,
                             setFontColor
                         )
@@ -191,6 +217,7 @@ fun CardFrame(items: List<InfoItem>) {
                         Text(
                             content,
                             Modifier
+                                .rotate(rotate)
                                 .offset {
                                     IntOffset(
                                         offsetX.roundToInt(),
@@ -198,7 +225,7 @@ fun CardFrame(items: List<InfoItem>) {
                                     )
                                 }
                                 .clickable {
-                                    Log.i("${content}", "isSelected")
+                                    Log.i(content, "isSelected")
                                     setIsSelected(true)
                                 }
                                 .pointerInput(Unit) {
@@ -206,7 +233,7 @@ fun CardFrame(items: List<InfoItem>) {
                                         change.consumeAllChanges()
                                         offsetX += dragAmount.x
                                         offsetY += dragAmount.y
-                                        Log.i("${content}", "$offsetX $offsetY")
+                                        Log.i(content, "$offsetX $offsetY")
                                     }
                                 },
                             fontColor,
@@ -218,8 +245,71 @@ fun CardFrame(items: List<InfoItem>) {
                     }
                 }
             }
+
+            stickers.forEach { item ->
+                if (item.image != 0) {
+                    var offsetX by remember { mutableStateOf(item.offsetX) }
+                    var offsetY by remember { mutableStateOf(item.offsetX) }
+
+                    var (isSelected, setIsSelected) = remember { mutableStateOf(false) }
+
+                    var (image, setImage) = remember { mutableStateOf(item.image) }
+                    var (scale, setScale) = remember { mutableStateOf(item.scale) }
+                    var (rotate, setRotate) = remember { mutableStateOf(item.rotate) }
+                    if (isSelected) {
+                        StickerTool(
+                            setIsSelected,
+                            image,
+                            setImage,
+                            scale,
+                            setScale,
+                            rotate,
+                            setRotate
+                        )
+                    }
+                    Box(Modifier.matchParentSize(), Alignment.Center) {
+                        Image(
+                            painterResource(image),
+                            null,
+                            Modifier
+                                .rotate(rotate)
+                                .offset {
+                                    IntOffset(
+                                        offsetX.roundToInt(),
+                                        offsetY.roundToInt()
+                                    )
+                                }
+                                .clickable {
+                                    Log.i(image.toString(), "isSelected")
+                                    setIsSelected(true)
+                                }
+                                .pointerInput(Unit) {
+                                    detectDragGestures { change, dragAmount ->
+                                        change.consumeAllChanges()
+                                        offsetX += dragAmount.x
+                                        offsetY += dragAmount.y
+                                        Log.i(image.toString(), "$offsetX $offsetY")
+                                    }
+                                },
+                        )
+                    }
+                }
+            }
         }
     }
+}
+
+@Composable
+fun StickerTool(
+    setIsSelected: (Boolean) -> Unit,
+    image: Int,
+    setImage: (Int) ->Unit,
+    scale: Float,
+    setScale: (Float) -> Unit,
+    rotate: Float,
+    setRotate: (Float) -> Unit,
+) {
+
 }
 
 @Composable
@@ -229,6 +319,8 @@ fun FontTool(
     setContent: (String) -> Unit,
     fontSize: Int,
     setFontSize: (Int) -> Unit,
+    rotate: Float,
+    setRotate: (Float) -> Unit,
     fontColor: Color,
     setFontColor: (Color) -> Unit
 ) {
@@ -264,15 +356,16 @@ fun FontTool(
                     }
 
                 }
-
-
+                var newRotate by remember { mutableStateOf(rotate) }
                 var newFontSize by remember { mutableStateOf(fontSize.toFloat()) }
                 var newFontColor by remember { mutableStateOf(fontColor) }
 
                 Box(Modifier.fillMaxSize(), Alignment.Center) {
                     Text(
                         content,
-                        Modifier.sizeIn(20.dp),
+                        Modifier
+                            .sizeIn(20.dp)
+                            .rotate(newRotate),
                         newFontColor,
                         newFontSize.toInt().sp,
                         FontStyle.Normal,
@@ -286,22 +379,45 @@ fun FontTool(
                     Arrangement.Bottom,
                     Alignment.CenterHorizontally
                 ) {
-                    // 폰트 사이즈 수정
-                    Slider(
-                        value = newFontSize,
-                        onValueChange = {
-                            newFontSize = it
-                        },
-                        onValueChangeFinished = {
-                            setFontSize(newFontSize.toInt())
-                        },
-                        valueRange = 12f..48f,
-                        steps = 36,
-                        colors = SliderDefaults.colors(
-                            thumbColor = PrimaryLight,
-                            activeTrackColor = Color.Transparent
+                    // 글시 회전
+                    Row(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterVertically) {
+                        Text(text = "회전")
+                        Slider(
+                            value = newRotate,
+                            onValueChange = {
+                                newRotate = it
+                            },
+                            onValueChangeFinished = {
+                                setRotate(newRotate)
+                            },
+                            valueRange = -180f..180f,
+                            steps = 360,
+                            colors = SliderDefaults.colors(
+                                thumbColor = PrimaryLight,
+                                activeTrackColor = Color.Transparent
+                            )
                         )
-                    )
+                    }
+                    // 폰트 사이즈 수정
+                    Row(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterVertically) {
+                        Text(text = "크기")
+                        Slider(
+                            value = newFontSize,
+                            onValueChange = {
+                                newFontSize = it
+                            },
+                            onValueChangeFinished = {
+                                setFontSize(newFontSize.toInt())
+                            },
+                            valueRange = 12f..48f,
+                            steps = 36,
+                            colors = SliderDefaults.colors(
+                                thumbColor = PrimaryLight,
+                                activeTrackColor = Color.Transparent
+                            )
+                        )
+                    }
+
                     ClassicColorPicker(
                         color = newFontColor,
                         onColorChanged = { color: HsvColor ->
