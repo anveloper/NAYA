@@ -16,9 +16,10 @@ dependencyResolutionManagement {
 rootProject.name = "android"
 include ':app'
 include ':java'
-include ':sdk'
-include ':documentscanner'
 include ':opencv'
+include ':documentscanner'
 
-def opencvsdk='android/opencv'
-project(':opencv').projectDir = new File(opencvsdk + '/sdk')
+//include ':sdk'
+
+//def opencvsdk='android/opencv'
+//project(':opencv').projectDir = new File(opencvsdk + '/sdk')
