@@ -27,6 +27,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.googlecode.tesseract.android.TessBaseAPI
 import org.sdase.submission.documentscanner.BitmapUtils
 import com.youme.naya.R
+import com.youme.naya.utils.saveCardImage
 import org.sdase.submission.documentscanner.GraphicOverlay
 import org.sdase.submission.documentscanner.VisionImageProcessor
 import org.sdase.submission.documentscanner.textdetector.TextRecognitionProcessor
@@ -55,6 +56,9 @@ class StillImageActivity : AppCompatActivity() {
     // Tess
     lateinit var tess: TessBaseAPI
     var dataPath: String = ""
+
+    // 이미지 경로
+    private var savedImgAbsolutePath: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +89,7 @@ class StillImageActivity : AppCompatActivity() {
         preview = findViewById(R.id.preview)
 
         // 4. 전달된 savedImgAbsolutePath가 잘 뜨는지 확인하기
-        val savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
+        savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
         if (savedImgAbsolutePath != null) {
             val bitmap = BitmapFactory.decodeFile(savedImgAbsolutePath)
             preview?.setImageBitmap(bitmap)
@@ -222,9 +226,10 @@ class StillImageActivity : AppCompatActivity() {
         ocrResult = tess.utF8Text
         Log.i("ocrResult", ocrResult)
 
-        val intent = Intent(context, StillImageActivity::class.java)
-        intent.putExtra("ocrResult", ocrResult)
-        setResult(RESULT_OK, intent)
+        val newIntent = Intent(context, StillImageActivity::class.java)
+        newIntent.putExtra("ocrResult", ocrResult)
+        newIntent.putExtra("croppedImage", savedImgAbsolutePath)
+        setResult(RESULT_OK, newIntent)
         finish()
     }
 
