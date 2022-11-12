@@ -12,21 +12,17 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Pair
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.annotation.KeepName
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.*;
+import com.google.mlkit.vision.text.*
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.googlecode.tesseract.android.TessBaseAPI
-import org.sdase.submission.documentscanner.BitmapUtils
 import com.youme.naya.R
+import org.sdase.submission.documentscanner.BitmapUtils
 import org.sdase.submission.documentscanner.GraphicOverlay
 import org.sdase.submission.documentscanner.VisionImageProcessor
 import org.sdase.submission.documentscanner.textdetector.TextRecognitionProcessor
@@ -94,10 +90,10 @@ class StillImageActivity : AppCompatActivity() {
 
         dataPath = "$filesDir/assets/"
 
-        checkFile(File(dataPath+"tessdata/"), "kor")
-        checkFile(File(dataPath+"tessdata/"), "eng")
+        checkFile(File(dataPath + "tessdata/"), "kor")
+        checkFile(File(dataPath + "tessdata/"), "eng")
 
-        val lang : String = "kor+eng"
+        val lang: String = "kor+eng"
         tess = TessBaseAPI()
         tess.init(dataPath, lang)
 
@@ -170,13 +166,13 @@ class StillImageActivity : AppCompatActivity() {
 
     private fun checkFile(dir: File, lang: String) {
         // 파일의 존재여부 확인 후 내부로 복사
-        if(!dir.exists()&&dir.mkdirs()) {
+        if (!dir.exists() && dir.mkdirs()) {
             copyFile(lang)
         }
-        if(dir.exists()) {
-            val datafilePath : String = "$dataPath/tessdata/$lang.traineddata"
-            var dataFile : File = File(datafilePath)
-            if(!dataFile.exists()) {
+        if (dir.exists()) {
+            val datafilePath: String = "$dataPath/tessdata/$lang.traineddata"
+            var dataFile: File = File(datafilePath)
+            if (!dataFile.exists()) {
                 copyFile(lang)
             }
         }
@@ -217,7 +213,7 @@ class StillImageActivity : AppCompatActivity() {
     }
 
     private fun processImage(bitmap: Bitmap) {
-        var ocrResult : String? = null;
+        var ocrResult: String? = null;
         tess.setImage(bitmap)
         ocrResult = tess.utF8Text
         Log.i("ocrResult", ocrResult)
