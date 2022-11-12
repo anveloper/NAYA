@@ -107,7 +107,7 @@ data class StickerItem(
     var offsetX: Float = 0.0f,
     var offsetY: Float = 0.0f,
     var rotate: Float = 0.0f,
-    var scale: Int = 24,
+    var scale: Float = 24f,
 )
 
 
