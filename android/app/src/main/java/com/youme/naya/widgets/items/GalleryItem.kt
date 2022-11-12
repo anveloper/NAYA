@@ -2,7 +2,6 @@ package com.youme.naya.widgets.items
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -18,11 +17,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
-import com.youme.naya.database.entity.Card
 import com.youme.naya.share.ShareActivity
-import com.youme.naya.utils.convertPath2Uri
 import com.youme.naya.widgets.home.ViewCard
-import java.io.File
 
 
 private val GalleryModifier = Modifier
@@ -36,8 +32,7 @@ private val GalleryModifier = Modifier
 @Composable
 fun GalleryItem(
     activity: Activity,
-    nayaCard: ViewCard? = null,
-    bCard: Card? = null
+    card: ViewCard
 ) {
     var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
 
@@ -55,67 +50,31 @@ fun GalleryItem(
         }
     }
 
-    if (nayaCard != null && bCard == null) {
-        Card(
-            GalleryModifier
-                .pointerInteropFilter {
-                    when (it.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            Log.i("Card", "Down ${nayaCard.uri}")
-                        }
-                        MotionEvent.ACTION_MOVE -> {
-                            Log.i("Card", "Move ${nayaCard.uri}")
-                        }
-                        MotionEvent.ACTION_UP -> {
-                            if (!isShareOpen) {
-                                Log.i("Card", "Up ${nayaCard.uri}")
-                                var intent = Intent(activity, ShareActivity::class.java)
-                                intent.putExtra("cardUri", nayaCard.uri.toString())
-                                intent.putExtra("filename", nayaCard.filename)
-                                launcher.launch(intent)
-                                setIsShareOpen(true)
-                            }
-                        }
-                        else -> false
+
+    Card(
+        GalleryModifier
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        Log.i("Card", "Down ${card.uri}")
                     }
-                    true
-                }) {
-            Image(rememberImagePainter(data = nayaCard.uri), null, Modifier.fillMaxSize())
-        }
-    } else if (nayaCard == null && bCard != null) {
-        val bCardUri = convertPath2Uri(activity, bCard.path!!)
-        Card(
-            GalleryModifier
-                .pointerInteropFilter {
-                    when (it.action) {
-                        MotionEvent.ACTION_DOWN -> {
-                            Log.i("Card", "Down ${bCardUri}")
-                        }
-                        MotionEvent.ACTION_MOVE -> {
-                            Log.i("Card", "Move ${bCardUri}")
-                        }
-                        MotionEvent.ACTION_UP -> {
-                            if (!isShareOpen) {
-                                Log.i("Card", "Up ${bCardUri}")
-                                var intent = Intent(activity, ShareActivity::class.java)
-                                intent.putExtra("cardUri", bCardUri)
-                                intent.putExtra(
-                                    "filename",
-                                    bCard.path.substring(bCard.path.lastIndexOf('/') + 1)
-                                )
-                                launcher.launch(intent)
-                                setIsShareOpen(true)
-                            }
-                        }
-                        else -> false
+                    MotionEvent.ACTION_MOVE -> {
+                        Log.i("Card", "Move ${card.uri}")
                     }
-                    true
-                }) {
-            Image(
-                rememberImagePainter(BitmapFactory.decodeFile(bCard.path)),
-                null,
-                Modifier.fillMaxSize()
-            )
-        }
+                    MotionEvent.ACTION_UP -> {
+                        if (!isShareOpen) {
+                            Log.i("Card", "Up ${card.uri}")
+                            var intent = Intent(activity, ShareActivity::class.java)
+                            intent.putExtra("cardUri", card.uri.toString())
+                            intent.putExtra("filename", card.filename)
+                            launcher.launch(intent)
+                            setIsShareOpen(true)
+                        }
+                    }
+                    else -> false
+                }
+                true
+            }) {
+        Image(rememberImagePainter(data = card.uri), null, Modifier.fillMaxSize())
     }
 }
