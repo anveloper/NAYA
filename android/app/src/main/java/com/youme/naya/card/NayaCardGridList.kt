@@ -27,7 +27,7 @@ fun NayaCardGridList(context: Context) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(cardList) { card ->
-            GalleryItem(context as Activity, nayaCard = card)
+            GalleryItem(context as Activity, card)
         }
     }
 //        if (nayaCards.isEmpty()) {
