@@ -12,5 +12,8 @@ fun convertUri2Path(context: Context, uri: Uri): String {
     val cursor: Cursor = cursorLoader.loadInBackground()!!
     val index: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
     cursor.moveToFirst()
-    return cursor.getString(index)
+
+    val result = cursor.getString(index)
+    cursor.close()
+    return result
 }

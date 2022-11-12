@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.youme.naya.card.BusinessCardGridList
 import com.youme.naya.card.BusinessCardStackList
 import com.youme.naya.card.NayaCardGridList
 import com.youme.naya.database.viewModel.CardViewModel
@@ -56,7 +57,8 @@ fun NayaCardScreen(navController: NavHostController) {
                 },
                 bCardTab = {
                     isBCard = true
-                    BusinessCardStackList(context, cardViewModel)
+//                    BusinessCardStackList(context, cardViewModel)
+                    BusinessCardGridList(context, cardViewModel)
                 }
             )
         }
@@ -83,11 +85,12 @@ fun NayaFloatingActionButtons(
         if (it.resultCode == Activity.RESULT_OK) {
             // OCR 문자열 인식 결과
             val ocrResult = it.data?.getStringExtra("ocrResult")
+            val imgPath = it.data?.getStringExtra("croppedImage")
 
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}")
             }
         }
     }
