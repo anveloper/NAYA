@@ -1,5 +1,6 @@
 package com.youme.naya.custom
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import com.godaddy.android.colorpicker.ClassicColorPicker
 import com.godaddy.android.colorpicker.HsvColor
@@ -53,7 +56,7 @@ fun DrawBoxDialog(
                 }
                 Capturable(controller = captureController, onCaptured = { bitmap, error ->
                     if (bitmap != null) {
-                        addDraw(bitmap)
+                        addDraw(resizeBitmap(1024, bitmap.asAndroidBitmap()).asImageBitmap())
                     }
                     if (error != null) {
                     }
@@ -103,4 +106,10 @@ fun DrawBoxDialog(
             }
         }
     )
+}
+
+fun resizeBitmap(targetWidth: Int, source: Bitmap): Bitmap {
+    val ratio = targetWidth.toDouble() / source.width.toDouble()
+    val targetHeight = (source.height * ratio).toInt()
+    return Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false)
 }
