@@ -1,9 +1,7 @@
 package com.youme.naya.screens
 
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -21,24 +19,18 @@ import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
-import com.youme.naya.card.BusinessCardTemplate
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.OutlinedSmallButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
-import com.youme.naya.utils.convertPath2Uri
 import com.youme.naya.utils.saveCardImage
-import java.io.File
 
 
 //val fieldsNameList = listOf(

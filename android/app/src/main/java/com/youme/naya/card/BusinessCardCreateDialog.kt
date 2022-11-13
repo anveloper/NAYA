@@ -65,7 +65,6 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
     val mediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
-        Log.i("FUCKIN HELL", it.resultCode.toString())
         if (it.resultCode == Activity.RESULT_OK) {
             val uri = it.data?.data as Uri
             val imgPath = convertUri2Path(context, uri)
@@ -108,6 +107,7 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
                     mediaLauncher.launch(intent)
                 }
                 OutlinedBigButton(text = "템플릿에서 만들기") {
+                    onDismissRequest()
                     navController.navigate("bCardCreate")
                 }
             }
