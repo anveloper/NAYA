@@ -503,8 +503,8 @@ fun DrawTool(
                             onValueChangeFinished = {
                                 setSize(newSize.toInt())
                             },
-                            valueRange = 10f..150f,
-                            steps = 142,
+                            valueRange = 100f..400f,
+                            steps = 300,
                             colors = SliderDefaults.colors(
                                 thumbColor = PrimaryLight,
                                 activeTrackColor = Color.Transparent
