@@ -63,7 +63,10 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
             val activity = LocalContext.current as? Activity
             val (cardId, setCardId) = remember { mutableStateOf<Int?>(-1) }
             val (sharedUri, setSharedUri) = remember { mutableStateOf<Uri?>(null) }
-
+            if (cardUri == null) {
+                Toast.makeText(this, "공유파일 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                finish()
+            } // uri없으면 종료
             // Share Loading tmp
             val (isLoading, setIsLoading) = remember { mutableStateOf(true) }
 

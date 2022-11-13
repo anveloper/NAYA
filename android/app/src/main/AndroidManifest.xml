@@ -71,11 +71,11 @@
 
         <activity
             android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".card.CardDetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
@@ -121,7 +121,9 @@
         <activity
             android:name=".custom.MediaCardActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".custom.VideoCardActivity"
+            android:screenOrientation="portrait" />
         <!--  OCR, DocumentScanner 액티비티  -->
 
         <activity

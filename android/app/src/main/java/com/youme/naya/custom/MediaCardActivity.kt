@@ -1,20 +1,13 @@
 package com.youme.naya.custom
 
 import android.app.Activity
-import android.content.ContentValues
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Build
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -35,22 +28,14 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.youme.naya.BaseActivity
 import com.youme.naya.ui.theme.AndroidTheme
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.ui.theme.fonts
 import com.youme.naya.utils.saveCardImage
-import com.youme.naya.widgets.home.CardListViewModel
 import dev.shreyaspatil.capturable.Capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
@@ -58,12 +43,13 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
         super.onCreate(savedInstanceState)
         setContent {
             val activity = LocalContext.current as? Activity
-            val viewModel = viewModel<CardListViewModel>()
+
+            val savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
+            val tmpImage: Bitmap? = BitmapFactory.decodeFile(savedImgAbsolutePath)
             AndroidTheme() {
-                MediaCardScreen(
+                MediaCardScreen(tmpImage,
                     // 액티비티 기준 커스텀 사진 저장 함수
                     { bitmap ->
-//                        createNayaCardFile(bitmap)
                         saveCardImage(baseContext, bitmap)
                         intent.putExtra("Custom Exit", 1)
                         setResult(RESULT_OK, intent)
@@ -79,10 +65,109 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
             }
         }
     }
+
+    private fun createNayaCardFile(bitmap: Bitmap) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveImageOnAboveAndroidQ(bitmap)
+            Toast.makeText(baseContext, "이미지 저장이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+        } else {
+            val writePermission = ActivityCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+
+            if (writePermission == PackageManager.PERMISSION_GRANTED) {
+                saveImageOnUnderAndroidQ(bitmap)
+                Toast.makeText(baseContext, "이미지 저장이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            } else {
+                val requestExternalStorageCode = 1
+
+                val permissionStorage = arrayOf(
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                ActivityCompat.requestPermissions(
+                    this,
+                    permissionStorage,
+                    requestExternalStorageCode
+                )
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun saveImageOnAboveAndroidQ(bitmap: Bitmap) {
+        val fileName = "NAYA-MEDIA-" + System.currentTimeMillis().toString() + ".png"
+
+        val contentValues = ContentValues()
+        contentValues.apply {
+            put(MediaStore.Images.Media.RELATIVE_PATH, "DCIM/NAYA")
+            put(MediaStore.Images.Media.DISPLAY_NAME, fileName)
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(MediaStore.Images.Media.IS_PENDING, 1)
+        }
+
+        val uri =
+            contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+        try {
+            if (uri != null) {
+                val image = contentResolver.openFileDescriptor(uri, "w", null)
+
+                if (image != null) {
+                    val fos = FileOutputStream(image.fileDescriptor)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                    fos.close()
+
+                    contentValues.clear()
+                    contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+                    Log.i("Media Card Saved", uri.toString())
+                    contentResolver.update(uri, contentValues, null, null)
+                }
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+
+    private fun saveImageOnUnderAndroidQ(bitmap: Bitmap) {
+        val fileName = "NAYA-MEDIA-" + System.currentTimeMillis().toString() + ".png"
+        val externalStorage = Environment.getExternalStorageDirectory().absolutePath
+        val path = "$externalStorage/DCIM/NAYA"
+        val dir = File(path)
+
+        if (dir.exists().not()) {
+            dir.mkdirs()
+        }
+
+        try {
+            val fileItem = File("$dir/$fileName")
+            fileItem.createNewFile()
+            //0KB 파일 생성.
+
+            val fos = FileOutputStream(fileItem)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            fos.close()
+
+            sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(fileItem)))
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
 
 @Composable
 fun MediaCardScreen(
+    tmpImage: Bitmap?,
     createNayaCardFile: (Bitmap) -> Unit,
     onFinish: () -> Unit
 ) {
@@ -94,10 +179,7 @@ fun MediaCardScreen(
     val captureController = rememberCaptureController()
 
     var (tmpBitmap, setTmpBitmap) = rememberSaveable {
-        mutableStateOf<Bitmap?>(null)
-    }
-    var (resultBitmap, setResultBitmap) = rememberSaveable {
-        mutableStateOf<Bitmap?>(null)
+        mutableStateOf<Bitmap?>(tmpImage)
     }
     val cameraX = CustomCameraX(context, lifecycleOwner)
 

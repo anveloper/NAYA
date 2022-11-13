@@ -64,7 +64,7 @@ fun HeaderBar(
             logo = false
             title = "명함 직접 입력"
         }
-        "bCardCreateByCamera?result={result}&path={path}" -> {
+        "bCardCreateByCamera?result={result}" -> {
             logo = false
             title = "카메라로 명함 등록"
         }
