@@ -11,15 +11,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Card
-import androidx.compose.material.IconButton
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -27,6 +27,7 @@ import com.youme.naya.R
 import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.ocr.DocumentScannerActivity
 import com.youme.naya.ocr.StillImageActivity
+import com.youme.naya.utils.convertUri2Path
 import com.youme.naya.widgets.home.CardListViewModel
 
 private val CardModifier = Modifier
@@ -43,13 +44,25 @@ fun CardItemPlus(
     val activity = context as? Activity
     val viewModel = viewModel<CardListViewModel>()
 
-    // 미디어 카드 액티비티 런처
+    // 미디어 카드 액티비티
     val mediaCameraLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         Log.i("Media Card Custom", it.resultCode.toString())
         if (it.resultCode == RESULT_OK) {
             viewModel.fetchCards()
+        }
+    }
+    // 이미지 선택 액티비티
+    val mediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) {
+            val uri = it.data?.data as Uri
+            val imgPath = convertUri2Path(context, uri)
+            val mediaIntent = Intent(activity, MediaCardActivity::class.java)
+            mediaIntent.putExtra("savedImgAbsolutePath", imgPath)
+            mediaCameraLauncher.launch(mediaIntent)
         }
     }
     // OCR 액티비티 런처
@@ -59,12 +72,11 @@ fun CardItemPlus(
         if (it.resultCode == RESULT_OK) {
             // OCR 문자열 인식 결과
             val ocrResult = it.data?.getStringExtra("ocrResult")
-            val imgPath = it.data?.getStringExtra("croppedImage")
 
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}")
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
             }
         }
     }
@@ -82,12 +94,15 @@ fun CardItemPlus(
             }
         }
 
+    val (imgSelector, setImgSelector) = remember { mutableStateOf(false) }
+
     Card(CardModifier) {
         IconButton(onClick = {
             if (isBCard) {
                 businessCameraLauncher.launch(Intent(activity, DocumentScannerActivity::class.java))
             } else {
-                mediaCameraLauncher.launch(Intent(activity, MediaCardActivity::class.java))
+                setImgSelector(true)
+//                mediaCameraLauncher.launch(Intent(activity, MediaCardActivity::class.java))
             }
         }) {
             Image(
@@ -95,5 +110,30 @@ fun CardItemPlus(
                 contentDescription = if (isBCard) "import business card" else "import naya card",
             )
         }
+
+    }
+
+    if (imgSelector) {
+        AlertDialog(onDismissRequest = { setImgSelector(false) }, {
+            TextButton(onClick = {
+                mediaCameraLauncher.launch(
+                    Intent(
+                        activity,
+                        MediaCardActivity::class.java
+                    )
+                )
+                setImgSelector(false)
+            }) {
+                Text("카메라")
+            }
+            TextButton(onClick = {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = "image/*"
+                mediaLauncher.launch(intent)
+                setImgSelector(false)
+            }) {
+                Text("갤러리")
+            }
+        })
     }
 }
