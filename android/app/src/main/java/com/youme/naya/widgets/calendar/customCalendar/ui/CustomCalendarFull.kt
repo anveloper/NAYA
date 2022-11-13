@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.youme.naya.schedule.ScheduleEditViewModel
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue

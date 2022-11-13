@@ -29,23 +29,21 @@ fun ScheduleItem(
     navController: NavController
 ) {
     Row(
-        modifier = Modifier
-            .height(80.dp)
-            .width(300.dp),
+        modifier = Modifier.height(80.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Checkbox(
-            modifier = Modifier
-                .scale(0.9F),
+            modifier = Modifier.scale(0.9F).fillMaxWidth(0.12f),
             checked = schedule.isDone,
             onCheckedChange = { isChecked ->
-                viewModel.onDoneChange(schedule, isChecked)
+                schedule.scheduleId?.let { viewModel.onDoneChange(it, isChecked) }
             },
             colors =  CheckboxDefaults.colors(
                 checkedColor = Color(schedule.color),
                 uncheckedColor = Color(schedule.color),
                 checkmarkColor = NeutralWhite
             ))
+        Spacer(modifier = Modifier.fillMaxWidth(0.02f))
         Card(
             modifier = modifier
                 .fillMaxWidth()
@@ -79,7 +77,7 @@ fun ScheduleItem(
                     Row(modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(
-                            text = "${schedule.title}",
+                            text = if (schedule.title.isEmpty()) "제목 없음" else "${schedule.title}",
                             style = Typography.h6,
                             color = (
                                     if (schedule.isDone) {

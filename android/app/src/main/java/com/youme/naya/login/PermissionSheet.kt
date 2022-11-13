@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,10 +63,11 @@ fun PrivacyComp(
         Alignment.CenterHorizontally
     ) {
         Text(
-            text = "서비스 이용을 위해\n이용약관 동의가 필요합니다.",
+            text = "서비스 이용을 위해\n이용약관 동의가 필요합니다",
             color = PrimaryDark,
+            textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontFamily = fonts
         )
         Column(
@@ -170,10 +172,11 @@ fun PermissionComp(
         Alignment.CenterHorizontally
     ) {
         Text(
-            text = "서비스 이용을 위해\n권한을 허용해주세요.",
+            text = "서비스 이용을 위해\n권한을 허용해주세요",
             color = PrimaryDark,
+            textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontFamily = fonts
         )
         Column(
@@ -181,9 +184,13 @@ fun PermissionComp(
                 .fillMaxWidth(0.82f), Arrangement.SpaceBetween, Alignment.CenterHorizontally
         ) {
             PermissionInfo(R.drawable.ic_permission_camera, "카메라", "명함 사진/동영상 촬영을 위해 필요합니다.")
+            Spacer(modifier = Modifier.height(12.dp))
             PermissionInfo(R.drawable.ic_permission_gallery, "갤러리", "명함 사진/동영상 접근을 위해 필요합니다.")
+            Spacer(modifier = Modifier.height(12.dp))
             PermissionInfo(R.drawable.ic_permission_call, "연락처", "연락처 저장 및 명함 연동을 위해 필요합니다.")
+            Spacer(modifier = Modifier.height(12.dp))
             PermissionInfo(R.drawable.ic_permission_location, "위치", "일정과 연동된 위치 정보를 위해 필요합니다.")
+            Spacer(modifier = Modifier.height(12.dp))
             PermissionInfo(R.drawable.ic_permission_noti, "알림", "일정에 대한 알림이 포함될 수 있습니다.")
         }
         PrimaryBigButton(text = "계속하기") {

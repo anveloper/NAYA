@@ -64,7 +64,7 @@ interface ScheduleDao {
     fun getSchedulesWithMembers(): Flow<List<ScheduleWithMembers>>
 
     @Transaction
-    @Query("SELECT * FROM schedule WHERE scheduleDate = :scheduleDate")
+    @Query("SELECT * FROM schedule WHERE scheduleDate = :scheduleDate ORDER BY startTime DESC")
     fun getSchedulesWithMembersByDate(scheduleDate: String): Flow<List<ScheduleWithMembers>>
 
     @Transaction

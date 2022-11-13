@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.youme.naya.R
 import com.youme.naya.components.BasicTextField
-import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.fonts
@@ -32,7 +32,7 @@ import com.youme.naya.ui.theme.fonts
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ScheduleCreateThird(
-    viewModel: ScheduleEditViewModel = hiltViewModel(),
+    viewModel: ScheduleMainViewModel = hiltViewModel()
 ){
     Column(
         modifier = Modifier

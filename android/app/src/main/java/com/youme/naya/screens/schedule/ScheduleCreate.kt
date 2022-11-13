@@ -28,7 +28,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import androidx.navigation.NavController
-import com.youme.naya.schedule.ScheduleEditViewModel
 import com.youme.naya.schedule.component.*
 import kotlinx.coroutines.launch
 
@@ -37,8 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ScheduleCreateScreen(
     navController: NavController,
-    viewModel: ScheduleEditViewModel = hiltViewModel(),
-    viewMainModel: ScheduleMainViewModel = hiltViewModel(),
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
     val componentVariable = remember {
         mutableStateOf(0)
@@ -222,8 +220,7 @@ fun ScheduleCreateScreen(
                             when (componentVariable.value) {
 //                                임시로 5 -> 4
                                 4 -> {
-                                    viewModel.insertSchedule(selectedDate = viewMainModel.selectedDate.value)
-                                    viewMainModel.getEventSchedule()
+                                    viewModel.insertSchedule(selectedDate = viewModel.selectedDate.value)
                                     navController.navigate("schedule")
                                 }
                             }

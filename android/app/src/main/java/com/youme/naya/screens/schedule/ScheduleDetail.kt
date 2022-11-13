@@ -6,10 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Divider
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,9 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.youme.naya.R
-import com.youme.naya.components.OutlinedTinySmallButton
 import com.youme.naya.components.PrimaryTinySmallButton
-import com.youme.naya.schedule.ScheduleEditViewModel
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
 
@@ -40,11 +35,15 @@ private val CalendarHeaderBtnGroupModifier = Modifier
 fun ScheduleDetailScreen(
     navController: NavController,
     scheduleId : Int,
-    viewModel: ScheduleEditViewModel = hiltViewModel(),
-    mainViewModel: ScheduleMainViewModel = hiltViewModel(),
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
+    val done = if (viewModel.isDone.value) {
+        remember { mutableStateOf(true) }
+    } else {
+        remember { mutableStateOf(false) }
+    }
 
-    Column (modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column (horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             CalendarHeaderBtnGroupModifier,
             verticalAlignment = Alignment.CenterVertically,
@@ -84,49 +83,58 @@ fun ScheduleDetailScreen(
                                 .padding(horizontal = 8.dp)
                                 .clickable(onClick = {
                                     navController.navigate("scheduleEdit/${scheduleId}")
-                                })
+                                }),
+
                         )
                     }
                 }
             }
         }
         Column(
-            modifier = Modifier.width(300.dp)) {
+            modifier = Modifier.fillMaxWidth(0.88f)) {
+            // title, 날짜, Done
             Row (
-                modifier = Modifier.width(300.dp),
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.1f),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box( modifier = Modifier
-                        .width(16.dp)
-                        .height(40.dp)
+                        .fillMaxWidth(0.05f)
+                        .fillMaxHeight()
                         .background(color = Color(viewModel.color.value)))
                     Spacer(modifier = Modifier.width(8.dp))
                     Column() {
-                        Text(viewModel.title.value.text,
+                        Text(viewModel.title.value.text.ifEmpty { "제목 없음" },
                             style=Typography.h4,
                             color = PrimaryDark)
-                        Text(viewModel.currentSchedule?.scheduleDate.toString(),
+                        Text(viewModel.selectedDate.value,
                             style= Typography.body1,
                             color = NeutralGray)
                     }
                 }
 
-                if (viewModel.isDone.value) {
-                    OutlinedTinySmallButton(text = "Undone", onClick = {
-                        mainViewModel.onDoneChange(viewModel.currentSchedule!!, false)
-                    })
-                } else {
-                    PrimaryTinySmallButton(text = "Done", onClick = {
-                        mainViewModel.onDoneChange(
-                        viewModel.currentSchedule!!, true)
-                    })
-                }
+                PrimaryTinySmallButton(text =
+                    if (done.value) "UnDone"
+                    else "Done",
+                    onClick = {
+                        viewModel.onDoneChange(
+                            scheduleId, !viewModel.isDone.value)
+                        done.value = !done.value
+                    },
+                    backgroundColor =
+                    if (done.value) NeutralWhite
+                    else PrimaryBlue,
+                    contentColor =
+                    if (done.value) PrimaryBlue
+                    else NeutralWhite,
+                )
             }
             Spacer(modifier = Modifier.height(12.dp))
+            
+            // 시작시간
             Row (
-                modifier = Modifier.width(300.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -136,13 +144,15 @@ fun ScheduleDetailScreen(
                     fontFamily = fonts,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,)
-                Text(viewModel.currentSchedule?.startTime.toString(),
+                Text(viewModel.startTime.value,
                     style= Typography.body1,
                     color = NeutralGray)
                 }
             Spacer(modifier = Modifier.height(4.dp))
+            
+            // 종료 시간
             Row (
-                modifier = Modifier.width(300.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -152,20 +162,17 @@ fun ScheduleDetailScreen(
                     fontFamily = fonts,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,)
-                Text(viewModel.currentSchedule?.endTime.toString(),
+                Text(viewModel.endTime.value,
                     style= Typography.body1,
                     color = NeutralGray)
             }
-
-            Text(viewModel.isOnAlarm.value.toString(),
-                style= Typography.body1,
-                color = NeutralGray)
-
-
+            // 알람 설정했으면, 표시
             if (viewModel.isOnAlarm.value) {
+                Spacer(modifier = Modifier.height(4.dp))
                 Divider(color = NeutralLightness)
+                Spacer(modifier = Modifier.height(4.dp))
                 Row (
-                    modifier = Modifier.width(300.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -175,12 +182,15 @@ fun ScheduleDetailScreen(
                         fontFamily = fonts,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,)
-                    Text(viewModel.currentSchedule?.alarmTime.toString(),
+                    Text(viewModel.alarmTime.value,
                         style= Typography.body1,
                         color = NeutralGray)
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
+            
+            // 주소
+            if (viewModel.address.value.text.isNotEmpty()) {
             Text(
                 "주소",
                 modifier = Modifier.padding(vertical = 12.dp),
@@ -190,21 +200,27 @@ fun ScheduleDetailScreen(
                 fontSize = 16.sp,
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(viewModel.currentSchedule?.address.toString(),
+            Text(viewModel.address.value.text,
                 style= Typography.body1,
                 color = NeutralGray)
             Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                "추가 기록 사항",
-                modifier = Modifier.padding(vertical = 12.dp),
-                color = PrimaryDark,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp,
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(viewModel.description.value.text,
-                style= Typography.body1,
-                color = NeutralGray)
+            }
+            
+            // 추가 기록 사항
+            if (viewModel.description.value.text.isNotEmpty()) {
+                Text(
+                    "추가 기록 사항",
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    color = PrimaryDark,
+                    fontFamily = fonts,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(viewModel.description.value.text,
+                    style= Typography.body1,
+                    color = NeutralGray)
+            }
+
 
     }}}

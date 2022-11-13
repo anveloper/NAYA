@@ -17,14 +17,14 @@ import com.chargemap.compose.numberpicker.AMPMHours
 import com.chargemap.compose.numberpicker.Hours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
 import com.chargemap.compose.numberpicker.ListItemPicker
-import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 // 시간 / 알림 설정
 @Composable
 fun ScheduleCreateSecond(
-    viewModel: ScheduleEditViewModel = hiltViewModel(),
+    viewModel: ScheduleMainViewModel = hiltViewModel()
 ){
     Column(
         modifier = Modifier
