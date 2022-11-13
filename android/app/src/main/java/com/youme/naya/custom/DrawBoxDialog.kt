@@ -56,7 +56,11 @@ fun DrawBoxDialog(
                 }
                 Capturable(controller = captureController, onCaptured = { bitmap, error ->
                     if (bitmap != null) {
-                        addDraw(resizeBitmap(1024, bitmap.asAndroidBitmap()).asImageBitmap())
+                        if (bitmap.width > 1024) {
+                            addDraw(resizeBitmap(1024, bitmap.asAndroidBitmap()).asImageBitmap())
+                        } else {
+                            addDraw(bitmap)
+                        }
                     }
                     if (error != null) {
                     }

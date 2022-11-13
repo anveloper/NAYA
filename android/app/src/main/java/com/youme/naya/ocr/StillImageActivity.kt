@@ -18,7 +18,6 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.annotation.KeepName
-import com.google.mlkit.vision.text.*
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.googlecode.tesseract.android.TessBaseAPI
 import com.youme.naya.R
@@ -96,9 +95,11 @@ class StillImageActivity : AppCompatActivity() {
         val lang: String = "kor+eng"
         tess = TessBaseAPI()
         tess.init(dataPath, lang)
-
-        processImage(BitmapFactory.decodeFile(savedImgAbsolutePath))
-
+        if (savedImgAbsolutePath != null) {
+            processImage(BitmapFactory.decodeFile(savedImgAbsolutePath))
+        } else {
+            finish()
+        }
         // TODO 5. R.id.preview 이미지를 통해 OCR 돌린다.
 //        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 //        val image = InputImage.fromBitmap(BitmapFactory.decodeFile(savedImgAbsolutePath), 0)
