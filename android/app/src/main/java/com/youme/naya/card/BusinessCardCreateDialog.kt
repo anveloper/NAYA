@@ -3,6 +3,7 @@ package com.youme.naya.card
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -44,6 +45,7 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
             } else {
                 navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}")
             }
+            onDismissRequest()
         }
     }
     // 카메라 액티비티 런처
@@ -63,6 +65,7 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
     val mediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
+        Log.i("FUCKIN HELL", it.resultCode.toString())
         if (it.resultCode == Activity.RESULT_OK) {
             val uri = it.data?.data as Uri
             val imgPath = convertUri2Path(context, uri)
@@ -81,14 +84,15 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(24.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "어떤 방법으로 카드를 만들까요?",
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
                 OutlinedBigButton(text = "카메라로 촬영하기") {
                     cameraLauncher.launch(
@@ -97,17 +101,14 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
                             DocumentScannerActivity::class.java
                         )
                     )
-                    onDismissRequest()
                 }
                 OutlinedBigButton(text = "갤러리에서 불러오기") {
                     val intent = Intent(Intent.ACTION_PICK)
                     intent.type = "image/*"
                     mediaLauncher.launch(intent)
-                    onDismissRequest()
                 }
                 OutlinedBigButton(text = "템플릿에서 만들기") {
                     navController.navigate("bCardCreate")
-                    onDismissRequest()
                 }
             }
         }

@@ -176,9 +176,9 @@ fun MainScreen(
             }
         }
         if (bCardCreateDialog) {
-            BusinessCardCreateDialog(
-                navController = navController,
-                onDismissRequest = { bCardCreateDialog = false })
+            BusinessCardCreateDialog(navController = navController) {
+                bCardCreateDialog = false
+            }
         }
     }
 }
