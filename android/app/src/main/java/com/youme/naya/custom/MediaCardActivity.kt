@@ -1,20 +1,13 @@
 package com.youme.naya.custom
 
 import android.app.Activity
-import android.content.ContentValues
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
-import android.os.Build
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -35,22 +28,14 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.youme.naya.BaseActivity
 import com.youme.naya.ui.theme.AndroidTheme
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.ui.theme.fonts
 import com.youme.naya.utils.saveCardImage
-import com.youme.naya.widgets.home.CardListViewModel
 import dev.shreyaspatil.capturable.Capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
-import java.io.File
-import java.io.FileNotFoundException
-import java.io.FileOutputStream
-import java.io.IOException
 
 
 class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
@@ -58,12 +43,13 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
         super.onCreate(savedInstanceState)
         setContent {
             val activity = LocalContext.current as? Activity
-            val viewModel = viewModel<CardListViewModel>()
+
+            val savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
+            val tmpImage: Bitmap? = BitmapFactory.decodeFile(savedImgAbsolutePath)
             AndroidTheme() {
-                MediaCardScreen(
+                MediaCardScreen(tmpImage,
                     // 액티비티 기준 커스텀 사진 저장 함수
                     { bitmap ->
-//                        createNayaCardFile(bitmap)
                         saveCardImage(baseContext, bitmap)
                         intent.putExtra("Custom Exit", 1)
                         setResult(RESULT_OK, intent)
@@ -83,6 +69,7 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
 
 @Composable
 fun MediaCardScreen(
+    tmpImage: Bitmap?,
     createNayaCardFile: (Bitmap) -> Unit,
     onFinish: () -> Unit
 ) {
@@ -94,10 +81,7 @@ fun MediaCardScreen(
     val captureController = rememberCaptureController()
 
     var (tmpBitmap, setTmpBitmap) = rememberSaveable {
-        mutableStateOf<Bitmap?>(null)
-    }
-    var (resultBitmap, setResultBitmap) = rememberSaveable {
-        mutableStateOf<Bitmap?>(null)
+        mutableStateOf<Bitmap?>(tmpImage)
     }
     val cameraX = CustomCameraX(context, lifecycleOwner)
 
