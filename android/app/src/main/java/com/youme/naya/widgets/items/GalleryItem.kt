@@ -2,20 +2,23 @@ package com.youme.naya.widgets.items
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.youme.naya.database.entity.Card
@@ -79,13 +82,18 @@ fun GalleryItem(
                         else -> false
                     }
                     true
-                }) {
+                },
+            shape = RectangleShape
+        ) {
             Image(rememberImagePainter(data = nayaCard.uri), null, Modifier.fillMaxSize())
         }
     } else if (nayaCard == null && bCard != null) {
         val bCardUri = convertPath2Uri(activity, bCard.path!!)
         Card(
-            GalleryModifier
+            Modifier
+                .fillMaxWidth()
+                .aspectRatio(5 / 9f)
+                .shadow(elevation = 6.dp)
                 .pointerInteropFilter {
                     when (it.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -110,12 +118,26 @@ fun GalleryItem(
                         else -> false
                     }
                     true
-                }) {
+                },
+            shape = RectangleShape
+        ) {
             Image(
-                rememberImagePainter(BitmapFactory.decodeFile(bCard.path)),
-                null,
-                Modifier.fillMaxSize()
+                painter = rememberImagePainter(
+                    rotateBitmap(
+                        BitmapFactory.decodeFile(bCard.path),
+                        90f
+                    )
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
         }
     }
+}
+
+fun rotateBitmap(src: Bitmap, degree: Float): Bitmap? {
+    val matrix = Matrix()
+    matrix.postRotate(degree)
+    return Bitmap.createBitmap(src, 0, 0, src.width, src.height, matrix, true)
 }
