@@ -123,6 +123,7 @@ fun CardItemPlus(
                         MediaCardActivity::class.java
                     )
                 )
+                setImgSelector(false)
             }) {
                 Text("카메라")
             }
@@ -130,6 +131,7 @@ fun CardItemPlus(
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.type = "image/*"
                 mediaLauncher.launch(intent)
+                setImgSelector(false)
             }) {
                 Text("갤러리")
             }
