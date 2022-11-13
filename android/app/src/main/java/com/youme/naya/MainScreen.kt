@@ -9,17 +9,11 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,21 +21,26 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.youme.naya.card.BusinessCardCreateDialog
+import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
+import com.youme.naya.widgets.common.NayaTabStore
 import com.youme.naya.widgets.items.CurrentCard
 import com.youme.naya.widgets.share.ShareButtonDialog
 
@@ -63,6 +62,9 @@ fun MainScreen(
     // 선택된 카드 가져오기
     val card = CurrentCard.getCurrentCard.value
 
+    // 비즈니스 카드 생성 방법 선택 다이얼로그 표시 여부
+    var bCardCreateDialog by remember { mutableStateOf(false) }
+
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { it ->
@@ -83,61 +85,67 @@ fun MainScreen(
             ) {
                 FloatingActionButton(
                     onClick = {
-                            when (currentDestination.toString()) {
-                                "schedule" -> navController.navigate("scheduleCreate")
-                                "naya" -> launcher.launch(
-                                    Intent(
-                                        activity,
-                                        MediaCardActivity::class.java
+                        when (currentDestination.toString()) {
+                            "schedule" -> navController.navigate("scheduleCreate")
+                            "naya" -> {
+                                if (NayaTabStore.isNayaCard()) {
+                                    launcher.launch(
+                                        Intent(
+                                            activity,
+                                            MediaCardActivity::class.java
+                                        )
                                     )
+                                } else {
+                                    bCardCreateDialog = true
+                                }
+                            }
+                            "nuya" -> launcher.launch(
+                                Intent(
+                                    activity,
+                                    MediaCardActivity::class.java
                                 )
-                                "nuya" -> launcher.launch(
-                                    Intent(
-                                        activity,
-                                        MediaCardActivity::class.java
-                                    )
-                                )
-                                else -> {
+                            )
+                            else -> {
 //                                    var intent = Intent(activity, ShareActivity::class.java)
 //                                    intent.putExtra("cardUri", card.uri.toString())
 //                                    intent.putExtra("filename", card.filename)
 //                                    launcher.launch(intent)
-                                    setShareAlert(true)
-                                }
+                                setShareAlert(true)
                             }
-                        },
-                        backgroundColor = Color.Transparent,
-                        shape = CircleShape,
-                    ) {
-                        Box(
-                            Modifier
-                                .width(60.dp)
-                                .height(
-                                    60.dp
-                                )
-                                .background(
-                                    SecondaryGradientBrush,
-                                    CircleShape
-                                ), Alignment.Center
-                        ) {
-                            // 아이콘 상황에 따라 변하게
-                            fun setCenterIcon(): Int {
-                                return when (currentDestination.toString()) {
-                                    "schedule" -> R.drawable.nav_schedule_plus_icon
-                                    "naya" -> R.drawable.nav_naya_plus_icon
-                                    "nuya" -> R.drawable.nav_naya_plus_icon
-                                    else -> R.drawable.nav_send_icon
-                                }
-                            }
-                            Icon(
-                                painter = painterResource(setCenterIcon()),
-                                contentDescription = "send",
-                                modifier = Modifier
-                                    .width(40.dp)
-                                    .height(40.dp),
-                                tint = NeutralWhite
-                            )
                         }
+                    },
+                    backgroundColor = Color.Transparent,
+                    shape = CircleShape,
+                ) {
+                    Box(
+                        Modifier
+                            .width(60.dp)
+                            .height(
+                                60.dp
+                            )
+                            .background(
+                                SecondaryGradientBrush,
+                                CircleShape
+                            ), Alignment.Center
+                    ) {
+                        // 아이콘 상황에 따라 변하게
+                        fun setCenterIcon(): Int {
+                            return when (currentDestination.toString()) {
+                                "schedule" -> R.drawable.nav_schedule_plus_icon
+                                "naya" -> R.drawable.nav_naya_plus_icon
+                                "nuya" -> R.drawable.nav_naya_plus_icon
+                                else -> R.drawable.nav_send_icon
+                            }
+                        }
+                        Icon(
+                            painter = painterResource(setCenterIcon()),
+                            contentDescription = "send",
+                            modifier = Modifier
+                                .width(40.dp)
+                                .height(40.dp),
+                            tint = NeutralWhite
+                        )
+                    }
 
                 }
             }
@@ -146,13 +154,15 @@ fun MainScreen(
         floatingActionButtonPosition = FabPosition.Center,
         topBar = {
             if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
-                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}"
+            ) {
                 HeaderBar(navController = navController)
             }
         },
         bottomBar = {
             if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
-                && currentDestination.toString() != "scheduleEdit/{scheduleId}") {
+                && currentDestination.toString() != "scheduleEdit/{scheduleId}"
+            ) {
                 BottomBar(navController = navController)
             }
         },
@@ -164,6 +174,11 @@ fun MainScreen(
             ShareButtonDialog(activity!!) {
                 setShareAlert(false)
             }
+        }
+        if (bCardCreateDialog) {
+            BusinessCardCreateDialog(
+                navController = navController,
+                onDismissRequest = { bCardCreateDialog = false })
         }
     }
 }
