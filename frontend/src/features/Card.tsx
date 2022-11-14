@@ -117,12 +117,6 @@ const Card = () => {
         <title>{"나야(Naya) - 카드공유"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
-      <a
-        href="https://play.google.com/store/apps/details?id=com.youme.naya"
-        style={{ position: "sticky" }}
-      >
-        X
-      </a>
 
       <div
         className={styles.content}
@@ -142,6 +136,16 @@ const Card = () => {
           }}
         />
       </div>
+
+      <a
+        href="https://play.google.com/store/apps/details?id=com.youme.naya"
+        style={{ position: "sticky" }}
+      >
+        스토어
+      </a>
+      <a href="naya://com.youme.naya" style={{ position: "sticky" }}>
+        앱 테스트
+      </a>
     </div>
   );
 };
