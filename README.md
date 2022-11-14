@@ -8,4 +8,5 @@
 
 ------------------------------------------
 
-# 1. ![logo_dark](./images/README/logo.png) 소개
+# 1. !NAYA 소개
+    [logo_dark](./images/README/logo.png)
