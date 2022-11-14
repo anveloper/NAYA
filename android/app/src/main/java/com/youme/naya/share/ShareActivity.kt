@@ -180,14 +180,14 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
         Log.i("Share Firebase uid", uid)
         Log.i("Share Card Uri", uri)
         Log.i("Share Card Filename", filename)
-
+        val shareFilename = "SHARE-$filename"
         storage.reference
             .child("naya/$uid")
-            .child(filename)
+            .child(shareFilename)
             .putFile(uri.toUri())
             .addOnCompleteListener() {
                 if (it.isSuccessful) {
-                    storage.reference.child("naya/$uid").child(filename).downloadUrl
+                    storage.reference.child("naya/$uid").child(shareFilename).downloadUrl
                         .addOnSuccessListener { uri ->
                             uploadComplete(uri)
                         }.addOnFailureListener { e ->
@@ -296,21 +296,21 @@ fun ShareScreen(
         ) {
             // 카카오톡 공유하기 로직
             //메세지 생성
-            Log.i("log","메세지 생성 시작")
+            Log.i("log", "메세지 생성 시작")
             val defaultScrap = FeedTemplate(
                 content = Content(
                     title = "NAYA 카드가 도착했어요!",
                     description = "웹 페이지에서 NAYA 카드를 확인할 수 있습니다!",
-                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/naya-365407.appspot.com/o/main_naya.png?alt=media&token=00773b70-6232-4514-9822-2b1e2d8528bc",
+                    imageUrl = "${R.string.sample_card}",
                     link = Link(
-                        webUrl = "https://k7b104.p.ssafy.io/$uid/$cardId",
-                        mobileWebUrl = "https://k7b104.p.ssafy.io/$uid/$cardId"
+                        webUrl = "${R.string.base_url}/$uid/$cardId",
+                        mobileWebUrl = "${R.string.base_url}/$uid/$cardId"
                     )
                 ), buttonTitle = "웹에서 보기"
             )
 
             // 공유할 웹페이지 URL
-            val url = "https://k7b104.p.ssafy.io/$uid/$cardId"
+            val url = "${R.string.base_url}/$uid/$cardId"
 
             // 카카오톡 설치여부 확인
             if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
@@ -318,8 +318,7 @@ fun ShareScreen(
                 ShareClient.instance.shareDefault(context, defaultScrap) { sharingResult, error ->
                     if (error != null) {
                         Log.e(TAG, "카카오톡 공유 실패", error)
-                    }
-                    else if (sharingResult != null) {
+                    } else if (sharingResult != null) {
                         Log.d(TAG, "카카오톡 공유 성공 ${sharingResult.intent}")
 //                        startActivity(sharingResult.intent)
                         launcher.launch(sharingResult.intent)
@@ -340,9 +339,9 @@ fun ShareScreen(
                 // ex) Chrome, 삼성 인터넷, FireFox, 웨일 등
                 try {
                     KakaoCustomTabsClient.openWithDefault(context, sharerUrl)
-                } catch(e: UnsupportedOperationException) {
+                } catch (e: UnsupportedOperationException) {
                     // CustomTabsServiceConnection 지원 브라우저가 없을 때 예외처리
-                    Toast.makeText(activity, "지원 가능한 브라우저가 없습니다.",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "지원 가능한 브라우저가 없습니다.", Toast.LENGTH_SHORT).show()
                 }
 
                 // 2. CustomTabsServiceConnection 미지원 브라우저 열기
@@ -351,7 +350,7 @@ fun ShareScreen(
                     KakaoCustomTabsClient.open(context, sharerUrl)
                 } catch (e: ActivityNotFoundException) {
                     // 디바이스에 설치된 인터넷 브라우저가 없을 때 예외처리
-                    Toast.makeText(activity, "인터넷 브라우저가 없습니다.",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "인터넷 브라우저가 없습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, redirect } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
@@ -93,18 +93,15 @@ const Card = () => {
 
   // 어플이 있는 지 체크
   const checkApplicationInstall = () => {
-    navigator("naya://com.youme.naya");
-    setTimeout(checkApplicationInstall_callback, 500);
+    setTimeout(checkApplicationInstallCallback, 500);
   };
 
-  const checkApplicationInstall_callback = () => {
+  const checkApplicationInstallCallback = () => {
     try {
-      // var s = document.checkframe.document.body.innerHTML;
-      // 어플리케이션 설치되어있음
+      redirect("naya://com.youme.naya");
     } catch (e) {
-      // 어플리케이션 설치 안 되어있음
-      alert("app not lnstall");
-      navigator("https://play.google.com/store/apps/details?id=com.youme.naya");
+      console.log(e);
+      redirect("https://play.google.com/store/apps/details?id=com.youme.naya");
     }
   };
 
@@ -120,6 +117,13 @@ const Card = () => {
         <title>{"나야(Naya) - 카드공유"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
+      <a
+        href="https://play.google.com/store/apps/details?id=com.youme.naya"
+        style={{ position: "sticky" }}
+      >
+        X
+      </a>
+
       <div
         className={styles.content}
         ref={contentRef}
