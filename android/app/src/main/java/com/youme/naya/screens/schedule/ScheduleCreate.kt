@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -32,8 +31,8 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import androidx.navigation.NavController
 import com.youme.naya.components.RegisterButton
-import com.youme.naya.components.SecondaryIconButton
 import com.youme.naya.database.entity.Member
+import com.youme.naya.database.entity.Member.Companion.memberIcons
 import com.youme.naya.schedule.component.*
 import kotlinx.coroutines.launch
 
@@ -52,6 +51,9 @@ fun ScheduleCreateScreen(
         mutableStateOf(-1)
     }
 
+    val memberNum = remember {
+        mutableStateOf(0)
+    }
 
     Column {
         // 상단 바
@@ -128,22 +130,22 @@ fun ScheduleCreateScreen(
                                         LazyColumn (modifier = Modifier.fillMaxWidth()){
                                         when (memberType.value) {
                                             -1 -> item {
-                                                Box(modifier = Modifier
-                                                    .clickable {
-                                                        coroutineScope.launch {
-                                                            bottomSheetState.hide()
-                                                        }
-                                                    }
-                                                    .padding(vertical = 4.dp)
-                                                    .fillMaxWidth()
-                                                    .height(48.dp),
-                                                        contentAlignment = Alignment.Center) {
-                                                        Text(
-                                                            text = "Nuya 보관함에서 가져오기",
-                                                            color = PrimaryBlue,
-                                                            style = Typography.body1,
-                                                        )
-                                                    }
+//                                                Box(modifier = Modifier
+//                                                    .clickable {
+//                                                        coroutineScope.launch {
+//                                                            bottomSheetState.hide()
+//                                                        }
+//                                                    }
+//                                                    .padding(vertical = 4.dp)
+//                                                    .fillMaxWidth()
+//                                                    .height(48.dp),
+//                                                        contentAlignment = Alignment.Center) {
+//                                                        Text(
+//                                                            text = "Nuya 보관함에서 가져오기",
+//                                                            color = PrimaryBlue,
+//                                                            style = Typography.body1,
+//                                                        )
+//                                                    }
 //                                                    Box(modifier = Modifier
 //                                                        .clickable {
 //                                                            coroutineScope.launch {
@@ -164,9 +166,6 @@ fun ScheduleCreateScreen(
                                                         .clickable(
                                                             onClick = {
                                                                 memberType.value = 0
-//                                                                coroutineScope.launch {
-//                                                                    bottomSheetState.hide()
-//                                                                }
                                                             })
                                                         .padding(vertical = 4.dp)
                                                         .fillMaxWidth()
@@ -187,8 +186,13 @@ fun ScheduleCreateScreen(
                                                     RegisterButton(
                                                         text = "등록",
                                                         onClick = {
-                                                            viewModel.insertTemporaryMember(memberType.value)
+                                                            viewModel.insertTemporaryMember(memberType.value,
+                                                                memberNum.value % 6,
+                                                                viewModel.schedulesAll.value.last().scheduleId?.plus(
+                                                                    1) ?: 0)
+                                                            memberNum.value += 1
                                                             memberType.value = -1
+
                                                             coroutineScope.launch {
                                                                 bottomSheetState.hide()
                                                             } },
@@ -245,7 +249,7 @@ fun ScheduleCreateScreen(
                                                     Row() {
                                                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                                             Image(
-                                                                painter = painterResource(Member.Companion.memberIcons[index % 6]),
+                                                                painter = painterResource(memberIcons[viewModel.memberList.value[index].memberIcon!!]),
                                                                 contentDescription = "",
                                                                 modifier = Modifier
                                                                     .width(60.dp)

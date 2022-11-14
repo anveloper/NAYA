@@ -44,7 +44,7 @@ fun ScheduleCreateFirst(
 ) {
     Column(
         modifier = Modifier
-            .width(300.dp)
+            .fillMaxWidth(0.88f)
             .height(320.dp)
             .verticalScroll(rememberScrollState()),
         content = {

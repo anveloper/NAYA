@@ -6,6 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.youme.naya.R
 import com.youme.naya.components.PrimaryTinySmallButton
+import com.youme.naya.database.entity.Member
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
 
@@ -91,7 +94,7 @@ fun ScheduleDetailScreen(
             }
         }
         Column(
-            modifier = Modifier.fillMaxWidth(0.88f)) {
+            modifier = Modifier.width(300.dp)) {
             // title, 날짜, Done
             Row (
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(0.1f),
@@ -205,6 +208,48 @@ fun ScheduleDetailScreen(
                 color = NeutralGray)
             Spacer(modifier = Modifier.height(12.dp))
             }
+
+            if (viewModel.memberList.value.isNotEmpty()) {
+            Text(
+                "함께 하는 멤버",
+                modifier = Modifier.padding(vertical = 12.dp),
+                color = PrimaryDark,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            LazyVerticalGrid(
+                modifier = Modifier.height(80.dp).width(300.dp),
+                columns = GridCells.Fixed(5),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            )
+            {
+                items(viewModel.memberList.value.size) { index ->
+                    Row() {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Image(
+                                painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .width(60.dp)
+                                    .height(60.dp)
+                            )
+                            viewModel.memberList.value[index].name?.let {
+                                Text(
+                                    it,
+                                    color = NeutralGray,
+                                    style = Typography.overline
+                                )
+
+                            }
+                        }
+                        Box(Modifier.width(16.dp).height(20.dp))
+                    }
+                }
+            }}
+            Spacer(modifier = Modifier.height(12.dp))
             
             // 추가 기록 사항
             if (viewModel.description.value.text.isNotEmpty()) {

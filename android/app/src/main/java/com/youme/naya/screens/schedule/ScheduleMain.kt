@@ -90,7 +90,6 @@ fun ScheduleMainScreen(
                        )
                    }
                    Spacer(modifier = Modifier.height(16.dp))
-                   Text(viewModel.memberListForRepo.value.toString())
                    LazyColumn (
                        state = rememberLazyListState(),
                        modifier = Modifier.fillMaxHeight(0.8f),
@@ -104,8 +103,8 @@ fun ScheduleMainScreen(
                            )
                        }
                    }
-
-               })
+               }
+           )
        } else {
            Column(
                modifier = Modifier.fillMaxWidth(0.88f),

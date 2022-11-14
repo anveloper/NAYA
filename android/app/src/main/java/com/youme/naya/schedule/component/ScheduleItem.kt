@@ -111,7 +111,7 @@ fun ScheduleItem(
                         for (index in schedule.members.indices) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Image(
-                                painter = painterResource(Member.memberIcons[index % 6]),
+                                painter = painterResource(Member.memberIcons[schedule.members[index].memberIcon!!]),
                                 contentDescription = "",
                                 modifier = Modifier
                                     .width(40.dp)

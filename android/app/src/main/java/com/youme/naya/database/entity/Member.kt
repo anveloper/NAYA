@@ -12,13 +12,14 @@ foreignKeys = [
     ForeignKey(
         entity = Schedule::class,
         parentColumns = ["scheduleId"],
-        childColumns =  ["scheduleId"]
+        childColumns =  ["scheduleId"],
+        onDelete = ForeignKey.CASCADE
     )
 ]
 )
 data class Member(
-    @PrimaryKey(autoGenerate = true) var memberId: Int? = -1,
-    @ColumnInfo(name = "scheduleId") var scheduleId: Int?,
+    @PrimaryKey(autoGenerate = true) val memberId: Int?,
+    @ColumnInfo(name = "scheduleId") val scheduleId: Int?,
     val name: String? = null,
     // 어디서 가져온 정보인지
     val type: Int? = -1,
@@ -27,7 +28,8 @@ data class Member(
     // 기타 기록 사항
     val etcInfo: String? = null,
     // Nuya 카드이면 너야 카드 번호
-    val cardId: Int? = null
+    val cardId: Int? = null,
+    val memberIcon: Int? = 0,
 ) {
     companion object {
         val memberIcons = listOf(

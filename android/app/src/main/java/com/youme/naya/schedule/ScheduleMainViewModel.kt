@@ -3,7 +3,6 @@ package com.youme.naya.schedule
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
@@ -95,6 +94,9 @@ class ScheduleMainViewModel @Inject constructor(
     private val _memberListForRepo = mutableStateOf(emptyList<Member>())
     val memberListForRepo: State<List<Member>> = _memberListForRepo
 
+    private val _membersForDelete = mutableStateOf(emptyList<Member>())
+    val membersForDelete : State<List<Member>> = _membersForDelete
+
 
     init {
         viewModelScope.launch {
@@ -129,26 +131,27 @@ class ScheduleMainViewModel @Inject constructor(
         savedStateHandle.get<Int>("scheduleId")?.let { scheduleId ->
             if (scheduleId != -1) {
                 viewModelScope.launch {
-                    repository.getScheduleById(scheduleId)?.also { schedule ->
-                        currentScheduleId = schedule.scheduleId
+                    repository.getScheduleWithMembersById(scheduleId)?.also { schedule ->
+                        currentScheduleId = schedule.schedule.scheduleId
                         _title.value = title.value.copy(
-                            text = schedule.title
+                            text = schedule.schedule.title
                         )
                         _description.value = description.value.copy(
-                            text = schedule.description
+                            text = schedule.schedule.description
                         )
-                        _address.value = schedule.address?.let {
+                        _address.value = schedule.schedule.address?.let {
                             address.value.copy(
                                 text = it
                             )
                         }!!
-                        _color.value = schedule.color
-                        _isDone.value = schedule.isDone
-                        _isOnAlarm.value = schedule.isOnAlarm
-                        _startTime.value = schedule.startTime.toString()
-                        _endTime.value = schedule.endTime.toString()
-                        _alarmTime.value = schedule.alarmTime
-                        _selectedDate.value = schedule.scheduleDate
+                        _color.value = schedule.schedule.color
+                        _isDone.value = schedule.schedule.isDone
+                        _isOnAlarm.value = schedule.schedule.isOnAlarm
+                        _startTime.value = schedule.schedule.startTime.toString()
+                        _endTime.value = schedule.schedule.endTime.toString()
+                        _alarmTime.value = schedule.schedule.alarmTime
+                        _selectedDate.value = schedule.schedule.scheduleDate
+                        _memberList.value = schedule.members
                     }
                 }
             }
@@ -263,7 +266,11 @@ class ScheduleMainViewModel @Inject constructor(
                 val schedule =  repository.getScheduleById(scheduleId)
                 if (schedule != null) {
                     recentlyDeletedSchedule = schedule
-                    repository.deleteSchedule(schedule)
+                    if (memberList.value != null) {
+                        repository.deleteScheduleWithMembers(schedule, memberList.value)
+                    } else {
+                        repository.deleteSchedule(schedule)
+                    }
                 }
             }
         }
@@ -280,39 +287,35 @@ class ScheduleMainViewModel @Inject constructor(
 
     fun insertSchedule(schedule: Schedule? = null, selectedDate: String) {
         viewModelScope.launch {
-            repository.insertScheduleWithMembers(
-                Schedule(
-                    title = title.value.text,
-                    description = description.value.text,
-                    isDone = isDone.value,
-                    scheduleId = currentScheduleId,
-                    address = address.value.text,
-                    scheduleDate = selectedDate,
-                    color = color.value,
-                    isOnAlarm = isOnAlarm.value,
-                    startTime = startTime.value,
-                    endTime = endTime.value,
-                ),
-                memberList.value
-            )
-//            val scheduleId = schedulesAll.value[schedulesAll.value.size-1].scheduleId
-//            for (member in memberList.value) {
-//                member.scheduleId = scheduleId
-//                repository.insertMember(member)
-//            }
+            repository.insertScheduleWithMembers(Schedule(
+                title = title.value.text,
+                description = description.value.text,
+                isDone = isDone.value,
+                scheduleId = currentScheduleId,
+                address = address.value.text,
+                scheduleDate = selectedDate,
+                color = color.value,
+                isOnAlarm = isOnAlarm.value,
+                startTime = startTime.value,
+                endTime = endTime.value,
+            ),  memberList.value)
+
         }
     }
 
-    fun insertTemporaryMember(memberType: Int) {
+
+    fun insertTemporaryMember(memberType: Int, memberNum: Int, scheduleId: Int) {
         viewModelScope.launch {
             _memberList.value +=
                 Member(
-                    scheduleId = -1,
+                    memberId = null,
+                    scheduleId = scheduleId,
                     type = memberType,
                     name = memberName.value.text,
                     phoneNum = memberPhone.value.text,
                     email = memberEmail.value.text,
                     etcInfo = memberEtcInfo.value.text,
+                    memberIcon = memberNum
                 )
             }
         _memberName.value = memberName.value.copy(
@@ -336,6 +339,12 @@ class ScheduleMainViewModel @Inject constructor(
                 if (index != memberId) list += memberList.value[index]
             }
             _memberList.value = list
+        }
+    }
+
+    fun deleteMember(member: Member) {
+        viewModelScope.launch {
+            repository.deleteMember(member)
         }
     }
 

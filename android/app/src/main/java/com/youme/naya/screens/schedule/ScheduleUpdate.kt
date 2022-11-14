@@ -4,6 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -35,11 +37,13 @@ import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.OutlinedSmallButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.components.PrimarySmallButton
+import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.schedule.CustomAlertDialog
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.schedule.UiEvent
 import com.youme.naya.ui.theme.*
+import kotlinx.coroutines.launch
 
 private val CalendarHeaderBtnGroupModifier = Modifier
     .fillMaxWidth()
@@ -425,9 +429,60 @@ fun ScheduleUpdateScreen(
                     keyBoardActions = KeyboardActions(onDone = {
                         keyboardController?.hide()
                     }),
+                )}
+                Spacer(modifier = Modifier.height(16.dp))
+            Column {
+                Text(
+                "함께 하는 멤버",
+                modifier = Modifier.padding(vertical = 12.dp),
+                color = PrimaryDark,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("멤버를 클릭하면 목록에서 삭제됩니다.", style = Typography.body2, color = SystemRed)
+                Spacer(modifier = Modifier.height(12.dp))
+                LazyVerticalGrid(
+                    modifier = Modifier.height(80.dp).width(300.dp),
+                    columns = GridCells.Fixed(5),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                )
+                {
+                    items(viewModel.memberList.value.size) { index ->
+                        Row() {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Image(
+                                    painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .height(60.dp)
+                                        .clickable(
+                                            enabled = true,
+                                            onClick = {
+                                                viewModel.deleteMember(viewModel.memberList.value[index])
+                                            }
+                                        )
+                                )
+                                viewModel.memberList.value[index].name?.let {
+                                    Text(
+                                        it,
+                                        color = NeutralGray,
+                                        style = Typography.overline
+                                    )
+
+                                }
+                            }
+                            Box(Modifier.width(16.dp).height(20.dp))
+                        }
+                    }
+                }}
+
 
                 Spacer(modifier = Modifier.height(16.dp))
+            Column() {
                 // 추가 기록 사항
                 Text(
                     "추가 기록 사항",
@@ -448,7 +503,7 @@ fun ScheduleUpdateScreen(
                     keyBoardActions = KeyboardActions(onDone = {
                         keyboardController?.hide()
                     })
-                )
+                )}
                 Spacer(modifier = Modifier.height(80.dp))
                 PrimaryBigButton(text = "수정하기",
                     onClick = {
@@ -460,8 +515,7 @@ fun ScheduleUpdateScreen(
                 Spacer(modifier = Modifier.height(40.dp))
             }
         }
-
-}}
+}
 
 @Composable
 fun DeleteModal(

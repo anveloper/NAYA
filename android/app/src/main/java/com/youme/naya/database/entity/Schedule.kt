@@ -10,7 +10,7 @@ import kotlinx.datetime.todayIn
 
 @Entity
 data class Schedule(
-    @PrimaryKey(autoGenerate = true) val scheduleId: Int? = -1,
+    @PrimaryKey(autoGenerate = true) val scheduleId: Int?,
     val title: String,
     var scheduleDate: String = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString(),
     val color: Int = SecondarySystemBlue.toArgb(),
