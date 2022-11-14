@@ -9,6 +9,10 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material.BottomSheetState
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -58,16 +62,24 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
 
     private val viewModel: PermissionViewModel by viewModels()
 
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
 
             val context = LocalContext.current
+
+            val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
+                bottomSheetState = BottomSheetState(BottomSheetValue.Expanded)
+            )
+            AndroidTheme {
+                LoginScreen(
+                    viewModel,
+                    bottomSheetScaffoldState,
+                    { checkPermission() }) { googleLogin() }
+            }
             viewModel.loadTerms(context)
             viewModel.loadPrivacy(context)
-            AndroidTheme {
-                LoginScreen(viewModel, { checkPermission() }) { googleLogin() }
-            }
         }
     }
 
