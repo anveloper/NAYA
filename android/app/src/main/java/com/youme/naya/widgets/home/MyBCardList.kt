@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.databinding.BusinessCardBinding
+import com.youme.naya.widgets.items.CardItem
 import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
@@ -58,43 +59,14 @@ fun MyBCardList(context: Context, navController: NavHostController) {
         verticalArrangement = Arrangement.Center
     ) {
         LazyRow(
-//            Modifier.fillMaxWidth(),
-            Modifier.fillMaxSize(),
+            Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             contentPadding = PaddingValues(horizontal = listVerticalPadding.dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp),
             state = currentCardId
         ) {
-//            items(cardList) { value ->
-//                CardItem(value.uri, value.filename)
-//            }
-            items(businessCards) { card ->
-                Box(
-                    Modifier
-                        .width(360.dp)
-                        .height(200.dp)
-                        .rotate(90f)
-                        .shadow(4.dp)
-                ) {
-                    AndroidViewBinding(
-                        { inflater, parent, _ ->
-                            BusinessCardBinding.inflate(inflater)
-                        },
-                        Modifier.fillMaxSize()
-                    ) {
-                        this.bcardName.text = card.name
-                        this.bcardEnglishName.text = card.engName
-                        this.bcardCompany.text = card.company
-                        this.bcardTeamAndRole.text = card.team + " | " + card.role
-                        this.bcardAddress.text = card.address
-                        this.bcardMobile.text = card.mobile
-                        this.bcardEmail.text = card.email
-                        this.bcardLogo.text = "로고 이미지"
-                        this.bcardQrcode.text = "QR코드 이미지"
-
-//                        val cardImage = convertView2Bitmap(this.root)
-                    }
-                }
+            items(businessCards) { value ->
+                CardItem(bCard = value)
             }
             item() {
                 CardItemPlus(navController = navController, isBCard = true)

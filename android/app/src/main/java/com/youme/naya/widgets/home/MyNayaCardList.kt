@@ -23,13 +23,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.youme.naya.widgets.items.CardItem
 import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun MyNayaCardList(context: Context) {
+fun MyNayaCardList(context: Context, navController: NavHostController) {
     // 처음 아이템의 padding을 정해주기 위한 식
     val context = LocalContext.current
     val activity = context as? Activity
@@ -62,7 +63,7 @@ fun MyNayaCardList(context: Context) {
             state = currentCardId
         ) {
             items(cardList) { card ->
-                CardItem(card)
+                CardItem(nayaCard = card)
             }
             item() {
                 CardItemPlus()
