@@ -8,4 +8,4 @@
 
 ------------------------------------------
 
-# 1. ![logo_dark](./images/README/logo_dark.png) 소개
+# 1. ![logo_dark](./images/README/logo.png) 소개
