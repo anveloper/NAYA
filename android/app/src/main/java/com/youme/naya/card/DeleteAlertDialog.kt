@@ -39,7 +39,7 @@ fun DeleteAlertDialog(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "명함을 삭제하시겠어요?",
+                            text = "카드를 삭제하시겠어요?",
                             fontFamily = fonts,
                             fontWeight = FontWeight.Bold,
                             color = PrimaryDark,
@@ -47,7 +47,7 @@ fun DeleteAlertDialog(
                             textAlign = TextAlign.Center
                         )
                         Text(
-                            text = "한 번 삭제한 명함은 되돌릴 수 없으니 신중하게 선택하세요",
+                            text = "한 번 삭제한 카드는 되돌릴 수 없으니 신중하게 선택하세요",
                             fontFamily = fonts,
                             color = NeutralMetal,
                             fontSize = 12.sp,
