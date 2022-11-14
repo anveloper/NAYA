@@ -33,10 +33,11 @@ import java.nio.ByteBuffer
 
 class CustomCameraX(
     private var context: Context,
-    private var owner: LifecycleOwner
+    private var owner: LifecycleOwner,
+    private var cameraSelector: Int = CameraSelector.LENS_FACING_FRONT
+
 ) {
     private var imageCapture: ImageCapture? = null
-    private var cameraSelector = CameraSelector.LENS_FACING_FRONT
 
     fun startCameraPreviewView(): PreviewView {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
