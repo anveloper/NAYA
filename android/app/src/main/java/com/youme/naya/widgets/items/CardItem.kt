@@ -28,6 +28,7 @@ import coil.compose.rememberImagePainter
 import com.youme.naya.database.entity.Card
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.utils.convertPath2Uri
+import com.youme.naya.utils.rotateBitmap
 import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.home.ViewCard
 import java.io.File
