@@ -117,9 +117,9 @@ dependencies {
     // Coil
     implementation "io.coil-kt:coil-compose:1.4.0"
 
-    // Firebase // 배포시 경고가 나는 부분이 여기 였습니다.
+    // Firebase
     implementation platform('com.google.firebase:firebase-bom:31.0.1') {
-        exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
+        exclude module: "play-services-safetynet"
     }
     implementation "com.google.firebase:firebase-storage-ktx"
     implementation 'com.google.firebase:firebase-analytics-ktx'
@@ -174,8 +174,8 @@ dependencies {
 
     // db library
     // retrofit2 http 통신 디펜던시
-    implementation "com.google.code.gson:gson:2.8.9"
-    implementation 'com.squareup.retrofit2:retrofit:2.7.0'
+    implementation "com.google.code.gson:gson:2.9.0"
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
