@@ -12,9 +12,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
@@ -24,8 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
+import com.youme.naya.card.BusinessCardCreateDialog
 import com.youme.naya.custom.MediaCardActivity
-import com.youme.naya.ocr.DocumentScannerActivity
 import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.utils.convertUri2Path
 import com.youme.naya.widgets.home.CardListViewModel
@@ -44,7 +42,9 @@ fun CardItemPlus(
     val activity = context as? Activity
     val viewModel = viewModel<CardListViewModel>()
 
-    // 미디어 카드 액티비티
+    var bCardCreateDialog by remember { mutableStateOf(false) }
+
+    // 미디어 카드 액티비티 런처
     val mediaCameraLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -72,11 +72,12 @@ fun CardItemPlus(
         if (it.resultCode == RESULT_OK) {
             // OCR 문자열 인식 결과
             val ocrResult = it.data?.getStringExtra("ocrResult")
+            val imgPath = it.data?.getStringExtra("croppedImage")
 
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}")
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}")
             }
         }
     }
@@ -99,7 +100,7 @@ fun CardItemPlus(
     Card(CardModifier) {
         IconButton(onClick = {
             if (isBCard) {
-                businessCameraLauncher.launch(Intent(activity, DocumentScannerActivity::class.java))
+                bCardCreateDialog = true
             } else {
                 setImgSelector(true)
 //                mediaCameraLauncher.launch(Intent(activity, MediaCardActivity::class.java))
@@ -136,4 +137,10 @@ fun CardItemPlus(
             }
         })
     }
+    if (bCardCreateDialog) {
+        BusinessCardCreateDialog(navController = navController) {
+            bCardCreateDialog = false
+        }
+    }
+
 }

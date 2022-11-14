@@ -11,11 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.items.GalleryItem
 
 @Composable
-fun NayaCardGridList(context: Context) {
+fun NayaCardGridList(context: Context, navController: NavHostController) {
     val nayaCards = viewModel<CardListViewModel>()
     nayaCards.fetchCards()
     val cardList = nayaCards.viewCards.value
@@ -27,7 +28,7 @@ fun NayaCardGridList(context: Context) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(cardList) { card ->
-            GalleryItem(context as Activity, card)
+            GalleryItem(context as Activity, navController, nayaCard = card)
         }
     }
 //        if (nayaCards.isEmpty()) {
