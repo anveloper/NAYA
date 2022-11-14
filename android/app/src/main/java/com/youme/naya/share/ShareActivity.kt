@@ -1,6 +1,8 @@
 package com.youme.naya.share
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -32,6 +34,13 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
+import com.kakao.sdk.common.KakaoSdk
+import com.kakao.sdk.common.util.KakaoCustomTabsClient
+import com.kakao.sdk.share.ShareClient
+import com.kakao.sdk.share.WebSharerClient
+import com.kakao.sdk.template.model.Content
+import com.kakao.sdk.template.model.FeedTemplate
+import com.kakao.sdk.template.model.Link
 import com.youme.naya.BaseActivity
 import com.youme.naya.R
 import com.youme.naya.network.RetrofitClient
@@ -57,6 +66,9 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
         initRetrofit()
 
         super.onCreate(savedInstanceState)
+
+        KakaoSdk.init(this, getString(R.string.kakao_app_key))
+
         setContent {
             val cardUri = intent.getStringExtra("cardUri")
             var filename = intent.getStringExtra("filename")
@@ -278,11 +290,70 @@ fun ShareScreen(
 //            launcher.launch(intent)
 //        }
         ShareTextButton(
-            R.drawable.ic_share_beacon,
-            "어플 공유",
-            "Naya 사용자끼리 바로 카드를 보낼 수 있어요"
+            R.drawable.ic_share_sns_kakao,
+            "카카오톡 공유",
+            "카카오톡으로 바로 카드를 보낼 수 있어요"
         ) {
-            // 비콘 실행 로직
+            // 카카오톡 공유하기 로직
+            //메세지 생성
+            Log.i("log","메세지 생성 시작")
+            val defaultScrap = FeedTemplate(
+                content = Content(
+                    title = "NAYA 카드가 도착했어요!",
+                    description = "웹 페이지에서 NAYA 카드를 확인할 수 있습니다!",
+                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/naya-365407.appspot.com/o/main_naya.png?alt=media&token=00773b70-6232-4514-9822-2b1e2d8528bc",
+                    link = Link(
+                        webUrl = "https://k7b104.p.ssafy.io/$uid/$cardId",
+                        mobileWebUrl = "https://k7b104.p.ssafy.io/$uid/$cardId"
+                    )
+                ), buttonTitle = "웹에서 보기"
+            )
+
+            // 공유할 웹페이지 URL
+            val url = "https://k7b104.p.ssafy.io/$uid/$cardId"
+
+            // 카카오톡 설치여부 확인
+            if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
+                // 카카오톡으로 카카오톡 공유 가능
+                ShareClient.instance.shareDefault(context, defaultScrap) { sharingResult, error ->
+                    if (error != null) {
+                        Log.e(TAG, "카카오톡 공유 실패", error)
+                    }
+                    else if (sharingResult != null) {
+                        Log.d(TAG, "카카오톡 공유 성공 ${sharingResult.intent}")
+//                        startActivity(sharingResult.intent)
+                        launcher.launch(sharingResult.intent)
+
+                        // 카카오톡 공유에 성공했지만 아래 경고 메시지가 존재할 경우 일부 컨텐츠가 정상 동작하지 않을 수 있습니다.
+                        Log.w(TAG, "Warning Msg: ${sharingResult.warningMsg}")
+                        Log.w(TAG, "Argument Msg: ${sharingResult.argumentMsg}")
+                    }
+                }
+            } else {
+                // 카카오톡 미설치: 웹 공유 사용 권장
+                // 웹 공유 예시 코드
+                val sharerUrl = WebSharerClient.instance.makeScrapUrl(url)
+
+                // CustomTabs으로 웹 브라우저 열기
+
+                // 1. CustomTabsServiceConnection 지원 브라우저 열기
+                // ex) Chrome, 삼성 인터넷, FireFox, 웨일 등
+                try {
+                    KakaoCustomTabsClient.openWithDefault(context, sharerUrl)
+                } catch(e: UnsupportedOperationException) {
+                    // CustomTabsServiceConnection 지원 브라우저가 없을 때 예외처리
+                    Toast.makeText(activity, "지원 가능한 브라우저가 없습니다.",Toast.LENGTH_SHORT).show()
+                }
+
+                // 2. CustomTabsServiceConnection 미지원 브라우저 열기
+                // ex) 다음, 네이버 등
+                try {
+                    KakaoCustomTabsClient.open(context, sharerUrl)
+                } catch (e: ActivityNotFoundException) {
+                    // 디바이스에 설치된 인터넷 브라우저가 없을 때 예외처리
+                    Toast.makeText(activity, "인터넷 브라우저가 없습니다.",Toast.LENGTH_SHORT).show()
+                }
+            }
         }
         ShareTextButton(
             R.drawable.ic_share_insta,
@@ -296,7 +367,7 @@ fun ShareScreen(
                     val sourceApplication = "${R.string.facebook_app_id}"
                     intent.putExtra("source_application", sourceApplication)
                     val backgroundAssetUri = Uri.parse(cardUri)
-                    intent.setDataAndType(backgroundAssetUri, "*/*")
+                    intent.setDataAndType(backgroundAssetUri, "image/*")
                     intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                     launcher.launch(intent)
                 }
