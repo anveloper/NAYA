@@ -1,14 +1,11 @@
 package com.youme.naya.widgets.items
 
 import android.app.Activity
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.util.Log
 import android.view.MotionEvent
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -24,10 +21,8 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.youme.naya.card.CardDetailsDialog
 import com.youme.naya.database.entity.Card
-import com.youme.naya.share.ShareActivity
 import com.youme.naya.utils.convertPath2Uri
 import com.youme.naya.widgets.home.ViewCard
-import java.io.File
 
 
 private val GalleryModifier = Modifier

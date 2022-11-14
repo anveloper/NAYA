@@ -1,6 +1,5 @@
 package com.youme.naya.database.entity
 
-import android.net.Uri
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -28,6 +27,7 @@ data class Card(
     @ColumnInfo(name = "memo3") val memo3: String? = null,
     @ColumnInfo(name = "memo_content") val memoContent: String? = null,
     @ColumnInfo(name = "path") val path: String? = null
+
 
 )
 // mainCardId : NayaCardId 1개
