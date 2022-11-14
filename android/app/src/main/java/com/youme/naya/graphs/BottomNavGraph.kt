@@ -42,13 +42,17 @@ fun BottomNavGraph(navController: NavHostController) {
             BCardCreateScreen(navController = navController)
         }
         // Nuya 명함 생성 (카메라 촬영)
-        composable(route = "bCardCreateByCamera?result={result}", arguments = listOf(
+        composable(route = "bCardCreateByCamera?result={result}&path={path}", arguments = listOf(
             navArgument("result") {
+                type = NavType.StringType
+            },
+            navArgument("path") {
                 type = NavType.StringType
             }
         )) {
             val result = it.arguments?.getString("result")!!
-            BCardCreateByCameraScreen(navController = navController, result = result)
+            val path = it.arguments?.getString("path")!!
+            BCardCreateByCameraScreen(navController = navController, result = result, path = path)
         }
         composable(route = "scheduleCreate") {
             ScheduleCreateScreen(navController = navController)
