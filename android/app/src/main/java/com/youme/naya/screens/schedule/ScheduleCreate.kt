@@ -5,6 +5,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +31,9 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import androidx.navigation.NavController
+import com.youme.naya.components.RegisterButton
+import com.youme.naya.components.SecondaryIconButton
+import com.youme.naya.database.entity.Member
 import com.youme.naya.schedule.component.*
 import kotlinx.coroutines.launch
 
@@ -41,6 +47,11 @@ fun ScheduleCreateScreen(
     val componentVariable = remember {
         mutableStateOf(0)
     }
+
+    val memberType = remember {
+        mutableStateOf(-1)
+    }
+
 
     Column {
         // 상단 바
@@ -106,7 +117,7 @@ fun ScheduleCreateScreen(
                     3 -> {
                         Column(
                             modifier = Modifier
-                                .width(300.dp)
+                                .fillMaxWidth(0.88f)
                                 .fillMaxHeight(),
                             content = {
                                 val bottomSheetState =
@@ -114,8 +125,9 @@ fun ScheduleCreateScreen(
                                 val coroutineScope = rememberCoroutineScope()
                                 ModalBottomSheetLayout(
                                     sheetContent = {
-                                        LazyColumn {
-                                            item {
+                                        LazyColumn (modifier = Modifier.fillMaxWidth()){
+                                        when (memberType.value) {
+                                            -1 -> item {
                                                 Box(modifier = Modifier
                                                     .clickable {
                                                         coroutineScope.launch {
@@ -125,53 +137,77 @@ fun ScheduleCreateScreen(
                                                     .padding(vertical = 4.dp)
                                                     .fillMaxWidth()
                                                     .height(48.dp),
-                                                    contentAlignment = Alignment.Center) {
-                                                    Text(
-                                                        text = "Nuya 보관함에서 가져오기",
-                                                        color = PrimaryBlue,
-                                                        style = Typography.body1,
-                                                    )
-                                                }
-                                                Box(modifier = Modifier
-                                                    .clickable {
-                                                        coroutineScope.launch {
-                                                            bottomSheetState.hide()
-                                                        }
+                                                        contentAlignment = Alignment.Center) {
+                                                        Text(
+                                                            text = "Nuya 보관함에서 가져오기",
+                                                            color = PrimaryBlue,
+                                                            style = Typography.body1,
+                                                        )
                                                     }
-                                                    .padding(vertical = 4.dp)
-                                                    .fillMaxWidth()
-                                                    .height(48.dp),
-                                                    contentAlignment = Alignment.Center) {
-                                                    Text(
-                                                        text = "전화번호부에서 가져오기",
-                                                        color = PrimaryBlue,
-                                                        style = Typography.body1,
-                                                    )
-                                                }
-                                                Box(modifier = Modifier
-                                                    .clickable {
-                                                        coroutineScope.launch {
-                                                            bottomSheetState.hide()
-                                                        }
+//                                                    Box(modifier = Modifier
+//                                                        .clickable {
+//                                                            coroutineScope.launch {
+//                                                                bottomSheetState.hide()
+//                                                            }
+//                                                        }
+//                                                        .padding(vertical = 4.dp)
+//                                                        .fillMaxWidth()
+//                                                        .height(48.dp),
+//                                                        contentAlignment = Alignment.Center) {
+//                                                        Text(
+//                                                            text = "전화번호부에서 가져오기",
+//                                                            color = PrimaryBlue,
+//                                                            style = Typography.body1,
+//                                                        )
+//                                                    }
+                                                    Box(modifier = Modifier
+                                                        .clickable(
+                                                            onClick = {
+                                                                memberType.value = 0
+//                                                                coroutineScope.launch {
+//                                                                    bottomSheetState.hide()
+//                                                                }
+                                                            })
+                                                        .padding(vertical = 4.dp)
+                                                        .fillMaxWidth()
+                                                        .height(48.dp),
+                                                        contentAlignment = Alignment.Center) {
+                                                        Text(
+                                                            text = "직접 입력",
+                                                            color = PrimaryBlue,
+                                                            style = Typography.body1,
+                                                        )
                                                     }
-                                                    .padding(vertical = 4.dp)
-                                                    .fillMaxWidth()
-                                                    .height(48.dp),
-                                                    contentAlignment = Alignment.Center) {
-                                                    Text(
-                                                        text = "직접 입력",
-                                                        color = PrimaryBlue,
-                                                        style = Typography.body1,
+                                            }
+
+                                            0 -> item {
+                                                Column(modifier = Modifier.fillMaxWidth(),
+                                                    horizontalAlignment = Alignment.CenterHorizontally) {
+                                                    MemberInput()
+                                                    RegisterButton(
+                                                        text = "등록",
+                                                        onClick = {
+                                                            viewModel.insertTemporaryMember(memberType.value)
+                                                            memberType.value = -1
+                                                            coroutineScope.launch {
+                                                                bottomSheetState.hide()
+                                                            } },
                                                     )
+                                                    Spacer(modifier = Modifier.height(20.dp))
                                                 }
-                                        }}},
+
+                                                }
+                                            }
+                                            }
+                                        },
                                     sheetState = bottomSheetState,
                                     scrimColor = Color(0XCCFFFFFF),
                                 ) {
                                     Column {
                                         Column(
                                             modifier = Modifier
-                                                .width(300.dp).height(320.dp)
+                                                .fillMaxWidth(0.88f)
+                                                .height(320.dp)
                                         ) {
                                             Text("멤버 등록",
                                                 modifier = Modifier.padding(vertical = 12.dp),
@@ -180,7 +216,8 @@ fun ScheduleCreateScreen(
                                                 fontWeight = FontWeight.Bold,
                                                 fontSize = 16.sp
                                             )
-                                            Spacer(modifier = Modifier.height(8.dp))
+                                            Text("멤버를 클릭하면 목록에서 삭제됩니다.", style = Typography.body2, color = SystemRed)
+                                            Spacer(modifier = Modifier.height(12.dp))
                                             Image(
                                                 painter = painterResource(R.drawable.schedule_member_register_icon),
                                                 contentDescription = "",
@@ -195,14 +232,56 @@ fun ScheduleCreateScreen(
                                                             }
                                                         }
                                                     )
-                                            )}
+                                            )
+                                            Spacer(modifier = Modifier.height(12.dp))
+
+                                            LazyVerticalGrid(
+                                                columns = GridCells.Fixed(5),
+                                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                            )
+                                            {
+                                                items(viewModel.memberList.value.size) { index ->
+                                                    Row() {
+                                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                            Image(
+                                                                painter = painterResource(Member.Companion.memberIcons[index % 6]),
+                                                                contentDescription = "",
+                                                                modifier = Modifier
+                                                                    .width(60.dp)
+                                                                    .height(60.dp)
+                                                                    .clickable(
+                                                                        enabled = true,
+                                                                        onClick = {
+                                                                            viewModel.deleteTemporaryMember(index)
+                                                                        }
+                                                                    )
+                                                            )
+                                                            viewModel.memberList.value[index].name?.let {
+                                                                Text(
+                                                                    it,
+                                                                    color = NeutralGray,
+                                                                    style = Typography.overline
+                                                                )
+
+                                                            }
+                                                        }
+                                                        Box(Modifier.width(16.dp).height(20.dp))
+                                                    }
+                                                }
+                                            }
+
+                                        }
                                         PrimaryBigButton(
                                             text = "다음",
                                             onClick = {
                                                 componentVariable.value = componentVariable.value + 1
                                             },
-                                        ) } }
-                            })
+                                        )
+                                    }
+                                }
+                            }
+                        )
                     }
                     4 -> ScheduleCreateFinal()
                 }

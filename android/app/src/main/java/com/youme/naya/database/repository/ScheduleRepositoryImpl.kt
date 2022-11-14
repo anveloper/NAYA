@@ -4,10 +4,7 @@ import com.youme.naya.database.dao.ScheduleDao
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.entity.relations.ScheduleWithMembers
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.conflate
-import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class ScheduleRepositoryImpl @Inject constructor(
@@ -83,6 +80,10 @@ class ScheduleRepositoryImpl @Inject constructor(
 
     override suspend fun getScheduleWithMembersById(scheduleId: Int): ScheduleWithMembers? {
         return dao.getScheduleWithMembersById(scheduleId)
+    }
+
+    override suspend fun insertScheduleWithMembers(schedule: Schedule, members: List<Member>) {
+        return dao.insertScheduleWithMembers(schedule, members)
     }
 
 }

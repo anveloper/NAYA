@@ -50,4 +50,6 @@ interface ScheduleRepository {
 
     suspend fun getScheduleWithMembersById(scheduleId: Int): ScheduleWithMembers?
 
+    suspend fun insertScheduleWithMembers(schedule: Schedule, members: List<Member>)
+
 }

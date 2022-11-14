@@ -90,12 +90,13 @@ fun ScheduleMainScreen(
                        )
                    }
                    Spacer(modifier = Modifier.height(16.dp))
+                   Text(viewModel.memberListForRepo.value.toString())
                    LazyColumn (
                        state = rememberLazyListState(),
                        modifier = Modifier.fillMaxHeight(0.8f),
                        horizontalAlignment = Alignment.CenterHorizontally
                    ) {
-                       items(viewModel.schedules.value) { schedule ->
+                       items(viewModel.schedulesWithMembers.value) { schedule ->
                            ScheduleItem(
                                schedule = schedule,
                                navController = navController,
@@ -103,6 +104,7 @@ fun ScheduleMainScreen(
                            )
                        }
                    }
+
                })
        } else {
            Column(

@@ -3,12 +3,15 @@ package com.youme.naya.schedule
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
+import com.youme.naya.database.entity.relations.ScheduleWithMembers
 import com.youme.naya.database.repository.ScheduleRepository
 import com.youme.naya.ui.theme.SecondarySystemBlue
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +34,9 @@ class ScheduleMainViewModel @Inject constructor(
 
     private val _schedulesAll = mutableStateOf(emptyList<Schedule>())
     val schedulesAll: State<List<Schedule>> = _schedulesAll
+
+    private val _schedulesWithMembers = mutableStateOf(emptyList<ScheduleWithMembers>())
+    val schedulesWithMembers: State<List<ScheduleWithMembers>> = _schedulesWithMembers
 
 
     private val _selectedDate = mutableStateOf(
@@ -68,6 +74,28 @@ class ScheduleMainViewModel @Inject constructor(
     private val _isDone = mutableStateOf(false)
     val isDone: State<Boolean> = _isDone
 
+    private val _memberName = mutableStateOf(TextFieldState())
+    var memberName: State<TextFieldState> = _memberName
+
+    private val _memberType = mutableStateOf(-1)
+    var memberType: State<Int> = _memberType
+
+    private val _memberPhone = mutableStateOf(TextFieldState())
+    var memberPhone: State<TextFieldState> = _memberPhone
+
+    private val _memberEmail = mutableStateOf(TextFieldState())
+    var memberEmail: State<TextFieldState> = _memberEmail
+
+    private val _memberEtcInfo = mutableStateOf(TextFieldState())
+    var memberEtcInfo: State<TextFieldState> = _memberEtcInfo
+
+    private val _memberList = mutableStateOf(emptyList<Member>())
+    val memberList: State<List<Member>> = _memberList
+
+    private val _memberListForRepo = mutableStateOf(emptyList<Member>())
+    val memberListForRepo: State<List<Member>> = _memberListForRepo
+
+
     init {
         viewModelScope.launch {
         repository.getSchedulesByDate(selectedDate.value)
@@ -76,10 +104,24 @@ class ScheduleMainViewModel @Inject constructor(
             }
             _schedules.value = schedules.value.sortedBy { it.startTime }
         }
+
+        viewModelScope.launch {
+            repository.getSchedulesWithMembersByDate(selectedDate.value)
+                .collect { schedulesWithMembers ->
+                    _schedulesWithMembers.value = schedulesWithMembers
+                }
+        }
         viewModelScope.launch {
             repository.getSchedules()
                 .collect { schedules ->
                     _schedulesAll.value = schedules
+                }
+
+        }
+        viewModelScope.launch {
+            repository.getMembers()
+                .collect { member ->
+                    _memberListForRepo.value = member
                 }
 
         }
@@ -131,6 +173,16 @@ class ScheduleMainViewModel @Inject constructor(
         }
     }
 
+    fun getScheduleWithMembers(date: String) {
+        viewModelScope.launch {
+            repository.getSchedulesWithMembersByDate(date)
+                .collect { schedulesWithMembers ->
+                    _schedulesWithMembers.value = schedulesWithMembers
+                }
+            _schedulesWithMembers.value = schedulesWithMembers.value.sortedBy { it.schedule.startTime }
+        }
+    }
+
     fun onDoneChange(scheduleId: Int, isDone: Boolean) {
         viewModelScope.launch {
             repository.getScheduleById(scheduleId)?.also { schedule ->
@@ -140,6 +192,30 @@ class ScheduleMainViewModel @Inject constructor(
                 )
             )}
         }
+    }
+
+    fun onMemNameChange(EnteredName: String) {
+        _memberName.value = memberName.value.copy(
+            text = EnteredName
+        )
+    }
+
+    fun onMemPhoneChange(EnteredPhone: String) {
+        _memberPhone.value = memberPhone.value.copy(
+            text = EnteredPhone
+        )
+    }
+
+    fun onMemEmailChange(EnteredEmail: String) {
+        _memberEmail.value = memberEmail.value.copy(
+            text = EnteredEmail
+        )
+    }
+
+    fun onMemEtcChange(EnteredEtc: String) {
+        _memberEtcInfo.value = memberEtcInfo.value.copy(
+            text = EnteredEtc
+        )
     }
 
     fun onTitleChange(EnteredTitle: String) {
@@ -196,7 +272,6 @@ class ScheduleMainViewModel @Inject constructor(
     fun restoreSchedule() {
         viewModelScope.launch {
             repository.insertSchedule(
-
                 recentlyDeletedSchedule ?: return@launch)
             recentlyDeletedSchedule = null
         }
@@ -205,7 +280,7 @@ class ScheduleMainViewModel @Inject constructor(
 
     fun insertSchedule(schedule: Schedule? = null, selectedDate: String) {
         viewModelScope.launch {
-            repository.insertSchedule(
+            repository.insertScheduleWithMembers(
                 Schedule(
                     title = title.value.text,
                     description = description.value.text,
@@ -217,8 +292,50 @@ class ScheduleMainViewModel @Inject constructor(
                     isOnAlarm = isOnAlarm.value,
                     startTime = startTime.value,
                     endTime = endTime.value,
-                )
+                ),
+                memberList.value
             )
+//            val scheduleId = schedulesAll.value[schedulesAll.value.size-1].scheduleId
+//            for (member in memberList.value) {
+//                member.scheduleId = scheduleId
+//                repository.insertMember(member)
+//            }
+        }
+    }
+
+    fun insertTemporaryMember(memberType: Int) {
+        viewModelScope.launch {
+            _memberList.value +=
+                Member(
+                    scheduleId = -1,
+                    type = memberType,
+                    name = memberName.value.text,
+                    phoneNum = memberPhone.value.text,
+                    email = memberEmail.value.text,
+                    etcInfo = memberEtcInfo.value.text,
+                )
+            }
+        _memberName.value = memberName.value.copy(
+            text = ""
+        )
+        _memberPhone.value = memberPhone.value.copy(
+            text = ""
+        )
+        _memberEmail.value = memberEmail.value.copy(
+            text = ""
+        )
+        _memberEtcInfo.value = memberEtcInfo.value.copy(
+            text = ""
+        )
+    }
+
+    fun deleteTemporaryMember(memberId: Int) {
+        viewModelScope.launch {
+            var list = emptyList<Member>()
+            for (index in memberList.value.indices) {
+                if (index != memberId) list += memberList.value[index]
+            }
+            _memberList.value = list
         }
     }
 

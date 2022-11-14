@@ -22,8 +22,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
-
-        buildConfigField "String", "TMAP_API", project.properties["TMAP_API"]
+//
+//        buildConfigField "String", "TMAP_API", project.properties["TMAP_API"]
     }
 
     buildTypes {

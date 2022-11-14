@@ -152,6 +152,7 @@ fun CustomCalendarFull(
                             weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
                             viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
                             viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
+                            viewModel.getScheduleWithMembers(selectedCustomCalendarDate.value.toString())
                             onCurrentDayClick(customCalendarDay, events)
                         },
                         customCalendarDayColors = customCalendarDayColors,
@@ -177,6 +178,7 @@ fun CustomCalendarFull(
                                     weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
                                     viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
                                     viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
+                                    viewModel.getScheduleWithMembers(selectedCustomCalendarDate.value.toString())
                                     onCurrentDayClick(customCalendarDay, events)
                                 },
                                 selectedCustomCalendarDay = selectedCustomCalendarDate.value,

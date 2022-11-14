@@ -19,7 +19,7 @@ fun PrimaryBigButton(
     text: String,
     // 클릭 가능 / 불가능 여부
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = Modifier
@@ -203,7 +203,7 @@ fun SecondaryIconButton(
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit,
-    icon: Int
+    icon: Int?
 ) {
     Button(
         modifier = Modifier
@@ -219,14 +219,16 @@ fun SecondaryIconButton(
         contentPadding = PaddingValues(),
     )
     {
-        Image(
-            painter = painterResource(id = icon),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(end = 12.dp)
-                .width(24.dp)
-                .height(24.dp)
-        )
+        icon?.let { painterResource(id = it) }?.let {
+            Image(
+                painter = it,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .width(24.dp)
+                    .height(24.dp)
+            )
+        }
         Text(
             text = text,
             style = Typography.button)
@@ -266,6 +268,32 @@ fun SecondarySelectIconButton(
                 .height(24.dp),
             tint = if (selected) NeutralLight else PrimaryBlue
         )
+        Text(
+            text = text,
+            style = Typography.button)
+    }
+}
+
+@Composable
+fun RegisterButton(
+    text: String,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(0.88f)
+            .height(48.dp),
+        shape = Shapes.large,
+        onClick = { onClick() },
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = PrimaryBlue,
+            contentColor = NeutralWhite,
+        ),
+        contentPadding = PaddingValues(),
+    )
+    {
         Text(
             text = text,
             style = Typography.button)

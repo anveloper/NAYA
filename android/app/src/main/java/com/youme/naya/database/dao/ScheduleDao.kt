@@ -70,4 +70,7 @@ interface ScheduleDao {
     @Transaction
     @Query("SELECT * FROM schedule WHERE scheduleId = :scheduleId")
     suspend fun getScheduleWithMembersById(scheduleId: Int): ScheduleWithMembers?
+
+    @Insert
+    suspend fun insertScheduleWithMembers(schedule: Schedule, members: List<Member>)
 }
