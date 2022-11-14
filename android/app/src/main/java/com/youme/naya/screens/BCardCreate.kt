@@ -1,5 +1,6 @@
 package com.youme.naya.screens
 
+import android.graphics.Bitmap
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -7,8 +8,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.viewinterop.AndroidViewBinding
+import androidx.core.view.drawToBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.youme.naya.card.BusinessCardTemplate
@@ -16,6 +21,9 @@ import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
+import com.youme.naya.databinding.BusinessCardBinding
+import com.youme.naya.utils.convertView2Bitmap
+import com.youme.naya.utils.saveCardImage
 
 
 @Composable
@@ -40,6 +48,9 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
 //    var memo3 by remember { mutableStateOf("") }
     var memoContent by remember { mutableStateOf("") }
 
+    var cardImage: Bitmap? by remember { mutableStateOf(null) }
+    var bCardBinding: BusinessCardBinding? = null
+
     Column(
         Modifier
             .fillMaxSize()
@@ -47,9 +58,43 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        BusinessCardTemplate(
-            name, engName, email, mobile, address, team, role, company, null
-        )
+//        BusinessCardTemplate(
+//            name, engName, email, mobile, address, team, role, company, null
+//        )
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .aspectRatio(9f / 5f)
+        ) {
+            AndroidViewBinding(
+                { inflater, parent, _ ->
+                    BusinessCardBinding.inflate(inflater)
+                },
+                Modifier.fillMaxSize()
+            ) {
+                bCardBinding = this
+
+                val teamAndRole = mutableListOf<String>()
+                teamAndRole.add(team.ifBlank { "부서" })
+                teamAndRole.add(role.ifBlank { "직책" })
+
+                this.bcardName.text = name.ifBlank { "이름" }
+                this.bcardEnglishName.text = engName.ifBlank { "영어 이름" }
+                this.bcardCompany.text = company.ifBlank { "회사명" }
+                this.bcardTeamAndRole.text = teamAndRole.joinToString(" | ")
+                this.bcardAddress.text = address.ifBlank { "주소" }
+                this.bcardMobile.text = mobile.ifBlank { "휴대폰 번호" }
+                this.bcardEmail.text = email.ifBlank { "이메일" }
+                this.bcardLogo.text = "로고 이미지"
+                this.bcardQrcode.text = "QR코드 이미지"
+
+                this.businessCard.minWidth = 990
+                this.businessCard.minHeight = 550
+
+                cardImage = convertView2Bitmap(this.root)
+            }
+        }
 
         LazyColumn(
             Modifier.fillMaxWidth(),
@@ -103,6 +148,30 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
                             || tel.isNotBlank() || memoContent.isNotBlank()
 
                     if (isValid) {
+                        if (name.isBlank()) bCardBinding?.bcardName?.text = ""
+                        if (engName.isBlank()) bCardBinding?.bcardEnglishName?.text = ""
+                        if (email.isBlank()) bCardBinding?.bcardEmail?.text = ""
+                        if (mobile.isBlank()) bCardBinding?.bcardMobile?.text = ""
+                        if (address.isBlank()) bCardBinding?.bcardAddress?.text = ""
+                        if (company.isBlank()) bCardBinding?.bcardCompany?.text = ""
+                        if (team.isBlank() && role.isBlank()) bCardBinding?.bcardTeamAndRole?.text = ""
+                        else if (role.isBlank()) bCardBinding?.bcardTeamAndRole?.text = team
+                        else if (team.isBlank()) bCardBinding?.bcardTeamAndRole?.text = role
+                        bCardBinding?.bcardLogo?.text = ""
+                        bCardBinding?.bcardQrcode?.text = ""
+
+                        cardImage = bCardBinding?.root?.let { convertView2Bitmap(it) }
+
+//                        val snapshot = ComposeView(ctx).apply {
+//                            setContent {
+//                                BusinessCardTemplate(
+//                                    name, engName, email, mobile, address, team, role, company, null
+//                                )
+//                            }
+//                        }
+//                        val bitmap = convertView2Bitmap(cardImage)
+                        val path = saveCardImage(ctx, cardImage!!, true)
+
                         val card = Card(
                             NayaCardId = 0,
                             name = name.ifBlank { null },
@@ -115,13 +184,14 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
                             team = team.ifBlank { null },
                             role = role.ifBlank { null },
                             tel = tel.ifBlank { null },
-                            memoContent = memoContent.ifBlank { null }
+                            memoContent = memoContent.ifBlank { null },
 //                            background,
 //                            logo,
 //                            fax,
 //                            memo1,
 //                            memo2,
 //                            memo3,
+                            path = path
                         )
 
                         cardViewModel.addCard(card)
@@ -134,7 +204,8 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
                 Spacer(
                     Modifier
                         .fillMaxWidth()
-                        .height(40.dp))
+                        .height(40.dp)
+                )
             }
         }
     }

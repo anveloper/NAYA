@@ -62,6 +62,6 @@ fun DeleteAlertDialog(
             }
         },
         backgroundColor = Color.White,
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(12.dp)
     )
 }

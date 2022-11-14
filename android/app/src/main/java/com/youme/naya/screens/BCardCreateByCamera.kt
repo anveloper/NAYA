@@ -1,10 +1,13 @@
 package com.youme.naya.screens
 
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
@@ -15,16 +18,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.youme.naya.card.BusinessCardTemplate
+import coil.compose.rememberImagePainter
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.OutlinedSmallButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
+import com.youme.naya.utils.saveCardImage
 
 
 //val fieldsNameList = listOf(
@@ -62,7 +68,7 @@ fun removeBlankLines(ocrResult: String): MutableList<String> {
 }
 
 @Composable
-fun BCardCreateByCameraScreen(navController: NavHostController, result: String) {
+fun BCardCreateByCameraScreen(navController: NavHostController, result: String, path: String) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
     val resultLines = removeBlankLines(Uri.decode(result))
@@ -94,6 +100,9 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
         mutableStateMapOf(*fieldsNameList.map { field -> field to "" }.toTypedArray())
     }
 
+    // 추출된 명함 이미지 비트맵
+    val cardImageBitmap = BitmapFactory.decodeFile(path)
+
     Column(
         Modifier
             .fillMaxSize()
@@ -101,17 +110,32 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        BusinessCardTemplate(
-            name = mappedValueMap["name"],
-            engName = mappedValueMap["engName"],
-            email = mappedValueMap["email"],
-            mobile = mappedValueMap["mobile"],
-            address = mappedValueMap["address"],
-            company = mappedValueMap["company"],
-            team = mappedValueMap["team"],
-            role = mappedValueMap["role"],
-            logo = mappedValueMap["logo"]
-        )
+//        BusinessCardTemplate(
+//            name = mappedValueMap["name"],
+//            engName = mappedValueMap["engName"],
+//            email = mappedValueMap["email"],
+//            mobile = mappedValueMap["mobile"],
+//            address = mappedValueMap["address"],
+//            company = mappedValueMap["company"],
+//            team = mappedValueMap["team"],
+//            role = mappedValueMap["role"],
+//            logo = mappedValueMap["logo"]
+//        )
+        Card(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .aspectRatio(9 / 5f),
+            shape = RectangleShape,
+            elevation = 4.dp
+        ) {
+            Image(
+                painter = rememberImagePainter(cardImageBitmap),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
 
         LazyColumn(
             Modifier.fillMaxWidth(),
@@ -156,6 +180,8 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
             item {
                 PrimaryBigButton(text = "저장") {
                     if (isValid(mappedValueMap)) {
+                        val newPath = saveCardImage(ctx, cardImageBitmap, true)
+
                         val card = Card(
                             0,
                             name = mappedValueMap["name"],
@@ -175,6 +201,7 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String) 
 //                            memo1 = mappedValueMap["memo1"],
 //                            memo2 = mappedValueMap["memo2"],
 //                            memo3 = mappedValueMap["memo3"],
+                            path = newPath
                         )
 
                         cardViewModel.addCard(card)

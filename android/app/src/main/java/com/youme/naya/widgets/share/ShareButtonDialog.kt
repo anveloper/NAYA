@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.widgets.home.CardListViewModel
@@ -25,6 +26,7 @@ import com.youme.naya.widgets.items.GalleryItem
 @Composable
 fun ShareButtonDialog(
     activity: Activity,
+    navController: NavHostController,
     setDismiss: () -> Unit
 ) {
     val viewModel = viewModel<CardListViewModel>()
@@ -58,7 +60,7 @@ fun ShareButtonDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(cardList) { card ->
-                        GalleryItem(activity, card)
+                        GalleryItem(activity, navController, card)
                     }
                 }
             }
