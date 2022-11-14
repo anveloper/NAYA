@@ -8,18 +8,25 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.camera.core.CameraSelector
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBackIos
 import androidx.compose.material.icons.outlined.ArrowForwardIos
+import androidx.compose.material.icons.outlined.Cached
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -29,16 +36,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.youme.naya.BaseActivity
-import com.youme.naya.ui.theme.AndroidTheme
-import com.youme.naya.ui.theme.NeutralLight
-import com.youme.naya.ui.theme.PrimaryBlue
-import com.youme.naya.ui.theme.fonts
+import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.saveCardImage
 import dev.shreyaspatil.capturable.Capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
+private const val LENS_BACK = CameraSelector.LENS_FACING_BACK
+private const val LENS_FRONT = CameraSelector.LENS_FACING_FRONT
 
 class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
+
+    private lateinit var cameraExecutor: ExecutorService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -47,7 +58,7 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
             val savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
             val tmpImage: Bitmap? = BitmapFactory.decodeFile(savedImgAbsolutePath)
             AndroidTheme() {
-                MediaCardScreen(tmpImage,
+                MediaCardScreen(tmpImage, cameraExecutor,
                     // 액티비티 기준 커스텀 사진 저장 함수
                     { bitmap ->
                         saveCardImage(baseContext, bitmap)
@@ -64,12 +75,14 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
                 )
             }
         }
+        cameraExecutor = Executors.newSingleThreadExecutor()
     }
 }
 
 @Composable
 fun MediaCardScreen(
     tmpImage: Bitmap?,
+    cameraExecutor: ExecutorService,
     createNayaCardFile: (Bitmap) -> Unit,
     onFinish: () -> Unit
 ) {
@@ -85,19 +98,33 @@ fun MediaCardScreen(
     }
     val cameraX = CustomCameraX(context, lifecycleOwner)
 
+    val (lensFacing, setLensFacing) = remember { mutableStateOf(LENS_FRONT) }
+
+    fun changeLensFacing() {
+        if (lensFacing == LENS_BACK) {
+            setLensFacing(LENS_FRONT)
+        } else {
+            setLensFacing(LENS_BACK)
+        }
+    }
+
+
     Box(Modifier.fillMaxSize()) {
         if (tmpBitmap == null) {
-            CustomCamera(context, cameraX) {
-                cameraX.capturePhoto() { bitmap ->
-                    setTmpBitmap(bitmap)
-                }
+            CameraView(
+                cameraExecutor, lensFacing
+            ) { bitmap ->
+                setTmpBitmap(bitmap)
             }
+//            CustomCamera(context, cameraX) {
+//                cameraX.capturePhoto() { bitmap ->
+//                    setTmpBitmap(bitmap)
+//                }
+//            }
         } else {
             Capturable(controller = captureController, onCaptured = { bitmap, error ->
                 if (bitmap != null) {
                     val result = getCardSection(bitmap.asAndroidBitmap(), density, view)
-//                    setResultBitmap(result)
-//                    setTmpBitmap(result) // 화면 출력 확인
                     createNayaCardFile(result)
                 }
                 if (error != null) {
@@ -106,6 +133,24 @@ fun MediaCardScreen(
                 }
             }) {
                 CustomImage(tmpBitmap)
+            }
+        }
+        if (tmpBitmap == null) {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(end = 80.dp, bottom = 24.dp), Alignment.BottomEnd
+            ) {
+                IconButton(onClick = { changeLensFacing() }) {
+                    Icon(
+                        Icons.Outlined.Cached, null,
+                        Modifier
+                            .size(32.dp)
+                            .padding(1.dp)
+                            .border(1.dp, Color.White, CircleShape),
+                        NeutralWhite
+                    )
+                }
             }
         }
         Row(Modifier.fillMaxSize(), Arrangement.SpaceBetween, Alignment.Top) {

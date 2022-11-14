@@ -31,7 +31,7 @@ fun HomeScreen(navController: NavHostController) {
 
     Column(HomeModifier) {
         NayaBcardSwitchButtons(
-            nayaTab = { MyNayaCardList(context) },
+            nayaTab = { MyNayaCardList(context, navController = navController) },
             bCardTab = { MyBCardList(context, navController = navController) }
         )
     }
