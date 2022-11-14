@@ -3,9 +3,13 @@ package com.youme.naya.card
 import android.app.Activity
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Environment
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.impl.utils.ContextUtil.getApplicationContext
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,15 +28,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
+import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.fonts
 import com.youme.naya.utils.convertPath2Uri
+import com.youme.naya.utils.convertUri2Path
 import com.youme.naya.widgets.home.ViewCard
+import java.io.File
 
 @Composable
 fun CardDetailsDialog(
@@ -42,7 +50,10 @@ fun CardDetailsDialog(
     bCard: Card? = null,
     onDismissRequest: () -> Unit
 ) {
+    val cardViewModel: CardViewModel = hiltViewModel()
+
     var isShareOpened by remember { mutableStateOf(false) }
+    var isDeleteDialogOpened by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -160,10 +171,38 @@ fun CardDetailsDialog(
                     }
                 }
                 OutlinedBigButton(text = "삭제하기") {
-
+                    isDeleteDialogOpened = true
                 }
             }
         }
+    }
+    if (isDeleteDialogOpened) {
+        DeleteAlertDialog(
+            onDelete = {
+                isDeleteDialogOpened = false
+                onDismissRequest()
+
+                if (nayaCard != null && bCard == null) {
+                    val root = Environment.getExternalStorageDirectory().toString();
+//                    val imageFile = File(convertUri2Path(activity, nayaCard.uri))
+                    val imageFile = File(root + nayaCard.uri)
+                    imageFile.delete()
+                    if (imageFile.exists()) {
+                        imageFile.canonicalFile.delete();
+                        if(imageFile.exists()){
+                            activity.applicationContext.deleteFile(imageFile.name);
+                        }
+                    }
+                } else if (nayaCard == null && bCard != null) {
+                    cardViewModel.removeCard(bCard)
+                    val imageFile = File(bCard.path!!)
+                    if (imageFile.exists()) imageFile.delete()
+                }
+
+                Toast.makeText(activity, "카드를 삭제했어요", Toast.LENGTH_SHORT).show()
+            },
+            onCancel = { isDeleteDialogOpened = false }
+        )
     }
 }
 
