@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
 import IMG from "../assets/sample_card.svg";
 import { Helmet } from "react-helmet-async";
+import { isMobile } from "react-device-detect";
+
 const Card = () => {
   const { userId, sendCardId }: any = useParams();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const imageUrl = useSelector(selectImageUrl);
   const dispatch = useAppDispatch();
+  const navigator = useNavigate();
   // render
   useEffect(() => {
     dispatch(getCardInfo({ userId, sendCardId }));
@@ -87,6 +90,30 @@ const Card = () => {
       content.removeEventListener("touchend", touchendOn);
     };
   });
+
+  // 어플이 있는 지 체크
+  const checkApplicationInstall = () => {
+    navigator("naya://com.youme.naya");
+    setTimeout(checkApplicationInstall_callback, 500);
+  };
+
+  const checkApplicationInstall_callback = () => {
+    try {
+      // var s = document.checkframe.document.body.innerHTML;
+      // 어플리케이션 설치되어있음
+    } catch (e) {
+      // 어플리케이션 설치 안 되어있음
+      alert("app not lnstall");
+      navigator("https://play.google.com/store/apps/details?id=com.youme.naya");
+    }
+  };
+
+  useEffect(() => {
+    if (isMobile) {
+      checkApplicationInstall();
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
       <Helmet>
