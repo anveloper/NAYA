@@ -20,6 +20,7 @@ import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.youme.naya.utils.rotateBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
@@ -32,10 +33,11 @@ import java.nio.ByteBuffer
 
 class CustomCameraX(
     private var context: Context,
-    private var owner: LifecycleOwner
+    private var owner: LifecycleOwner,
+    private var cameraSelector: Int = CameraSelector.LENS_FACING_FRONT
+
 ) {
     private var imageCapture: ImageCapture? = null
-    private var cameraSelector = CameraSelector.LENS_FACING_FRONT
 
     fun startCameraPreviewView(): PreviewView {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
@@ -179,11 +181,5 @@ class CustomCameraX(
             ExifInterface.ORIENTATION_ROTATE_270 -> degree = 270
         }
         return degree.toFloat()
-    }
-
-    fun rotateBitmap(bitmap: Bitmap, degree: Float): Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(degree)
-        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 }

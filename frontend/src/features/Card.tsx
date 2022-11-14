@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, Link, redirect } from "react-router-dom";
 import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
 import IMG from "../assets/sample_card.svg";
 import { Helmet } from "react-helmet-async";
+import { isMobile } from "react-device-detect";
+
 const Card = () => {
   const { userId, sendCardId }: any = useParams();
   const contentRef = useRef<HTMLDivElement | null>(null);
   const imageUrl = useSelector(selectImageUrl);
   const dispatch = useAppDispatch();
+  const navigator = useNavigate();
   // render
   useEffect(() => {
     dispatch(getCardInfo({ userId, sendCardId }));
@@ -87,12 +90,34 @@ const Card = () => {
       content.removeEventListener("touchend", touchendOn);
     };
   });
+
+  // 어플이 있는 지 체크
+  const checkApplicationInstall = () => {
+    setTimeout(checkApplicationInstallCallback, 500);
+  };
+
+  const checkApplicationInstallCallback = () => {
+    try {
+      redirect("naya://com.youme.naya");
+    } catch (e) {
+      console.log(e);
+      redirect("https://play.google.com/store/apps/details?id=com.youme.naya");
+    }
+  };
+
+  useEffect(() => {
+    if (isMobile) {
+      checkApplicationInstall();
+    }
+  }, []);
+
   return (
     <div className={styles.container}>
       <Helmet>
         <title>{"나야(Naya) - 카드공유"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
+
       <div
         className={styles.content}
         ref={contentRef}
@@ -111,6 +136,16 @@ const Card = () => {
           }}
         />
       </div>
+
+      <a
+        href="https://play.google.com/store/apps/details?id=com.youme.naya"
+        style={{ position: "sticky" }}
+      >
+        스토어
+      </a>
+      <a href="naya://com.youme.naya" style={{ position: "sticky" }}>
+        앱 테스트
+      </a>
     </div>
   );
 };
