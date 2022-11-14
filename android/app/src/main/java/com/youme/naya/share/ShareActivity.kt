@@ -290,7 +290,7 @@ fun ShareScreen(
 //            launcher.launch(intent)
 //        }
         ShareTextButton(
-            R.drawable.ic_share_sns_kakao,
+            R.drawable.ic_share_kakao,
             "카카오톡 공유",
             "카카오톡으로 바로 카드를 보낼 수 있어요"
         ) {
