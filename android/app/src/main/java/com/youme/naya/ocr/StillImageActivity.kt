@@ -51,6 +51,9 @@ class StillImageActivity : AppCompatActivity() {
     lateinit var tess: TessBaseAPI
     var dataPath: String = ""
 
+    // 이미지 경로
+    private var savedImgAbsolutePath: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_still_image)
@@ -80,7 +83,7 @@ class StillImageActivity : AppCompatActivity() {
         preview = findViewById(R.id.preview)
 
         // 4. 전달된 savedImgAbsolutePath가 잘 뜨는지 확인하기
-        val savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
+        savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
         if (savedImgAbsolutePath != null) {
             val bitmap = BitmapFactory.decodeFile(savedImgAbsolutePath)
             preview?.setImageBitmap(bitmap)
@@ -219,9 +222,10 @@ class StillImageActivity : AppCompatActivity() {
         ocrResult = tess.utF8Text
         Log.i("ocrResult", ocrResult)
 
-        val intent = Intent(context, StillImageActivity::class.java)
-        intent.putExtra("ocrResult", ocrResult)
-        setResult(RESULT_OK, intent)
+        val newIntent = Intent(context, StillImageActivity::class.java)
+        newIntent.putExtra("ocrResult", ocrResult)
+        newIntent.putExtra("croppedImage", savedImgAbsolutePath)
+        setResult(RESULT_OK, newIntent)
         finish()
     }
 
