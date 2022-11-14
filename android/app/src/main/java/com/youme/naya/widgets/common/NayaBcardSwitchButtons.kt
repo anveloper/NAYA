@@ -42,7 +42,10 @@ fun NayaBcardSwitchButtons(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextButton(
-                onClick = { setCardTab(CardTabConstant.NAYA) }
+                onClick = {
+                    setCardTab(CardTabConstant.NAYA)
+                    NayaTabStore.setCurrTabState("naya")
+                }
             ) {
                 Image(
                     painter = painterResource(R.drawable.home_tab_naya),
@@ -58,7 +61,10 @@ fun NayaBcardSwitchButtons(
                     .background(NeutralLightness)
             )
             Spacer(modifier = Modifier.width(4.dp))
-            TextButton(onClick = { setCardTab(CardTabConstant.BCARD) }) {
+            TextButton(onClick = {
+                setCardTab(CardTabConstant.BCARD)
+                NayaTabStore.setCurrTabState("bCard")
+            }) {
                 Image(
                     painter = painterResource(R.drawable.home_tab_b),
                     contentDescription = "home business tab",

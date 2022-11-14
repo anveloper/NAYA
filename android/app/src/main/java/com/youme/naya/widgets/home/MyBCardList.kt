@@ -27,7 +27,7 @@ import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.youme.naya.database.viewModel.CardViewModel
-import com.youme.naya.databinding.BusinessCardVerticalBinding
+import com.youme.naya.databinding.BusinessCardBinding
 import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
@@ -78,7 +78,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                 ) {
                     AndroidViewBinding(
                         { inflater, parent, _ ->
-                            BusinessCardVerticalBinding.inflate(inflater)
+                            BusinessCardBinding.inflate(inflater)
                         },
                         Modifier.fillMaxSize()
                     ) {
