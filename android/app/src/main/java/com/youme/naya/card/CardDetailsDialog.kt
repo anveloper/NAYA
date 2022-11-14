@@ -1,15 +1,21 @@
 package com.youme.naya.card
 
 import android.app.Activity
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
+import android.app.RecoverableSecurityException
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.os.Environment
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.impl.utils.ContextUtil.getApplicationContext
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,9 +44,14 @@ import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.fonts
 import com.youme.naya.utils.convertPath2Uri
-import com.youme.naya.utils.convertUri2Path
 import com.youme.naya.widgets.home.ViewCard
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
+
+
+lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
 
 @Composable
 fun CardDetailsDialog(
@@ -55,16 +66,33 @@ fun CardDetailsDialog(
     var isShareOpened by remember { mutableStateOf(false) }
     var isDeleteDialogOpened by remember { mutableStateOf(false) }
 
-    val launcher = rememberLauncherForActivityResult(
+    val coroutineScope = rememberCoroutineScope()
+
+    intentSenderLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) {
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                coroutineScope.launch {
+                    removeCardFileFromExternalStorage(activity, nayaCard?.uri ?: return@launch)
+                    Toast.makeText(activity, "카드를 삭제했어요", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            Toast.makeText(activity, "Photo couldn't be deleted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val shareLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         Log.i("Activity Result", it.resultCode.toString())
         when (it.resultCode) {
-            Activity.RESULT_OK -> {
+            RESULT_OK -> {
                 isShareOpened = false
                 onDismissRequest()
             }
-            Activity.RESULT_CANCELED -> {
+            RESULT_CANCELED -> {
                 isShareOpened = false
                 onDismissRequest()
             }
@@ -150,7 +178,7 @@ fun CardDetailsDialog(
                             val intent = Intent(activity, ShareActivity::class.java)
                             intent.putExtra("cardUri", nayaCard.uri.toString())
                             intent.putExtra("filename", nayaCard.filename)
-                            launcher.launch(intent)
+                            shareLauncher.launch(intent)
                         } else if (nayaCard == null && bCard != null) {
                             val bCardUri = convertPath2Uri(activity, bCard.path!!).toString()
                             Log.i("Card", "Up $bCardUri")
@@ -160,7 +188,7 @@ fun CardDetailsDialog(
                                 "filename",
                                 bCard.path.substring(bCard.path.lastIndexOf('/') + 1)
                             )
-                            launcher.launch(intent)
+                            shareLauncher.launch(intent)
                         }
                         isShareOpened = true
                     }
@@ -183,23 +211,15 @@ fun CardDetailsDialog(
                 onDismissRequest()
 
                 if (nayaCard != null && bCard == null) {
-                    val root = Environment.getExternalStorageDirectory().toString();
-//                    val imageFile = File(convertUri2Path(activity, nayaCard.uri))
-                    val imageFile = File(root + nayaCard.uri)
-                    imageFile.delete()
-                    if (imageFile.exists()) {
-                        imageFile.canonicalFile.delete();
-                        if(imageFile.exists()){
-                            activity.applicationContext.deleteFile(imageFile.name);
-                        }
+                    coroutineScope.launch {
+                        removeCardFileFromExternalStorage(activity, nayaCard.uri)
                     }
                 } else if (nayaCard == null && bCard != null) {
                     cardViewModel.removeCard(bCard)
                     val imageFile = File(bCard.path!!)
                     if (imageFile.exists()) imageFile.delete()
+                    Toast.makeText(activity, "카드를 삭제했어요", Toast.LENGTH_SHORT).show()
                 }
-
-                Toast.makeText(activity, "카드를 삭제했어요", Toast.LENGTH_SHORT).show()
             },
             onCancel = { isDeleteDialogOpened = false }
         )
@@ -212,10 +232,39 @@ fun CardDetailsDescription(
     fieldValue: String
 ) {
     Row(
-        Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = fieldName, fontFamily = fonts, fontWeight = FontWeight.Bold)
         Text(text = fieldValue, fontFamily = fonts, textAlign = TextAlign.End)
+    }
+}
+
+suspend fun removeCardFileFromExternalStorage(context: Context, cardUri: Uri) {
+    withContext(Dispatchers.IO) {
+        try {
+            context.contentResolver.delete(cardUri, null, null)
+        } catch (e: SecurityException) {
+            val intentSender = when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
+                    MediaStore.createDeleteRequest(
+                        context.contentResolver,
+                        listOf(cardUri)
+                    ).intentSender
+                }
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                    val recoverableSecurityException = e as? RecoverableSecurityException
+                    recoverableSecurityException?.userAction?.actionIntent?.intentSender
+                }
+                else -> null
+            }
+            intentSender?.let { sender ->
+                intentSenderLauncher.launch(
+                    IntentSenderRequest.Builder(sender).build()
+                )
+            }
+        }
     }
 }
