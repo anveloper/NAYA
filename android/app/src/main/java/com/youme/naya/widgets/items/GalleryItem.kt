@@ -20,8 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.youme.naya.card.CardDetailsDialog
+import com.youme.naya.custom.CustomCameraX
 import com.youme.naya.database.entity.Card
 import com.youme.naya.utils.convertPath2Uri
+import com.youme.naya.utils.rotateBitmap
 import com.youme.naya.widgets.home.ViewCard
 
 
@@ -111,10 +113,4 @@ fun GalleryItem(
             }
         }
     }
-}
-
-fun rotateBitmap(src: Bitmap, degree: Float): Bitmap? {
-    val matrix = Matrix()
-    matrix.postRotate(degree)
-    return Bitmap.createBitmap(src, 0, 0, src.width, src.height, matrix, true)
 }
