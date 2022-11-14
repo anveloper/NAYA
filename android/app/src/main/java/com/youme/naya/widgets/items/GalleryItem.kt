@@ -20,7 +20,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.youme.naya.card.CardDetailsDialog
 import com.youme.naya.database.entity.Card
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.utils.convertPath2Uri
@@ -39,24 +41,11 @@ private val GalleryModifier = Modifier
 @Composable
 fun GalleryItem(
     activity: Activity,
+    navController: NavHostController,
     nayaCard: ViewCard? = null,
     bCard: Card? = null
 ) {
-    var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
-
-    val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { it ->
-        Log.i("Activity Result", it.resultCode.toString())
-        when (it.resultCode) {
-            Activity.RESULT_OK -> {
-                setIsShareOpen(false)
-            }
-            Activity.RESULT_CANCELED -> {
-                setIsShareOpen(false)
-            }
-        }
-    }
+    var isDetailsDialogOpened by remember { mutableStateOf(false) }
 
     if (nayaCard != null && bCard == null) {
         Card(
@@ -70,14 +59,7 @@ fun GalleryItem(
                             Log.i("Card", "Move ${nayaCard.uri}")
                         }
                         MotionEvent.ACTION_UP -> {
-                            if (!isShareOpen) {
-                                Log.i("Card", "Up ${nayaCard.uri}")
-                                var intent = Intent(activity, ShareActivity::class.java)
-                                intent.putExtra("cardUri", nayaCard.uri.toString())
-                                intent.putExtra("filename", nayaCard.filename)
-                                launcher.launch(intent)
-                                setIsShareOpen(true)
-                            }
+                            isDetailsDialogOpened = true
                         }
                         else -> false
                     }
@@ -86,6 +68,11 @@ fun GalleryItem(
             shape = RectangleShape
         ) {
             Image(rememberImagePainter(data = nayaCard.uri), null, Modifier.fillMaxSize())
+        }
+        if (isDetailsDialogOpened) {
+            CardDetailsDialog(activity, navController, nayaCard = nayaCard) {
+                isDetailsDialogOpened = false
+            }
         }
     } else if (nayaCard == null && bCard != null) {
         val bCardUri = convertPath2Uri(activity, bCard.path!!)
@@ -103,17 +90,7 @@ fun GalleryItem(
                             Log.i("Card", "Move ${bCardUri}")
                         }
                         MotionEvent.ACTION_UP -> {
-                            if (!isShareOpen) {
-                                Log.i("Card", "Up ${bCardUri}")
-                                var intent = Intent(activity, ShareActivity::class.java)
-                                intent.putExtra("cardUri", bCardUri)
-                                intent.putExtra(
-                                    "filename",
-                                    bCard.path.substring(bCard.path.lastIndexOf('/') + 1)
-                                )
-                                launcher.launch(intent)
-                                setIsShareOpen(true)
-                            }
+                            isDetailsDialogOpened = true
                         }
                         else -> false
                     }
@@ -132,6 +109,11 @@ fun GalleryItem(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
+        }
+        if (isDetailsDialogOpened) {
+            CardDetailsDialog(activity, navController, bCard = bCard) {
+                isDetailsDialogOpened = false
+            }
         }
     }
 }

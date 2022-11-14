@@ -171,12 +171,12 @@ fun MainScreen(
     ) {
         BottomNavGraph(navController = navController)
         if (shareAlert) {
-            ShareButtonDialog(activity!!) {
+            ShareButtonDialog(activity!!, navController) {
                 setShareAlert(false)
             }
         }
         if (bCardCreateDialog) {
-            BusinessCardCreateDialog(navController = navController) {
+            BusinessCardCreateDialog(navController) {
                 bCardCreateDialog = false
             }
         }
