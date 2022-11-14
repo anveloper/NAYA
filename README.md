@@ -1,4 +1,4 @@
-![Footer__1_](./images/README/Footer__1_.png)
+![Footer__1_](./images/README/Footer.png)
   
 [TOC]
 
