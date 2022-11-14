@@ -16,4 +16,5 @@ fun convertUri2Path(context: Context, uri: Uri): String {
     val result = cursor.getString(index)
     cursor.close()
     return result
+
 }

@@ -29,15 +29,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     viewModel: PermissionViewModel,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
     checkPermission: () -> Boolean,
     signInGoogle: () -> Unit
 ) {
     val (permitted, setPermitted) = remember { mutableStateOf(false) }
     val (confirmResult, setConfirmResult) = remember { mutableStateOf(ConfirmResult.Idle) }
 
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
-    )
     val coroutineScope = rememberCoroutineScope()
 
     fun openSheet() = coroutineScope.launch {
@@ -48,21 +46,15 @@ fun LoginScreen(
         }
     }
 
-    fun onSheet() = coroutineScope.launch {
-        if (bottomSheetScaffoldState.bottomSheetState.isCollapsed) {
-            bottomSheetScaffoldState.bottomSheetState.expand()
-        }
-    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
             PermissionSheet(permitted, viewModel, {
                 setPermitted(checkPermission())
-                onSheet()
             }) {
                 setConfirmResult(ConfirmResult.Agree)
-                onSheet()
+                openSheet()
             }
         },
         sheetShape = RoundedCornerShape(20.dp, 20.dp),
@@ -168,7 +160,9 @@ fun LoginInfoText() {
 
 @Composable
 fun SignInGoogleButton(
-    confirmResult: ConfirmResult, setConfirmResult: () -> Unit, onClick: () -> Unit
+    confirmResult: ConfirmResult,
+    setConfirmResult: () -> Unit,
+    onClick: () -> Unit
 ) {
     Box(Modifier.fillMaxWidth(), Alignment.Center) {
         TextButton(
@@ -179,7 +173,6 @@ fun SignInGoogleButton(
                     Log.i("confirmResult", confirmResult.toString())
                     setConfirmResult()
                 }
-
             },
             Modifier
                 .fillMaxWidth(0.8f)
@@ -213,6 +206,7 @@ fun SignInGoogleButton(
 }
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Preview(
     name = "Login Preview",
     showSystemUi = true,
@@ -220,7 +214,10 @@ fun SignInGoogleButton(
 )
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(PermissionViewModel(), { true }) {
+    val e = rememberBottomSheetScaffoldState(
+        bottomSheetState = BottomSheetState(BottomSheetValue.Expanded)
+    )
+    LoginScreen(PermissionViewModel(), e, { true }) {
 
     }
 }

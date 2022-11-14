@@ -2,6 +2,7 @@ package com.youme.naya.widgets.items
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -19,13 +20,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
+import com.youme.naya.database.entity.Card
 import com.youme.naya.share.ShareActivity
+import com.youme.naya.utils.convertPath2Uri
 import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.home.ViewCard
+import java.io.File
 
 
 private val CardModifier = Modifier
@@ -35,56 +40,84 @@ private val CardModifier = Modifier
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CardItem(card: ViewCard) {
+fun CardItem(nayaCard: ViewCard? = null, bCard: Card? = null) {
     val context = LocalContext.current
     val activity = context as? Activity
-    var (isShareOpen, setIsShareOpen) = remember { mutableStateOf(false) }
+
+    var isShareOpened by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) { it ->
+    ) {
         Log.i("Activity Result", it.resultCode.toString())
         when (it.resultCode) {
             Activity.RESULT_OK -> {
-                setIsShareOpen(false)
+                isShareOpened = false
             }
             Activity.RESULT_CANCELED -> {
-                setIsShareOpen(false)
+                isShareOpened = false
             }
         }
     }
-
 
     Card(
         CardModifier
             .draggable(
                 orientation = Orientation.Vertical,
                 state = rememberDraggableState { delta ->
-                    if (delta < 0 && !isShareOpen) {
-                        var intent = Intent(activity, ShareActivity::class.java)
-                        intent.putExtra("cardUri", card.uri.toString())
-                        intent.putExtra("filename", card.filename)
-                        launcher.launch(intent)
-                        setIsShareOpen(true)
+                    if (delta < 0 && !isShareOpened) {
+                        if (nayaCard != null && bCard == null) {
+                            val intent = Intent(activity, ShareActivity::class.java)
+                            intent.putExtra("cardUri", nayaCard.uri.toString())
+                            intent.putExtra("filename", nayaCard.filename)
+                            launcher.launch(intent)
+                        } else if (nayaCard == null && bCard != null) {
+                            val bCardUri = convertPath2Uri(context, bCard.path!!).toString()
+                            Log.i("Card", "Up $bCardUri")
+                            val intent = Intent(activity, ShareActivity::class.java)
+                            intent.putExtra("cardUri", bCardUri)
+                            intent.putExtra(
+                                "filename",
+                                bCard.path.substring(bCard.path.lastIndexOf('/') + 1)
+                            )
+                            launcher.launch(intent)
+                        }
+                        isShareOpened = true
                     }
                 }
             )
             .pointerInteropFilter {
                 when (it.action) {
                     MotionEvent.ACTION_DOWN -> {
-                        Log.i("Card", "Down ${card.uri}")
+//                        Log.i("Card", "Down ${nayaCard.uri}")
                     }
                     MotionEvent.ACTION_MOVE -> {
-                        Log.i("Card", "Move ${card.uri}")
+//                        Log.i("Card", "Move ${nayaCard.uri}")
                     }
                     MotionEvent.ACTION_UP -> {
-                        Log.i("Card", "Up ${card.uri}")
-                        CurrentCard.setCurrentCard(card)
+//                        Log.i("Card", "Up ${nayaCard.uri}")
+                        if (nayaCard != null && bCard == null) {
+                            CurrentCard.setCurrentCard(nayaCard)
+                        }
                     }
                     else -> false
                 }
                 true
             }) {
-        Image(rememberImagePainter(data = card.uri), null, Modifier.fillMaxSize())
+        if (nayaCard != null && bCard == null) {
+            Image(rememberImagePainter(data = nayaCard.uri), null, Modifier.fillMaxSize())
+        } else if (nayaCard == null && bCard != null) {
+            Image(
+                painter = rememberImagePainter(
+                    rotateBitmap(
+                        BitmapFactory.decodeFile(bCard.path),
+                        90f
+                    )
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }

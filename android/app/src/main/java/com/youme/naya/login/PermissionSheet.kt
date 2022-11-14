@@ -155,6 +155,7 @@ fun PrivacyComp(
         }
         PrimaryBigButton(text = "동의합니다", terms && privacy) {
             userConfirm()
+
         }
     }
 }

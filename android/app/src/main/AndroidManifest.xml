@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--queries에 카카오톡 패키지 추가-->
+    <queries>
+        <package android:name="com.kakao.talk" />
+    </queries>
+
     <!-- 기능 -->
     <!--  카메라  -->
     <uses-feature android:name="android.hardware.camera.any" />
@@ -71,11 +76,11 @@
 
         <activity
             android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".card.CardDetailsActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <!--  공유모드를 위한 별도의 액티비티  -->
         <activity
@@ -121,7 +126,9 @@
         <activity
             android:name=".custom.MediaCardActivity"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".custom.VideoCardActivity"
+            android:screenOrientation="portrait" />
         <!--  OCR, DocumentScanner 액티비티  -->
 
         <activity
