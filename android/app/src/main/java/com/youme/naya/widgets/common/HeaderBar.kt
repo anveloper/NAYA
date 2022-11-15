@@ -70,8 +70,7 @@ fun HeaderBar(
         }
         "bCardModify?card={card}" -> {
             logo = false
-            title = "카드 수정하기"
-            closeActivityButton = true
+            title = "명함 수정하기"
         }
         "details" -> {
             logo = false
