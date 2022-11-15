@@ -92,7 +92,8 @@ const Card = () => {
   });
 
   // 어플이 있는 지 체크
-  const [isOpenModal, setIsModalOpen] = useState(true);
+  // const [isOpenModal, setIsModalOpen] = useState(true);
+
   const redireactApp = () => {
     exeDeepLink();
     checkInstallApp();
@@ -129,7 +130,7 @@ const Card = () => {
   };
 
   function exeDeepLink() {
-    const url = "naya://com.youme.naya/";
+    const url = `naya://com.youme.naya/${imageUrl}`;
     // eslint-disable-next-line no-restricted-globals
     location.href = url;
   }
