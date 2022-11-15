@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,6 +18,7 @@ import com.youme.naya.ui.theme.AndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Retrofit
 
+@Keep
 @AndroidEntryPoint
 class MainActivity : BaseActivity(TransitionMode.NONE) {
     // login viewModel
