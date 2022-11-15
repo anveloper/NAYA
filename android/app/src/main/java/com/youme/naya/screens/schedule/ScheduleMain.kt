@@ -57,8 +57,6 @@ fun ScheduleMainScreen(
         }
     }
 
-
-
    Column (
        horizontalAlignment = Alignment.CenterHorizontally
    ) {
