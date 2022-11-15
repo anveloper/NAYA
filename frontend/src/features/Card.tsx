@@ -5,6 +5,7 @@ import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
 import IMG from "../assets/sample_card.svg";
+import PLAY_IMG from "../assets/google_play_button.svg";
 import { Helmet } from "react-helmet-async";
 import { isMobile } from "react-device-detect";
 
@@ -117,7 +118,12 @@ const Card = () => {
         <title>{"나야(Naya) - 카드공유"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
-
+      <a
+        href="https://play.google.com/store/apps/details?id=com.youme.naya"
+        style={{ position: "sticky" }}
+      >
+        <img src={PLAY_IMG} alt="Google Play Button" />
+      </a>
       <div
         className={styles.content}
         ref={contentRef}
@@ -137,15 +143,12 @@ const Card = () => {
         />
       </div>
 
-      <a
-        href="https://play.google.com/store/apps/details?id=com.youme.naya"
+      <button
+        onClick={checkApplicationInstallCallback}
         style={{ position: "sticky" }}
       >
-        스토어
-      </a>
-      <a href="naya://com.youme.naya" style={{ position: "sticky" }}>
         앱 테스트
-      </a>
+      </button>
     </div>
   );
 };
