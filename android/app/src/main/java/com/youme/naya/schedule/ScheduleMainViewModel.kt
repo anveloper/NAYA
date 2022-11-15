@@ -28,8 +28,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -41,9 +39,11 @@ class ScheduleMainViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
+    // 해당 시간의 스케줄
     private val _schedules = mutableStateOf(emptyList<Schedule>())
     val schedules: State<List<Schedule>> = _schedules
 
+    // 해당 시간의 스케줄
     private val _schedulesAll = mutableStateOf(emptyList<Schedule>())
     val schedulesAll: State<List<Schedule>> = _schedulesAll
 
@@ -272,6 +272,16 @@ class ScheduleMainViewModel @Inject constructor(
         _endTime.value = time
     }
 
+    // 스케줄 삭제
+
+    // 복구
+    fun restoreSchedule() {
+        viewModelScope.launch {
+            repository.insertSchedule(
+                recentlyDeletedSchedule ?: return@launch)
+            recentlyDeletedSchedule = null
+        }
+    }
 
     fun deleteSchedule(scheduleId: Int?) {
         viewModelScope.launch {
@@ -285,14 +295,21 @@ class ScheduleMainViewModel @Inject constructor(
         }
     }
 
-    fun restoreSchedule() {
-        viewModelScope.launch {
-            repository.insertSchedule(
-                recentlyDeletedSchedule ?: return@launch)
-            recentlyDeletedSchedule = null
-        }
-    }
 
+
+    // 스케줄 추가/수정
+
+    // Day2 받은 날짜 (알람을 위한 변환)
+    private fun compareTime(Day: String) : Long {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
+        val startDate =  Calendar.getInstance().apply {
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
+        }.time.time
+        val endDate = dateFormat.parse(Day).time
+        val compareDate = (endDate - startDate) / (60 * 1000)
+        return compareDate
+    }
 
     fun insertSchedule(schedule: Schedule? = null, selectedDate: String, scheduleId: Int?) {
         viewModelScope.launch {
@@ -332,7 +349,7 @@ class ScheduleMainViewModel @Inject constructor(
                         if (endTime.value.substring(8,10) == "PM") {
                             (endTime.value.substring(0,2).toInt() + 12).toString()
                         } else {
-                            (endTime.value.substring(0,2).toInt() + 12).toString()
+                            endTime.value.substring(0,2).toInt().toString()
                         }
                     val reservationMinute = endTime.value.substring(5,7)
                     val reservationTime = selectedDate + " ${reservationHour}:${reservationMinute}"
@@ -347,7 +364,7 @@ class ScheduleMainViewModel @Inject constructor(
                         if (startTime.value.substring(8,10) == "PM") {
                             (startTime.value.substring(0,2).toInt() + 12).toString()
                         } else {
-                            (startTime.value.substring(0,2).toInt() + 12).toString()
+                            startTime.value.substring(0,2).toInt().toString()
                         }
                     val reservationMinute = startTime.value.substring(5,7)
                     val reservationTime = selectedDate + " ${reservationHour}:${reservationMinute}"
@@ -366,18 +383,6 @@ class ScheduleMainViewModel @Inject constructor(
             }
         }
 
-    }
-
-    // Day2 받은 날짜
-    fun compareTime(Day: String) : Long {
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
-        val startDate =  Calendar.getInstance().apply {
-            set(Calendar.SECOND, 0)
-            set(Calendar.MILLISECOND, 0)
-        }.time.time
-        val endDate = dateFormat.parse(Day).time
-        val compareDate = (endDate - startDate) / (60 * 1000)
-        return compareDate
     }
 
 
@@ -521,8 +526,7 @@ private fun createStartNotification(selectedDate: String, startTime: String, tit
     val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
         .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
         .setContentTitle("일정 알림 :)")
-        .setContentText("$selectedDate  ${startTime}분 후,\n" +
-                "${title}이 곧 시작됩니다." )
+        .setContentText("${title}이 곧 시작됩니다." )
         .setPriority(NotificationCompat.PRIORITY_HIGH)
     with(NotificationManagerCompat.from(AppModule.appContext)) {
         //notificationId is unique for each notification that you define
