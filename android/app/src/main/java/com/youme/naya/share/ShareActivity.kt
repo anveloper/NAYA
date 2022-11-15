@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.Keep
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -53,6 +54,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
+@Keep
 class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
 
     private lateinit var retrofit: Retrofit
@@ -301,16 +303,16 @@ fun ShareScreen(
                 content = Content(
                     title = "NAYA 카드가 도착했어요!",
                     description = "웹 페이지에서 NAYA 카드를 확인할 수 있습니다!",
-                    imageUrl = "${R.string.sample_card}",
+                    imageUrl = "https://firebasestorage.googleapis.com/v0/b/naya%2D365407.appspot.com/o/main%5Fnaya.png?alt=media",
                     link = Link(
-                        webUrl = "${R.string.base_url}/$uid/$cardId",
-                        mobileWebUrl = "${R.string.base_url}/$uid/$cardId"
+                        webUrl = "https://k7b104.p.ssafy.io/$uid/$cardId",
+                        mobileWebUrl = "https://k7b104.p.ssafy.io/$uid/$cardId"
                     )
                 ), buttonTitle = "웹에서 보기"
             )
 
             // 공유할 웹페이지 URL
-            val url = "${R.string.base_url}/$uid/$cardId"
+            val url = "https://k7b104.p.ssafy.io/$uid/$cardId"
 
             // 카카오톡 설치여부 확인
             if (ShareClient.instance.isKakaoTalkSharingAvailable(context)) {
