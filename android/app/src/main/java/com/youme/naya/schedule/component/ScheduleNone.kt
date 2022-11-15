@@ -1,6 +1,5 @@
 package com.youme.naya.schedule.component
 
-import android.media.Image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -20,7 +19,9 @@ import com.youme.naya.ui.theme.pico
 
 @Composable
 fun ScheduleNone(selectedDate : String, navController: NavController) {
-    Column(modifier = Modifier.width(300.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = Modifier.fillMaxWidth(0.88f),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(60.dp))
         Text("NAYA is FREE", fontFamily = pico, fontSize = 32.sp, color = PrimaryDark, modifier = Modifier.padding(vertical = 4.dp))
         Text("${selectedDate}등록된 일정이 없어요", color = NeutralMedium, style = Typography.body2)
         Spacer(modifier = Modifier.height(16.dp))
