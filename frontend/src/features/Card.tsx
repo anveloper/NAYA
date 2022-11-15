@@ -130,7 +130,7 @@ const Card = () => {
   };
 
   function exeDeepLink() {
-    const url = `naya://com.youme.naya/${imageUrl}`;
+    const url = `naya://com.youme.naya/imageUrl=${imageUrl}`;
     // eslint-disable-next-line no-restricted-globals
     location.href = url;
   }
