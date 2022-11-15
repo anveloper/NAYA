@@ -196,6 +196,9 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
     implementation "com.kakao.sdk:v2-share:2.11.2" // 메시지(카카오톡 공유)
+
+    // work manager
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 }
 
 kapt {

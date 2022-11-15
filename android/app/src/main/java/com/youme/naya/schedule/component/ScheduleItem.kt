@@ -125,11 +125,7 @@ fun ScheduleItem(
                                 )
 
                             }
-                        }
-                        Text(
-                            text = "${schedule.schedule.description}",
-                            style = Typography.overline
-                        )}
+                        } }
                     }
                 }
             }

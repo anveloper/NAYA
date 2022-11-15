@@ -110,6 +110,13 @@ fun ScheduleCreateScreen(
             .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             content = {
+                val lastKey =
+                    if (viewModel.schedulesAll.value.isEmpty()) {
+                        0
+                    } else {
+                        viewModel.schedulesAll.value.last().scheduleId
+                    }
+
 
 
                 when (componentVariable.value) {
@@ -186,16 +193,19 @@ fun ScheduleCreateScreen(
                                                     RegisterButton(
                                                         text = "등록",
                                                         onClick = {
-                                                            viewModel.insertTemporaryMember(memberType.value,
-                                                                memberNum.value % 6,
-                                                                viewModel.schedulesAll.value.last().scheduleId?.plus(
-                                                                    1) ?: 0)
+                                                            if (lastKey != null) {
+                                                                viewModel.insertTemporaryMember(memberType.value,
+                                                                    memberNum.value % 6,
+                                                                    lastKey + 1)
+                                                            }
+
                                                             memberNum.value += 1
                                                             memberType.value = -1
 
                                                             coroutineScope.launch {
                                                                 bottomSheetState.hide()
-                                                            } },
+                                                            }
+                                                                  },
                                                     )
                                                     Spacer(modifier = Modifier.height(20.dp))
                                                 }
@@ -300,7 +310,9 @@ fun ScheduleCreateScreen(
                             componentVariable.value = componentVariable.value + 1
                             when (componentVariable.value) {
                                 5 -> {
-                                    viewModel.insertSchedule(selectedDate = viewModel.selectedDate.value)
+                                    if (lastKey != null) {
+                                        viewModel.insertSchedule(selectedDate = viewModel.selectedDate.value, scheduleId = lastKey + 1)
+                                    }
                                     navController.navigate("schedule")
                                 }
                             }

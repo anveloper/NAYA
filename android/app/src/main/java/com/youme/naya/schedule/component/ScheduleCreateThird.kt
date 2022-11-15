@@ -65,12 +65,12 @@ fun ScheduleCreateThird(
         keyBoardActions = KeyboardActions(onDone = {
             keyboardController?.hide()
         }),
-        trailingIcon = {
-            Image(
-            painter = painterResource(R.drawable.home_icon_search),
-                "setting",
-                colorFilter = ColorFilter.tint(PrimaryBlue)
-        )}
+//        trailingIcon = {
+//            Image(
+//            painter = painterResource(R.drawable.home_icon_search),
+//                "setting",
+//                colorFilter = ColorFilter.tint(PrimaryBlue)
+//        )}
     )
 })}
 

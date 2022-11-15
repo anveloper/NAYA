@@ -67,7 +67,7 @@ fun PrivacyComp(
             color = PrimaryDark,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontFamily = fonts
         )
         Column(
@@ -177,7 +177,7 @@ fun PermissionComp(
             color = PrimaryDark,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
+            fontSize = 20.sp,
             fontFamily = fonts
         )
         Column(

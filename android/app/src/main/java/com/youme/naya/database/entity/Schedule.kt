@@ -21,6 +21,8 @@ data class Schedule(
     val address: String ?= "",
     val description: String = "",
     val isDone: Boolean = false,
+    val visible: Boolean = true,
+    val lastKey : Int? = -1,
 ) {
     companion object {
         val scheduleColors = listOf(SystemPink, SystemOrange, SystemYellow, SystemGreen, SecondarySystemBlue, SystemPurple)

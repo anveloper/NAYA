@@ -41,9 +41,7 @@ import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.schedule.CustomAlertDialog
 import com.youme.naya.schedule.ScheduleMainViewModel
-import com.youme.naya.schedule.UiEvent
 import com.youme.naya.ui.theme.*
-import kotlinx.coroutines.launch
 
 private val CalendarHeaderBtnGroupModifier = Modifier
     .fillMaxWidth()
@@ -63,6 +61,7 @@ fun ScheduleUpdateScreen(
     // focus
     val focusRequester = remember { FocusRequester() }
     val openDialog = remember { mutableStateOf(false)  }
+    var memberList = remember { mutableStateOf(viewModel.memberList) }
 
 
 
@@ -441,7 +440,7 @@ fun ScheduleUpdateScreen(
                 fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text("멤버를 클릭하면 목록에서 삭제됩니다.", style = Typography.body2, color = SystemRed)
+                Text("멤버 수정은 추후에 가능합니다.", style = Typography.body2, color = SystemRed)
                 Spacer(modifier = Modifier.height(12.dp))
                 LazyVerticalGrid(
                     modifier = Modifier.height(80.dp).width(300.dp),
@@ -450,7 +449,7 @@ fun ScheduleUpdateScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 )
                 {
-                    items(viewModel.memberList.value.size) { index ->
+                    items(memberList.value.value.size) { index ->
                         Row() {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Image(
@@ -459,12 +458,16 @@ fun ScheduleUpdateScreen(
                                     modifier = Modifier
                                         .width(60.dp)
                                         .height(60.dp)
-                                        .clickable(
-                                            enabled = true,
-                                            onClick = {
-                                                viewModel.deleteMember(viewModel.memberList.value[index])
-                                            }
-                                        )
+//                                        .clickable(
+//                                            enabled = true,
+//                                            onClick = {
+//                                                viewModel.memberList.value[index].memberId?.let {
+//                                                    viewModel.deleteMember(
+//                                                        it
+//                                                    )
+//                                                }
+//                                            }
+//                                        )
                                 )
                                 viewModel.memberList.value[index].name?.let {
                                     Text(
@@ -508,7 +511,7 @@ fun ScheduleUpdateScreen(
                 PrimaryBigButton(text = "수정하기",
                     onClick = {
                         viewModel.insertSchedule(
-                            selectedDate = viewModel.selectedDate.value
+                            selectedDate = viewModel.selectedDate.value, scheduleId = null
                         )
                         navController.navigate("schedule")
                     })

@@ -118,13 +118,13 @@ fun HeaderBar(
                          Modifier.height(24.dp),
                          verticalAlignment = Alignment.CenterVertically
                      ) {
-                         IconButton(onClick = { /*TODO*/ }) {
+                         IconButton(onClick = { navController.navigate("settings") }) {
                              Image(
                                  painter = painterResource(R.drawable.home_icon_alarm),
                                  contentDescription = "Alarm button"
                              )
                          }
-                         IconButton(onClick = { /*TODO*/ }) {
+                         IconButton(onClick = { navController.navigate("settings")  }) {
                              Image(
                                  painter = painterResource(R.drawable.home_icon_setting),
                                  contentDescription = "Settings button"
@@ -172,7 +172,7 @@ fun HeaderBar(
     } else {
         LazyColumn {
             stickyHeader {
-                SearchHeaderBar()
+                SearchHeaderBar(navController)
             }
         }
     }
