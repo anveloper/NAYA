@@ -21,11 +21,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -33,14 +31,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.BusinessCardCreateDialog
-import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
-import com.youme.naya.share.ShareActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaTabStore
+import com.youme.naya.widgets.home.SharedSaveImageDialog
 import com.youme.naya.widgets.items.CurrentCard
 import com.youme.naya.widgets.share.ShareButtonDialog
 
@@ -48,6 +45,7 @@ import com.youme.naya.widgets.share.ShareButtonDialog
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
+    sharedImageUrl: String,
     navController: NavHostController = rememberNavController(),
 ) {
     val context = LocalContext.current
@@ -58,6 +56,7 @@ fun MainScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
     val (shareAlert, setShareAlert) = remember { mutableStateOf(false) }
+    val (saveImage, setSaveImage) = remember { mutableStateOf(sharedImageUrl) }
 
     // 선택된 카드 가져오기
     val card = CurrentCard.getCurrentCard.value
@@ -180,6 +179,9 @@ fun MainScreen(
                 bCardCreateDialog = false
             }
         }
+        if (saveImage != "") {
+            SharedSaveImageDialog(saveImage) { setSaveImage("") }
+        }
     }
 }
 
@@ -273,5 +275,5 @@ fun RowScope.AddItem(
 @Preview
 @Composable
 fun MainScreenPreview() {
-    MainScreen(rememberNavController())
+    MainScreen("", rememberNavController())
 }
