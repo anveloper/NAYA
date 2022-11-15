@@ -14,7 +14,6 @@ const Card = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const imageUrl = useSelector(selectImageUrl);
   const dispatch = useAppDispatch();
-  const navigator = useNavigate();
   // render
   useEffect(() => {
     dispatch(getCardInfo({ userId, sendCardId }));
@@ -93,24 +92,47 @@ const Card = () => {
   });
 
   // 어플이 있는 지 체크
-  const checkApplicationInstall = () => {
-    setTimeout(checkApplicationInstallCallback, 500);
+  const [isOpenModal, setIsModalOpen] = useState(true);
+  const redireactApp = () => {
+    exeDeepLink();
+    checkInstallApp();
   };
 
-  const checkApplicationInstallCallback = () => {
-    try {
-      redirect("naya://com.youme.naya");
-    } catch (e) {
-      console.log(e);
-      redirect("https://play.google.com/store/apps/details?id=com.youme.naya");
+  function checkInstallApp() {
+    function clearTimers() {
+      // clearInterval(check);
+      clearTimeout(timer);
+    }
+
+    // function isHideWeb() {
+    //   if (document.webkitHidden | document.hidden) {
+    //     clearTimers();
+    //   }
+    // }
+    // const check = setInterval(isHideWeb, 200);
+
+    const timer = setTimeout(function () {
+      redirectStore();
+    }, 500);
+  }
+
+  const redirectStore = () => {
+    const ua = navigator.userAgent.toLowerCase();
+
+    if (window.confirm("스토어로 이동하시겠습니까?")) {
+      // eslint-disable-next-line no-restricted-globals
+      location.href =
+        ua.indexOf("android") > -1
+          ? "https://play.google.com/store/apps/details?id=com.youme.naya"
+          : "https://apps.apple.com/kr/app/com.youme.naya";
     }
   };
 
-  useEffect(() => {
-    if (isMobile) {
-      checkApplicationInstall();
-    }
-  }, []);
+  function exeDeepLink() {
+    const url = "naya://com.youme.naya/";
+    // eslint-disable-next-line no-restricted-globals
+    location.href = url;
+  }
 
   return (
     <div className={styles.container}>
@@ -145,7 +167,7 @@ const Card = () => {
         />
       </a>
       <button
-        onClick={checkApplicationInstallCallback}
+        onClick={redireactApp}
         style={{ position: "sticky", border: "none" }}
       >
         <img
