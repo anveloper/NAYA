@@ -159,13 +159,13 @@ const Card = () => {
           }}
         />
       </div>
-      <a href="https://play.google.com/store/apps/details?id=com.youme.naya">
+      {/* <a href="https://play.google.com/store/apps/details?id=com.youme.naya">
         <img
           src={PLAY_IMG}
           alt="Google Play Button"
           className={styles.playBtn}
         />
-      </a>
+      </a> */}
       <button
         onClick={redireactApp}
         style={{ position: "sticky", border: "none" }}
