@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.BusinessCardGridList
 import com.youme.naya.card.NayaCardGridList
@@ -18,10 +19,9 @@ import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 
 @Composable
-fun NayaCardScreen() {
+fun NayaCardScreen(navController: NavHostController) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val context = LocalContext.current
-    val navController = rememberNavController()
 
     Box(
         Modifier
@@ -47,5 +47,5 @@ fun NayaCardScreen() {
 @Preview
 @Composable
 fun NayaCardScreenPreview() {
-    NayaCardScreen()
+    NayaCardScreen(rememberNavController())
 }

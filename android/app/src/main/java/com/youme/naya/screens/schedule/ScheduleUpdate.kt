@@ -1,8 +1,13 @@
 package com.youme.naya.screens.schedule
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -29,9 +34,13 @@ import com.chargemap.compose.numberpicker.HoursNumberPicker
 import com.chargemap.compose.numberpicker.ListItemPicker
 import com.youme.naya.R
 import com.youme.naya.components.BasicTextField
+import com.youme.naya.components.OutlinedSmallButton
 import com.youme.naya.components.PrimaryBigButton
+import com.youme.naya.components.PrimarySmallButton
+import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
-import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.CustomAlertDialog
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
 
 private val CalendarHeaderBtnGroupModifier = Modifier
@@ -40,16 +49,21 @@ private val CalendarHeaderBtnGroupModifier = Modifier
     .padding(start = 8.dp, end = 8.dp)
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ScheduleUpdateScreen(
     navController: NavController,
-    viewModel: ScheduleEditViewModel = hiltViewModel(),
+    viewModel: ScheduleMainViewModel = hiltViewModel(),
     scheduleId: Int,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     // focus
     val focusRequester = remember { FocusRequester() }
+    val openDialog = remember { mutableStateOf(false)  }
+    var memberList = remember { mutableStateOf(viewModel.memberList) }
+
+
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
@@ -89,17 +103,30 @@ fun ScheduleUpdateScreen(
                             color = PrimaryDark,
                         )
                         Text(
-                            "     ",
+                            "  삭제",
                             fontFamily = fonts,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
-                            color = PrimaryDark,
+                            color = PrimaryBlue,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .clickable(onClick = {
+                                    openDialog.value = true
+                                })
                         )
-
                     }
                 }
             }
         }
+        // 삭제 시 모달
+        DeleteModal(visible = openDialog.value,
+            onDismissRequest = { openDialog.value = false },
+            scheduleId = scheduleId,
+            onDelete = {
+                viewModel.deleteSchedule(scheduleId)
+                navController.navigate("schedule")
+            })
+
         Spacer(modifier = Modifier.height(20.dp))
         Column(modifier = Modifier
             .fillMaxSize()
@@ -155,14 +182,22 @@ fun ScheduleUpdateScreen(
             Spacer(modifier = Modifier.height(16.dp))
             // 시간 설정
             // 시작 시간 선택
-            var pickerStartValue by remember { mutableStateOf<Hours>(AMPMHours(0, 0, AMPMHours.DayTime.PM )) }
+            var pickerStartValue by remember {
+                mutableStateOf<Hours>(AMPMHours(0,
+                    0,
+                    AMPMHours.DayTime.PM))
+            }
             var pickerStartString = pickerStartValue.toString().reversed()
 
-            fun StringConverter (start: String, end: String, AMPM: String) : String {
+            fun StringConverter(start: String, end: String, AMPM: String): String {
                 var start = start
                 var end = end
-                if (start.length == 1) { start = "0$start"}
-                if (end.length == 1) { end = "0$end"}
+                if (start.length == 1) {
+                    start = "0$start"
+                }
+                if (end.length == 1) {
+                    end = "0$end"
+                }
                 return "$start : $end $AMPM"
             }
 
@@ -176,7 +211,11 @@ fun ScheduleUpdateScreen(
 
 
             // 끝나는 시간
-            var pickerEndValue by remember { mutableStateOf<Hours>(AMPMHours(12, 0, AMPMHours.DayTime.PM )) }
+            var pickerEndValue by remember {
+                mutableStateOf<Hours>(AMPMHours(12,
+                    0,
+                    AMPMHours.DayTime.PM))
+            }
             var pickerEndString = pickerEndValue.toString().reversed()
 
             var showPickerEndDate by remember {
@@ -223,7 +262,9 @@ fun ScheduleUpdateScreen(
                         onValueChange = {
                             pickerStartValue = it
                             pickerStartString = it.toString().reversed()
-                            viewModel.onStartTimeChange(StringConverter(it.hours.toString(), it.minutes.toString(), pickerStartString.substring(1,3).reversed()))
+                            viewModel.onStartTimeChange(StringConverter(it.hours.toString(),
+                                it.minutes.toString(),
+                                pickerStartString.substring(1, 3).reversed()))
                         },
                         hoursDivider = {
                             Text(
@@ -274,7 +315,9 @@ fun ScheduleUpdateScreen(
                         onValueChange = {
                             pickerEndValue = it
                             pickerEndString = it.toString().reversed()
-                            viewModel.onEndTimeChange(StringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
+                            viewModel.onEndTimeChange(StringConverter(it.hours.toString(),
+                                it.minutes.toString(),
+                                pickerEndString.substring(1, 3).reversed()))
                         },
                         hoursDivider = {
                             Text(
@@ -385,9 +428,64 @@ fun ScheduleUpdateScreen(
                     keyBoardActions = KeyboardActions(onDone = {
                         keyboardController?.hide()
                     }),
+                )}
+                Spacer(modifier = Modifier.height(16.dp))
+            Column {
+                Text(
+                "함께 하는 멤버",
+                modifier = Modifier.padding(vertical = 12.dp),
+                color = PrimaryDark,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
                 )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("멤버 수정은 추후에 가능합니다.", style = Typography.body2, color = SystemRed)
+                Spacer(modifier = Modifier.height(12.dp))
+                LazyVerticalGrid(
+                    modifier = Modifier.height(80.dp).width(300.dp),
+                    columns = GridCells.Fixed(5),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                )
+                {
+                    items(memberList.value.value.size) { index ->
+                        Row() {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Image(
+                                    painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
+                                    contentDescription = "",
+                                    modifier = Modifier
+                                        .width(60.dp)
+                                        .height(60.dp)
+//                                        .clickable(
+//                                            enabled = true,
+//                                            onClick = {
+//                                                viewModel.memberList.value[index].memberId?.let {
+//                                                    viewModel.deleteMember(
+//                                                        it
+//                                                    )
+//                                                }
+//                                            }
+//                                        )
+                                )
+                                viewModel.memberList.value[index].name?.let {
+                                    Text(
+                                        it,
+                                        color = NeutralGray,
+                                        style = Typography.overline
+                                    )
+
+                                }
+                            }
+                            Box(Modifier.width(16.dp).height(20.dp))
+                        }
+                    }
+                }}
+
 
                 Spacer(modifier = Modifier.height(16.dp))
+            Column() {
                 // 추가 기록 사항
                 Text(
                     "추가 기록 사항",
@@ -408,21 +506,59 @@ fun ScheduleUpdateScreen(
                     keyBoardActions = KeyboardActions(onDone = {
                         keyboardController?.hide()
                     })
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-                PrimaryBigButton(text = "수정하기", onClick = {
-                    viewModel.currentSchedule?.scheduleDate?.let {
+                )}
+                Spacer(modifier = Modifier.height(80.dp))
+                PrimaryBigButton(text = "수정하기",
+                    onClick = {
                         viewModel.insertSchedule(
-                            selectedDate = it
+                            selectedDate = viewModel.selectedDate.value, scheduleId = null
                         )
-                    }
-                    navController.navigate("schedule")
-                })
-                Spacer(modifier = Modifier.height(20.dp))
+                        navController.navigate("schedule")
+                    })
+                Spacer(modifier = Modifier.height(40.dp))
             }
-
-
         }
+}
 
+@Composable
+fun DeleteModal(
+    visible: Boolean,
+    onDismissRequest: () -> Unit,
+    scheduleId: Int,
+    onDelete: () -> Unit,
+) {
+    if (visible) {
+        CustomAlertDialog(onDismissRequest = { onDismissRequest() }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.55f)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(color = NeutralWhite),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .padding(horizontal = 24.dp)
+                    ,
+                    text = "삭제 시 복구가 불가능합니다 \n 정말 삭제하시겠습니까?" ,
+                    style = Typography.h6,
+                    color = PrimaryDark,
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+                Row() {
+                    OutlinedSmallButton(text = "취소", onClick = {
+                        onDismissRequest()})
+                    Spacer(modifier = Modifier.width(14.dp))
+                    PrimarySmallButton(text = "삭제", onClick = {
+                        onDelete()
+                        onDismissRequest()})
+                }
+            }
+        }
+    }
+}
 
-}}
