@@ -26,8 +26,8 @@ data class Card(
     @ColumnInfo(name = "memo2") val memo2: String? = null,
     @ColumnInfo(name = "memo3") val memo3: String? = null,
     @ColumnInfo(name = "memo_content") val memoContent: String? = null,
-    @ColumnInfo(name = "path") val path: String? = null
-
+    @ColumnInfo(name = "path") val path: String? = null,
+    @ColumnInfo(name = "templateId") val templateId: Int? = -1  // 비즈니스 카드 템플릿 ID (-1는 카메라 촬영)
 
 )
 // mainCardId : NayaCardId 1개

@@ -37,6 +37,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
@@ -195,7 +197,13 @@ fun CardDetailsDialog(
                 }
                 if (nayaCard == null && bCard != null) {
                     OutlinedBigButton(text = "수정하기") {
+                        onDismissRequest()
 
+                        val moshi = Moshi.Builder().addLast(KotlinJsonAdapterFactory()).build()
+                        val jsonAdapter = moshi.adapter(Card::class.java).lenient()
+                        val cardJson = jsonAdapter.toJson(bCard)
+
+                        navController.navigate("bCardModify?card=$cardJson")
                     }
                 }
                 OutlinedBigButton(text = "삭제하기") {

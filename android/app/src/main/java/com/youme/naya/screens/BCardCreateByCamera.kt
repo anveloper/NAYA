@@ -228,7 +228,8 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
 //                            memo1 = mappedValueMap["memo1"],
 //                            memo2 = mappedValueMap["memo2"],
 //                            memo3 = mappedValueMap["memo3"],
-                            path = newPath
+                            path = newPath,
+                            templateId = -1
                         )
 
                         cardViewModel.addCard(card)
