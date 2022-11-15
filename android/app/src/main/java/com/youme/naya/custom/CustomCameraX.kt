@@ -81,6 +81,7 @@ class CustomCameraX(
 //                    )
                     Log.i("CameraX", image.imageInfo.timestamp.toString())
                     setImageBitmap(resultImage)
+                    image.close()
                 }
             }
 
