@@ -1,6 +1,8 @@
 package com.youme.naya.schedule.component
 
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -23,16 +25,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.youme.naya.R
 import com.youme.naya.components.BasicTextField
-import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.fonts
 
 // 장소 등록
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ScheduleCreateThird(
-    viewModel: ScheduleEditViewModel = hiltViewModel(),
+    viewModel: ScheduleMainViewModel = hiltViewModel()
 ){
     Column(
         modifier = Modifier
@@ -44,8 +47,7 @@ fun ScheduleCreateThird(
     // focus
     val focusRequester = remember { FocusRequester() }
 
-    // 임시
-    Text("주소 등록",
+    Text("장소 검색",
         modifier = Modifier.padding(vertical = 12.dp),
         color = PrimaryDark,
         fontFamily = fonts,
@@ -63,33 +65,12 @@ fun ScheduleCreateThird(
         keyBoardActions = KeyboardActions(onDone = {
             keyboardController?.hide()
         }),
-    )
-
-    // Todo: 추후 구현 예정
-//    Text("장소 검색",
-//        modifier = Modifier.padding(vertical = 12.dp),
-//        color = PrimaryDark,
-//        fontFamily = fonts,
-//        fontWeight = FontWeight.Bold,
-//        fontSize = 16.sp
-//    )
-//    Spacer(modifier = Modifier.height(4.dp))
-//    BasicTextField(
-//        modifier = Modifier
-//            .focusRequester(focusRequester),
-//        text = viewModel.address.value.text,
-//        onChange = { viewModel.onAddressChange(it) },
-//        placeholder = "주소 입력",
-//        imeAction = ImeAction.Done,
-//        keyBoardActions = KeyboardActions(onDone = {
-//            keyboardController?.hide()
-//        }),
 //        trailingIcon = {
 //            Image(
 //            painter = painterResource(R.drawable.home_icon_search),
 //                "setting",
 //                colorFilter = ColorFilter.tint(PrimaryBlue)
 //        )}
-//    )
+    )
 })}
 

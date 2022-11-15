@@ -17,6 +17,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    lateinit var appContext: Context
 
     @Singleton
     @Provides
@@ -33,6 +34,10 @@ object AppModule {
     @Provides
     fun provideScheduleRepository(database: CardDatabase) : ScheduleRepository {
         return ScheduleRepositoryImpl(database.scheduleDao())
+    }
+
+    fun provide(context: Context) {
+        appContext = context
     }
 
 
