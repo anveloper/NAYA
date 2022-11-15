@@ -33,6 +33,7 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
         loginViewModel.tryLogin(this, supplementService)
 
         setContent {
+            val sharedImageUrl:String? = intent.getStringExtra("imageUrl")
             AndroidTheme {
                 RootNavigationGraph(rememberNavController(), loginViewModel)
             }
