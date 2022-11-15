@@ -118,12 +118,7 @@ const Card = () => {
         <title>{"나야(Naya) - 카드공유"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Helmet>
-      <a
-        href="https://play.google.com/store/apps/details?id=com.youme.naya"
-        style={{ position: "sticky" }}
-      >
-        <img src={PLAY_IMG} alt="Google Play Button" />
-      </a>
+
       <div
         className={styles.content}
         ref={contentRef}
@@ -142,12 +137,22 @@ const Card = () => {
           }}
         />
       </div>
-
+      <a href="https://play.google.com/store/apps/details?id=com.youme.naya">
+        <img
+          src={PLAY_IMG}
+          alt="Google Play Button"
+          className={styles.playBtn}
+        />
+      </a>
       <button
         onClick={checkApplicationInstallCallback}
-        style={{ position: "sticky" }}
+        style={{ position: "sticky", border: "none" }}
       >
-        앱 테스트
+        <img
+          src={PLAY_IMG}
+          alt="Google Play Button"
+          className={styles.playBtn}
+        />
       </button>
     </div>
   );
