@@ -3,26 +3,23 @@ package com.youme.naya.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.youme.naya.ui.theme.*
-import kotlinx.coroutines.launch
 
 @Composable
 fun PrimaryBigButton(
     text: String,
     // 클릭 가능 / 불가능 여부
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = Modifier
@@ -87,6 +84,8 @@ fun PrimarySmallButton(
 
 @Composable
 fun PrimaryTinySmallButton(
+    backgroundColor: Color,
+    contentColor: Color,
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit
@@ -99,8 +98,8 @@ fun PrimaryTinySmallButton(
         onClick = { onClick() },
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = PrimaryBlue,
-            contentColor = NeutralWhite,
+            backgroundColor = backgroundColor,
+            contentColor = contentColor,
             disabledBackgroundColor = PrimaryBlue
                 .copy(alpha = 0.7f),
             disabledContentColor = NeutralWhite
@@ -204,7 +203,7 @@ fun SecondaryIconButton(
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit,
-    icon: Int
+    icon: Int?
 ) {
     Button(
         modifier = Modifier
@@ -220,14 +219,16 @@ fun SecondaryIconButton(
         contentPadding = PaddingValues(),
     )
     {
-        Image(
-            painter = painterResource(id = icon),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(end = 12.dp)
-                .width(24.dp)
-                .height(24.dp)
-        )
+        icon?.let { painterResource(id = it) }?.let {
+            Image(
+                painter = it,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .width(24.dp)
+                    .height(24.dp)
+            )
+        }
         Text(
             text = text,
             style = Typography.button)
@@ -267,6 +268,32 @@ fun SecondarySelectIconButton(
                 .height(24.dp),
             tint = if (selected) NeutralLight else PrimaryBlue
         )
+        Text(
+            text = text,
+            style = Typography.button)
+    }
+}
+
+@Composable
+fun RegisterButton(
+    text: String,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth(0.88f)
+            .height(48.dp),
+        shape = Shapes.large,
+        onClick = { onClick() },
+        enabled = enabled,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = PrimaryBlue,
+            contentColor = NeutralWhite,
+        ),
+        contentPadding = PaddingValues(),
+    )
+    {
         Text(
             text = text,
             style = Typography.button)

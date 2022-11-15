@@ -10,7 +10,7 @@ import kotlinx.datetime.todayIn
 
 @Entity
 data class Schedule(
-    @PrimaryKey(autoGenerate = true) val scheduleId: Int? = -1,
+    @PrimaryKey(autoGenerate = true) val scheduleId: Int?,
     val title: String,
     var scheduleDate: String = Clock.System.todayIn(TimeZone.currentSystemDefault()).toString(),
     val color: Int = SecondarySystemBlue.toArgb(),
@@ -21,6 +21,8 @@ data class Schedule(
     val address: String ?= "",
     val description: String = "",
     val isDone: Boolean = false,
+    val visible: Boolean = true,
+    val lastKey : Int? = -1,
 ) {
     companion object {
         val scheduleColors = listOf(SystemPink, SystemOrange, SystemYellow, SystemGreen, SecondarySystemBlue, SystemPurple)

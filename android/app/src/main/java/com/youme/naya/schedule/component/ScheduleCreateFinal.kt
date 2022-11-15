@@ -1,5 +1,7 @@
 package com.youme.naya.schedule.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,15 +20,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.youme.naya.components.BasicTextField
-import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.fonts
 
 // 추가 기록 사항
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ScheduleCreateFinal(
-    viewModel: ScheduleEditViewModel = hiltViewModel()
+    viewModel: ScheduleMainViewModel = hiltViewModel()
 ) {
     Column(
         modifier = Modifier

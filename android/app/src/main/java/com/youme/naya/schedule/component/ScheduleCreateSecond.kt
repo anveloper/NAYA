@@ -1,5 +1,7 @@
 package com.youme.naya.schedule.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,14 +19,15 @@ import com.chargemap.compose.numberpicker.AMPMHours
 import com.chargemap.compose.numberpicker.Hours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
 import com.chargemap.compose.numberpicker.ListItemPicker
-import com.youme.naya.schedule.ScheduleEditViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 // 시간 / 알림 설정
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleCreateSecond(
-    viewModel: ScheduleEditViewModel = hiltViewModel(),
+    viewModel: ScheduleMainViewModel = hiltViewModel()
 ){
     Column(
         modifier = Modifier
@@ -58,6 +61,10 @@ fun ScheduleCreateSecond(
             var pickerEndString = pickerEndValue.toString().reversed()
 
             var showPickerEndDate by remember {
+                mutableStateOf(false)
+            }
+
+            var showErrors by remember {
                 mutableStateOf(false)
             }
 
@@ -142,6 +149,11 @@ fun ScheduleCreateSecond(
                 )
 
             }
+            if (showErrors) {
+                Text("종료 시간을 제대로 설정해주세요", style = Typography.body2, color = SystemRed,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center)
+            }
             if (showPickerEndDate) {
                 Column(modifier = Modifier
                     .width(300.dp)
@@ -152,7 +164,34 @@ fun ScheduleCreateSecond(
                         onValueChange = {
                             pickerEndValue = it
                             pickerEndString = it.toString().reversed()
-                            viewModel.onEndTimeChange(StringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
+                            var AMPM = pickerEndString.substring(1,3).reversed()
+                            var hour = it.hours.toString()
+                            var minute = it.minutes.toString()
+                            if (AMPM > viewModel.startTime.value.substring(8, 10)) {
+                                viewModel.onEndTimeChange(StringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
+                                showErrors = false
+                            } else if (AMPM == viewModel.startTime.value.substring(8, 10)) {
+                                if (hour.toInt() > viewModel.startTime.value.substring(0,2).toInt()) {
+                                    viewModel.onEndTimeChange(StringConverter(it.hours.toString(),
+                                        it.minutes.toString(),
+                                        pickerEndString.substring(1, 3).reversed()))
+                                    showErrors = false
+                                } else if (hour.toInt()  == viewModel.startTime.value.substring(0,2).toInt() ) {
+                                    if (minute.toInt()  >= viewModel.startTime.value.substring(5,7).toInt() ) {
+                                        viewModel.onEndTimeChange(StringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
+                                        showErrors = false
+                                    } else {
+                                        showErrors = true
+                                    }
+
+                                    } else {
+                                        showErrors = true
+                                    }
+                                }
+                            else {
+                                showErrors = true
+                            }
+
                         },
                         hoursDivider = {
                             Text(

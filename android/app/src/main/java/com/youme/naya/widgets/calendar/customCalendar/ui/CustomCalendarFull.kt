@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.youme.naya.schedule.ScheduleEditViewModel
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.PrimaryBlue
@@ -153,6 +152,7 @@ fun CustomCalendarFull(
                             weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
                             viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
                             viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
+                            viewModel.getScheduleWithMembers(selectedCustomCalendarDate.value.toString())
                             onCurrentDayClick(customCalendarDay, events)
                         },
                         customCalendarDayColors = customCalendarDayColors,
@@ -178,6 +178,7 @@ fun CustomCalendarFull(
                                     weekValue.value = selectedCustomCalendarDate.value.getNext7Dates()
                                     viewModel.getSelectedDate(selectedCustomCalendarDate.value.toString())
                                     viewModel.getScheduleList(selectedCustomCalendarDate.value.toString())
+                                    viewModel.getScheduleWithMembers(selectedCustomCalendarDate.value.toString())
                                     onCurrentDayClick(customCalendarDay, events)
                                 },
                                 selectedCustomCalendarDay = selectedCustomCalendarDate.value,
