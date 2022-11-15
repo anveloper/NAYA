@@ -79,7 +79,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="deeplink"
+                    android:host="com.youme.naya"
                     android:scheme="naya" />
             </intent-filter>
         </activity>

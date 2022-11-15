@@ -13,7 +13,11 @@ import com.youme.naya.login.LoginViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RootNavigationGraph(navController: NavHostController,loginViewModel: LoginViewModel) {
+fun RootNavigationGraph(
+    sharedImageUrl: String,
+    navController: NavHostController,
+    loginViewModel: LoginViewModel
+) {
     NavHost(
         navController = navController,
         route = Graph.ROOT,
@@ -23,7 +27,7 @@ fun RootNavigationGraph(navController: NavHostController,loginViewModel: LoginVi
             AnimatedSplashScreen(navController, loginViewModel)
         }
         composable(route = Graph.BOTTOM) {
-            MainScreen()
+            MainScreen(sharedImageUrl)
         }
     }
 }

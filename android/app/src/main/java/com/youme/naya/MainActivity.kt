@@ -2,6 +2,7 @@ package com.youme.naya
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -33,8 +34,15 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
         loginViewModel.tryLogin(this, supplementService)
 
         setContent {
+            val dataString: String? = intent.dataString
+            var sharedImageUrl = ""
+            if (dataString != null) {
+                Log.i("dataString", sharedImageUrl)
+                sharedImageUrl = dataString.substring("naya://com.youme.naya/imageUrl=".length)
+                Log.i("sharedImageUrl", sharedImageUrl)
+            }
             AndroidTheme {
-                RootNavigationGraph(rememberNavController(), loginViewModel)
+                RootNavigationGraph(sharedImageUrl, rememberNavController(), loginViewModel)
             }
         }
     }

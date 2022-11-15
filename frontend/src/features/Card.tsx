@@ -5,6 +5,7 @@ import { useAppDispatch } from "../app/hooks";
 import styles from "./Card.module.css";
 import { getCardInfo, selectImageUrl } from "./cardSlice";
 import IMG from "../assets/sample_card.svg";
+import PLAY_IMG from "../assets/google_play_button.svg";
 import { Helmet } from "react-helmet-async";
 import { isMobile } from "react-device-detect";
 
@@ -13,7 +14,6 @@ const Card = () => {
   const contentRef = useRef<HTMLDivElement | null>(null);
   const imageUrl = useSelector(selectImageUrl);
   const dispatch = useAppDispatch();
-  const navigator = useNavigate();
   // render
   useEffect(() => {
     dispatch(getCardInfo({ userId, sendCardId }));
@@ -92,24 +92,48 @@ const Card = () => {
   });
 
   // 어플이 있는 지 체크
-  const checkApplicationInstall = () => {
-    setTimeout(checkApplicationInstallCallback, 500);
+  // const [isOpenModal, setIsModalOpen] = useState(true);
+
+  const redireactApp = () => {
+    exeDeepLink();
+    checkInstallApp();
   };
 
-  const checkApplicationInstallCallback = () => {
-    try {
-      redirect("naya://com.youme.naya");
-    } catch (e) {
-      console.log(e);
-      redirect("https://play.google.com/store/apps/details?id=com.youme.naya");
+  function checkInstallApp() {
+    function clearTimers() {
+      clearInterval(check);
+      clearTimeout(timer);
+    }
+
+    function isHideWeb() {
+      if (document.hidden) {
+        clearTimers();
+      }
+    }
+    const check = setInterval(isHideWeb, 200);
+
+    const timer = setTimeout(function () {
+      redirectStore();
+    }, 500);
+  }
+
+  const redirectStore = () => {
+    const ua = navigator.userAgent.toLowerCase();
+
+    if (window.confirm("스토어로 이동하시겠습니까?")) {
+      // eslint-disable-next-line no-restricted-globals
+      location.href =
+        ua.indexOf("android") > -1
+          ? "https://play.google.com/store/apps/details?id=com.youme.naya"
+          : "https://apps.apple.com/kr/app/com.youme.naya";
     }
   };
 
-  useEffect(() => {
-    if (isMobile) {
-      checkApplicationInstall();
-    }
-  }, []);
+  function exeDeepLink() {
+    const url = `naya://com.youme.naya/imageUrl=${imageUrl}`;
+    // eslint-disable-next-line no-restricted-globals
+    location.href = url;
+  }
 
   return (
     <div className={styles.container}>
@@ -136,16 +160,23 @@ const Card = () => {
           }}
         />
       </div>
-
-      <a
-        href="https://play.google.com/store/apps/details?id=com.youme.naya"
-        style={{ position: "sticky" }}
+      {/* <a href="https://play.google.com/store/apps/details?id=com.youme.naya">
+        <img
+          src={PLAY_IMG}
+          alt="Google Play Button"
+          className={styles.playBtn}
+        />
+      </a> */}
+      <button
+        onClick={redireactApp}
+        style={{ position: "sticky", border: "none" }}
       >
-        스토어
-      </a>
-      <a href="naya://com.youme.naya" style={{ position: "sticky" }}>
-        앱 테스트
-      </a>
+        <img
+          src={PLAY_IMG}
+          alt="Google Play Button"
+          className={styles.playBtn}
+        />
+      </button>
     </div>
   );
 };
