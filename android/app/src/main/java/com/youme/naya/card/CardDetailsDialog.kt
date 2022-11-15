@@ -19,7 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Surface
@@ -163,7 +163,7 @@ fun CardDetailsDialog(
                             .padding(bottom = 16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        itemsIndexed(cardData) { index, item ->
+                        items(cardData) { item ->
                             if (!item[1].isNullOrBlank()) {
                                 CardDetailsDescription(item[0]!!, item[1]!!)
                             }

@@ -30,6 +30,7 @@ import com.youme.naya.components.OutlinedSmallButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
+import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.utils.saveCardImage
 
 
@@ -85,10 +86,10 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
     }
 
     // 각 입력 창과 매핑되는 필드 이름 맵
-    val mappedFieldNameMap = remember { mutableStateMapOf<Int, String>() }
+    val mappedFieldNameMap = remember { mutableStateMapOf<Int, String?>() }
 
     // 각 입력 창과 매핑되는 필드 레이블 맵
-    val mappedFieldLabelMap = remember { mutableStateMapOf<Int, String>() }
+    val mappedFieldLabelMap = remember { mutableStateMapOf<Int, String?>() }
 
     // 필드 선택 여부 맵
     val fieldSelectedMap = remember(fieldsNameList) {
@@ -138,12 +139,14 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
         }
 
         LazyColumn(
-            Modifier.fillMaxWidth(),
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             itemsIndexed(resultLines) { idx, _ ->
-                Row {
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     OutlinedSmallButton(text = mappedFieldLabelMap[idx] ?: "선택") {
                         dropdownMenuState[idx] = true
                     }
@@ -161,6 +164,30 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
                                     mappedValueMap[fieldName] = fieldsValueState[idx]
                                 }) {
                                     Text(text = fieldsLabelList[fieldIdx])
+                                }
+                            } else {
+                                // 이미 선택된 아이템을 고르는 경우 기존에 선택된 아이템에서 현재 값으로 변경
+                                DropdownMenuItem(onClick = {
+                                    dropdownMenuState[idx] = false
+                                    val prevSelected = mappedFieldNameMap.entries.find { entry ->
+                                        entry.value == fieldName
+                                    }!!
+                                    if (prevSelected.key == idx) {
+                                        // 이미 선택된 필드를 한 번 더 선택할 경우 해제
+                                        fieldSelectedMap[fieldName] = false
+                                        mappedFieldNameMap[idx] = null
+                                        mappedFieldLabelMap[idx] = null
+                                        mappedValueMap[fieldName] = ""
+                                    } else {
+                                        // 이미 해당 필드가 선택된 입력창이 있다면
+                                        mappedFieldNameMap[prevSelected.key] = null
+                                        mappedFieldLabelMap[prevSelected.key] = null
+                                        mappedFieldNameMap[idx] = fieldName
+                                        mappedFieldLabelMap[idx] = fieldsLabelList[fieldIdx]
+                                        mappedValueMap[fieldName] = fieldsValueState[idx]
+                                    }
+                                }) {
+                                    Text(text = fieldsLabelList[fieldIdx], color = PrimaryBlue)
                                 }
                             }
                         }

@@ -1,0 +1,296 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 5,
+    "identityHash": "7242df98538aa351fc9189c9142c5ec6",
+    "entities": [
+      {
+        "tableName": "naya_card",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`NayaCardId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `eng_name` TEXT, `kind` INTEGER NOT NULL, `email` TEXT, `mobile` TEXT, `address` TEXT, `company` TEXT, `team` TEXT, `role` TEXT, `background` TEXT, `logo` TEXT, `fax` TEXT, `tel` TEXT, `memo1` TEXT, `memo2` TEXT, `memo3` TEXT, `memo_content` TEXT, `path` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "NayaCardId",
+            "columnName": "NayaCardId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "engName",
+            "columnName": "eng_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mobile",
+            "columnName": "mobile",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "company",
+            "columnName": "company",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "team",
+            "columnName": "team",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "role",
+            "columnName": "role",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "background",
+            "columnName": "background",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "logo",
+            "columnName": "logo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fax",
+            "columnName": "fax",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tel",
+            "columnName": "tel",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "memo1",
+            "columnName": "memo1",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "memo2",
+            "columnName": "memo2",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "memo3",
+            "columnName": "memo3",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "memoContent",
+            "columnName": "memo_content",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "NayaCardId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Schedule",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`scheduleId` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `scheduleDate` TEXT NOT NULL, `color` INTEGER NOT NULL, `isOnAlarm` INTEGER NOT NULL, `alarmTime` TEXT NOT NULL, `startTime` TEXT, `endTime` TEXT, `address` TEXT, `description` TEXT NOT NULL, `isDone` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "scheduleId",
+            "columnName": "scheduleId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "scheduleDate",
+            "columnName": "scheduleDate",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isOnAlarm",
+            "columnName": "isOnAlarm",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "alarmTime",
+            "columnName": "alarmTime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startTime",
+            "columnName": "startTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endTime",
+            "columnName": "endTime",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDone",
+            "columnName": "isDone",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "scheduleId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "member",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`memberId` INTEGER PRIMARY KEY AUTOINCREMENT, `scheduleId` INTEGER NOT NULL, `name` TEXT, `type` TEXT, `phoneNum` TEXT, `email` TEXT, `etcInfo` TEXT, `cardId` INTEGER, FOREIGN KEY(`scheduleId`) REFERENCES `Schedule`(`scheduleId`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "memberId",
+            "columnName": "memberId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "scheduleId",
+            "columnName": "scheduleId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phoneNum",
+            "columnName": "phoneNum",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "etcInfo",
+            "columnName": "etcInfo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cardId",
+            "columnName": "cardId",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "memberId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "Schedule",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "scheduleId"
+            ],
+            "referencedColumns": [
+              "scheduleId"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7242df98538aa351fc9189c9142c5ec6')"
+    ]
+  }
+}
