@@ -14,8 +14,8 @@ android {
         applicationId "com.youme.naya"
         minSdk 21
         targetSdk 33
-        versionCode 13
-        versionName "1.2.6"
+        versionCode 14
+        versionName "1.2.7"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -117,7 +117,7 @@ dependencies {
     implementation 'com.godaddy.android.colorpicker:compose-color-picker-android:0.5.1'
 
     // Coil
-    implementation "io.coil-kt:coil-compose:1.4.0"
+    implementation "io.coil-kt:coil-compose:2.1.0"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:31.0.1') {
