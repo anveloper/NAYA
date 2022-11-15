@@ -100,16 +100,16 @@ const Card = () => {
 
   function checkInstallApp() {
     function clearTimers() {
-      // clearInterval(check);
+      clearInterval(check);
       clearTimeout(timer);
     }
 
-    // function isHideWeb() {
-    //   if (document.webkitHidden | document.hidden) {
-    //     clearTimers();
-    //   }
-    // }
-    // const check = setInterval(isHideWeb, 200);
+    function isHideWeb() {
+      if (document.hidden) {
+        clearTimers();
+      }
+    }
+    const check = setInterval(isHideWeb, 200);
 
     const timer = setTimeout(function () {
       redirectStore();
