@@ -33,13 +33,15 @@ interface ScheduleDao {
     fun getSchedulesByDate(scheduleDate: String): Flow<List<Schedule>>
 
 
-
     /**
      * Member
      */
 
     @Query("SELECT * FROM member")
     fun getMembers(): Flow<List<Member>>
+
+    @Query("SELECT * FROM member WHERE scheduleId = :scheduleId")
+    fun getMembersByScheduleId(scheduleId: Int): Flow<List<Member>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMember(member: Member)
@@ -64,10 +66,18 @@ interface ScheduleDao {
     fun getSchedulesWithMembers(): Flow<List<ScheduleWithMembers>>
 
     @Transaction
-    @Query("SELECT * FROM schedule WHERE scheduleDate = :scheduleDate")
+    @Query("SELECT * FROM schedule WHERE scheduleDate = :scheduleDate ORDER BY startTime DESC")
     fun getSchedulesWithMembersByDate(scheduleDate: String): Flow<List<ScheduleWithMembers>>
 
     @Transaction
     @Query("SELECT * FROM schedule WHERE scheduleId = :scheduleId")
     suspend fun getScheduleWithMembersById(scheduleId: Int): ScheduleWithMembers?
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertScheduleWithMembers(schedule: Schedule, members: List<Member>)
+
+    @Transaction
+    @Delete
+    suspend fun deleteScheduleWithMembers(schedule: Schedule, members: List<Member>)
 }

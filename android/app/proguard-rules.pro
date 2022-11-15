@@ -20,5 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.youme.naya.database.*
--keep class com.youme.naya.share.*
+-keep class com.youme.naya.database.* {*;}
+-keep class com.youme.naya.share.* {*;}
+-keep class com.youme.naya.vo.* {*;}
+
+-keep class com.kakao.sdk.**.model.* { <fields>; }
+-keep class * extends com.google.gson.TypeAdapter
