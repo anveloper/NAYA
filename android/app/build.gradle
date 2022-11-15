@@ -22,6 +22,8 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+//
+//        buildConfigField "String", "TMAP_API", project.properties["TMAP_API"]
     }
 
     buildTypes {
@@ -115,7 +117,7 @@ dependencies {
     implementation 'com.godaddy.android.colorpicker:compose-color-picker-android:0.5.1'
 
     // Coil
-    implementation "io.coil-kt:coil-compose:1.4.0"
+    implementation "io.coil-kt:coil-compose:2.1.0"
 
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:31.0.1') {
@@ -185,7 +187,7 @@ dependencies {
 
     // MapView
     implementation 'com.google.maps.android:maps-compose:2.7.2'
-    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
 
     // FusedLocationProvideClient
     implementation 'com.google.android.gms:play-services-location:21.0.1'
@@ -194,6 +196,9 @@ dependencies {
     implementation 'com.facebook.android:facebook-android-sdk:latest.release'
     implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
     implementation "com.kakao.sdk:v2-share:2.11.2" // 메시지(카카오톡 공유)
+
+    // work manager
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 }
 
 kapt {
