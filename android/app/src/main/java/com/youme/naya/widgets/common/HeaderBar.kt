@@ -70,8 +70,7 @@ fun HeaderBar(
         }
         "bCardModify?card={card}" -> {
             logo = false
-            title = "카드 수정하기"
-            closeActivityButton = true
+            title = "명함 수정하기"
         }
         "details" -> {
             logo = false
@@ -105,7 +104,7 @@ fun HeaderBar(
                             painter = painterResource(R.drawable.home_logo_image),
                             contentDescription = "logo",
                             modifier = Modifier
-                                .fillMaxHeight()
+                                .fillMaxHeight(0.9f)
                                 .padding(end = 4.dp)
                         )
                         Image(
@@ -114,23 +113,23 @@ fun HeaderBar(
                             modifier = Modifier.fillMaxHeight()
                         )
                     }
-                    // Row(
-                    //     Modifier.height(24.dp),
-                    //     verticalAlignment = Alignment.CenterVertically
-                    // ) {
-                    //     IconButton(onClick = { /*TODO*/ }) {
-                    //         Image(
-                    //             painter = painterResource(R.drawable.home_icon_alarm),
-                    //             contentDescription = "Alarm button"
-                    //         )
-                    //     }
-                    //     IconButton(onClick = { /*TODO*/ }) {
-                    //         Image(
-                    //             painter = painterResource(R.drawable.home_icon_setting),
-                    //             contentDescription = "Settings button"
-                    //         )
-                    //     }
-                    // }
+                     Row(
+                         Modifier.height(24.dp),
+                         verticalAlignment = Alignment.CenterVertically
+                     ) {
+                         IconButton(onClick = { navController.navigate("settings") }) {
+                             Image(
+                                 painter = painterResource(R.drawable.home_icon_alarm),
+                                 contentDescription = "Alarm button"
+                             )
+                         }
+                         IconButton(onClick = { navController.navigate("settings")  }) {
+                             Image(
+                                 painter = painterResource(R.drawable.home_icon_setting),
+                                 contentDescription = "Settings button"
+                             )
+                         }
+                     }
                 }
                 else {
                 Row(
@@ -172,7 +171,7 @@ fun HeaderBar(
     } else {
         LazyColumn {
             stickyHeader {
-                SearchHeaderBar()
+                SearchHeaderBar(navController)
             }
         }
     }
