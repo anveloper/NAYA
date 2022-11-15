@@ -191,7 +191,8 @@ fun BCardCreateScreen(navController: NavHostController, kind: Int = 1) {
 //                            memo1,
 //                            memo2,
 //                            memo3,
-                            path = path
+                            path = path,
+                            templateId = 0
                         )
 
                         cardViewModel.addCard(card)

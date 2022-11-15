@@ -150,10 +150,11 @@ fun LoginInfoText() {
         text = "Naya와 함께 명함과 일정을 관리하고, \n나를 공유해보세요!",
         color = NeutralLight,
         modifier = Modifier.fillMaxWidth(),
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
         fontFamily = fonts
     )
+
 
 }
 
@@ -190,10 +191,9 @@ fun SignInGoogleButton(
                     "Google sign button",
                     modifier = Modifier.size(32.dp),
                 )
-                Spacer(modifier = Modifier.width(20.dp))
+                Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = "구글 계정으로 시작하기",
-                    style = MaterialTheme.typography.overline,
                     color = PrimaryDark,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
