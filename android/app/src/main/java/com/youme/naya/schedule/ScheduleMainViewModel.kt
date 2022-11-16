@@ -202,12 +202,13 @@ class ScheduleMainViewModel @Inject constructor(
 
     fun onDoneChange(scheduleId: Int, isDone: Boolean) {
         viewModelScope.launch {
-            repository.getScheduleById(scheduleId)?.also { schedule ->
-            repository.insertSchedule(
-                schedule.copy(
+            repository.getScheduleWithMembersById(scheduleId)?.also {
+                repository.insertScheduleWithMembers(
+                it.schedule.copy(
                     isDone = isDone
+                ),
+                it.members
                 )
-            )
             }
         }
     }
