@@ -46,7 +46,7 @@ fun MyNayaCardList(context: Context, navController: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
 
     val viewModel = viewModel<CardListViewModel>()
-    viewModel.fetchCards()
+    viewModel.fetchNayaCards()
     val cardList = viewModel.viewCards.value
     val listSize = cardList.size
 

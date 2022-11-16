@@ -1,25 +1,14 @@
 package com.youme.naya.screens
 
-import android.app.Activity
-import android.app.Activity.RESULT_OK
-import android.content.Intent
-import android.content.Intent.ACTION_PICK
-import android.net.Uri
-import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddAPhoto
-import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,55 +16,47 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.youme.naya.ocr.DocumentScannerActivity
-import com.youme.naya.ocr.StillImageActivity
+import com.youme.naya.card.BusinessCardGridList
+import com.youme.naya.card.NayaCardGridList
+import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ui.theme.NeutralLightness
 import com.youme.naya.ui.theme.NeutralMedium
-import com.youme.naya.ui.theme.NeutralWhite
-import com.youme.naya.ui.theme.PrimaryBlue
-import com.youme.naya.utils.convertUri2Path
+import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 
 
 @Composable
 fun NuyaCardScreen(navController: NavHostController) {
-//    val cardViewModel: CardViewModel = hiltViewModel()
-//    val context = LocalContext.current
-//    var isBCard by remember { mutableStateOf(false) }
+    val cardViewModel: CardViewModel = hiltViewModel()
+    val context = LocalContext.current
 
-    Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "해당 기능은 준비 중입니다")
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        Column(
+            Modifier.fillMaxSize()
+        ) {
+//            SearchInput()
+            NayaBcardSwitchButtons(
+                nayaTab = {
+                    NayaCardGridList(context, navController, true)
+                },
+                bCardTab = {
+                    BusinessCardGridList(context, navController, cardViewModel, true)
+                }
+            )
+        }
     }
-//    Box(
-//        Modifier
-//            .fillMaxSize()
-//            .background(Color.White)
-//    ) {
-//        Column(
-//            Modifier.fillMaxSize()
-//        ) {
-////            SearchInput()
-//            NayaBcardSwitchButtons(
-//                nayaTab = {
-//                    isBCard = false
-//                    NayaCardGridList(context)
-//                },
-//                bCardTab = {
-//                    isBCard = true
-//                    BusinessCardStackList(context, cardViewModel)
-//                }
-//            )
-//        }
-//        if (isBCard) {
-//            NuyaFloatingActionButtons(navController)
-//        }
-//    }
 }
 
 /**
