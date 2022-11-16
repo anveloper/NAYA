@@ -40,5 +40,14 @@ data class Member(
             R.drawable.member_icon_5,
             R.drawable.member_icon_6,
             R.drawable.member_icon_7)
+        val memberIconsCancel = listOf(
+            R.drawable.member_icon_cancel_1,
+            R.drawable.member_icon_cancel_2,
+            R.drawable.member_icon_cancel_3,
+            R.drawable.member_icon_cancel_4,
+            R.drawable.member_icon_cancel_5,
+            R.drawable.member_icon_cancel_6,
+            R.drawable.member_icon_cancel_7)
     }
+
 }

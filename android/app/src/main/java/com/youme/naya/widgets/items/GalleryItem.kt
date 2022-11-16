@@ -1,9 +1,7 @@
 package com.youme.naya.widgets.items
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.util.Log
 import android.view.MotionEvent
 import androidx.compose.foundation.Image
@@ -20,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
 import com.youme.naya.card.CardDetailsDialog
-import com.youme.naya.custom.CustomCameraX
 import com.youme.naya.database.entity.Card
 import com.youme.naya.utils.convertPath2Uri
 import com.youme.naya.utils.rotateBitmap
@@ -28,10 +25,8 @@ import com.youme.naya.widgets.home.ViewCard
 
 
 private val GalleryModifier = Modifier
-    .defaultMinSize(
-        minWidth = 50.dp,
-        minHeight = 90.dp
-    )
+    .fillMaxWidth()
+    .aspectRatio(5 / 9f)
     .shadow(elevation = 6.dp)
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -40,6 +35,7 @@ fun GalleryItem(
     activity: Activity,
     navController: NavHostController,
     nayaCard: ViewCard? = null,
+    enableShare: Boolean = true,
     bCard: Card? = null
 ) {
     var isDetailsDialogOpened by remember { mutableStateOf(false) }
@@ -64,20 +60,22 @@ fun GalleryItem(
                 },
             shape = RectangleShape
         ) {
-            Image(rememberImagePainter(data = nayaCard.uri), null, Modifier.fillMaxSize())
+            ImageContainer(nayaCard.uri)
         }
         if (isDetailsDialogOpened) {
-            CardDetailsDialog(activity, navController, nayaCard = nayaCard) {
+            CardDetailsDialog(
+                activity,
+                navController,
+                nayaCard = nayaCard,
+                enableShare = enableShare
+            ) {
                 isDetailsDialogOpened = false
             }
         }
     } else if (nayaCard == null && bCard != null) {
         val bCardUri = convertPath2Uri(activity, bCard.path!!)
         Card(
-            Modifier
-                .fillMaxWidth()
-                .aspectRatio(5 / 9f)
-                .shadow(elevation = 6.dp)
+            GalleryModifier
                 .pointerInteropFilter {
                     when (it.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -95,22 +93,27 @@ fun GalleryItem(
                 },
             shape = RectangleShape
         ) {
-            Image(
-                painter = rememberImagePainter(
-                    rotateBitmap(
-                        BitmapFactory.decodeFile(bCard.path),
-                        90f
-                    )
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
+            ImageContainer(
+                rotateBitmap(
+                    BitmapFactory.decodeFile(bCard.path),
+                    90f
+                )
             )
         }
         if (isDetailsDialogOpened) {
-            CardDetailsDialog(activity, navController, bCard = bCard) {
+            CardDetailsDialog(activity, navController, bCard = bCard, enableShare = enableShare) {
                 isDetailsDialogOpened = false
             }
         }
     }
+}
+
+@Composable
+fun ImageContainer(data: Any) {
+    Image(
+        painter = rememberImagePainter(data),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.fillMaxSize()
+    )
 }
