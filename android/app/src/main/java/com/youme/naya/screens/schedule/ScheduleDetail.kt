@@ -94,7 +94,7 @@ fun ScheduleDetailScreen(
             }
         }
         Column(
-            modifier = Modifier.width(300.dp)) {
+            modifier = Modifier.fillMaxWidth(0.88f)) {
             // title, 날짜, Done
             Row (
                 modifier = Modifier.fillMaxWidth().fillMaxHeight(0.1f),
@@ -220,7 +220,7 @@ fun ScheduleDetailScreen(
             )
             Spacer(modifier = Modifier.height(12.dp))
             LazyVerticalGrid(
-                modifier = Modifier.height(80.dp).width(300.dp),
+                modifier = Modifier.height(80.dp).fillMaxWidth(0.88f),
                 columns = GridCells.Fixed(5),
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -266,6 +266,6 @@ fun ScheduleDetailScreen(
                     style= Typography.body1,
                     color = NeutralGray)
             }
-
-
-    }}}
+        }
+    }
+}

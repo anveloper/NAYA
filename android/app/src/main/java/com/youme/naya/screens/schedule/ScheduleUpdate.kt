@@ -134,7 +134,7 @@ fun ScheduleUpdateScreen(
             horizontalAlignment = Alignment.CenterHorizontally) {
             Row(
                 modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth(0.8f)
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
 
@@ -222,7 +222,7 @@ fun ScheduleUpdateScreen(
                 mutableStateOf(false)
             }
 
-            Column(modifier = Modifier.width(300.dp)) {
+            Column(modifier = Modifier.fillMaxWidth(0.8f)) {
                 Text("시간 설정",
                     modifier = Modifier.padding(vertical = 12.dp),
                     color = PrimaryDark,
@@ -231,7 +231,7 @@ fun ScheduleUpdateScreen(
                     fontSize = 16.sp
                 )
                 Row(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth()
                     .clickable(onClick = { showPickerStartDate = !showPickerStartDate }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("시작 시간",
@@ -254,7 +254,7 @@ fun ScheduleUpdateScreen(
             }
             if (showPickerStartDate) {
                 Column(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth(0.8f)
                     .padding(horizontal = 8.dp, vertical = 10.dp)) {
                     HoursNumberPicker(
                         dividersColor = SecondaryLightBlue,
@@ -285,7 +285,7 @@ fun ScheduleUpdateScreen(
                 }
             }
             Row(modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth(0.8f)
                 .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("종료 시간",
@@ -307,7 +307,7 @@ fun ScheduleUpdateScreen(
             }
             if (showPickerEndDate) {
                 Column(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth(0.8f)
                     .padding(horizontal = 8.dp, vertical = 10.dp)) {
                     HoursNumberPicker(
                         dividersColor = SecondaryLightBlue,
@@ -338,10 +338,10 @@ fun ScheduleUpdateScreen(
                 }
             }
             Divider(modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth(0.8f)
                 .padding(vertical = 20.dp), color = PrimaryLight)
             Row(modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth(0.8f)
                 .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("일정 알람",
@@ -368,7 +368,7 @@ fun ScheduleUpdateScreen(
                 val possibleValues = listOf("시작 시간", "1시간 전", "3시간 전", "종료 시간")
                 var state by remember { mutableStateOf(possibleValues[0]) }
                 Row(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth(0.8f)
                     .clickable(onClick = { showAlarmSetting = !showAlarmSetting }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("알람 시간 설정",
@@ -390,7 +390,7 @@ fun ScheduleUpdateScreen(
                 }
                 if (showAlarmSetting) {
                     Column(modifier = Modifier
-                        .width(300.dp)
+                        .fillMaxWidth(0.8f)
                         .padding(vertical = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -440,7 +440,7 @@ fun ScheduleUpdateScreen(
                 fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text("멤버 수정은 추후에 가능합니다.", style = Typography.body2, color = SystemRed)
+                Text("멤버 클릭시 삭제가 가능합니다.", style = Typography.body2, color = SystemRed)
                 Spacer(modifier = Modifier.height(12.dp))
                 LazyVerticalGrid(
                     modifier = Modifier.height(80.dp).width(300.dp),
@@ -453,21 +453,17 @@ fun ScheduleUpdateScreen(
                         Row() {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Image(
-                                    painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
+                                    painter = painterResource(Member.memberIconsCancel[viewModel.memberList.value[index].memberIcon!!]),
                                     contentDescription = "",
                                     modifier = Modifier
                                         .width(60.dp)
                                         .height(60.dp)
-//                                        .clickable(
-//                                            enabled = true,
-//                                            onClick = {
-//                                                viewModel.memberList.value[index].memberId?.let {
-//                                                    viewModel.deleteMember(
-//                                                        it
-//                                                    )
-//                                                }
-//                                            }
-//                                        )
+                                        .clickable(
+                                            enabled = true,
+                                            onClick = {
+                                                viewModel.deleteTemporaryMember(index)
+                                            }
+                                        )
                                 )
                                 viewModel.memberList.value[index].name?.let {
                                     Text(

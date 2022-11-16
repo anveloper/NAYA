@@ -296,8 +296,6 @@ class ScheduleMainViewModel @Inject constructor(
         }
     }
 
-
-
     // 스케줄 추가/수정
 
     // Day2 받은 날짜 (알람을 위한 변환)
