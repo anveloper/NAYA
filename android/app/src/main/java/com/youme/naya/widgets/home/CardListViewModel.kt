@@ -19,14 +19,25 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
     private val _viewCards = mutableStateOf(emptyList<ViewCard>())
     val viewCards: State<List<ViewCard>> = _viewCards
 
+    fun fetchNayaCards() {
+        fetchCards("NAYA")
+    }
 
-    fun fetchCards() {
+    fun fetchNayaCardsInNuya() {
+        fetchCards("NUYA")
+    }
+
+    fun fetchBusinessCardsInNuya() {
+        fetchCards("NUYA", true)
+    }
+
+    fun fetchCards(prefix: String, isBusinessCard: Boolean = false) {
         val viewCards = mutableListOf<ViewCard>()
         getApplication<Application>().contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
             MediaStore.Files.FileColumns.TITLE + " LIKE ?",
-            arrayOf("NAYA-MEDIA-%"),
+            arrayOf("$prefix-${if (isBusinessCard) "BUSINESS" else "MEDIA"}-%"),
             "${MediaStore.Images.ImageColumns.DATE_TAKEN} ASC"
         )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)

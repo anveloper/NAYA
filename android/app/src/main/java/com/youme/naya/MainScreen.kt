@@ -3,8 +3,12 @@ package com.youme.naya
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -18,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -33,13 +38,17 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.BusinessCardCreateDialog
 import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
+import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
+import com.youme.naya.utils.convertUri2Path
+import com.youme.naya.utils.saveSharedCardImage
 import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaTabStore
 import com.youme.naya.widgets.home.SharedSaveImageDialog
 import com.youme.naya.widgets.items.CurrentCard
 import com.youme.naya.widgets.share.ShareButtonDialog
+import java.io.File
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -59,20 +68,32 @@ fun MainScreen(
     val (saveImage, setSaveImage) = remember { mutableStateOf(sharedImageUrl) }
 
     // 선택된 카드 가져오기
-    val card = CurrentCard.getCurrentCard.value
+//    val card = CurrentCard.getCurrentCard.value
 
     // 비즈니스 카드 생성 방법 선택 다이얼로그 표시 여부
-    var bCardCreateDialog by remember { mutableStateOf(false) }
+    var bCardCreateDialogInNaya by remember { mutableStateOf(false) }
+    var bCardCreateDialogInNuya by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) { it ->
+    ) {
         Log.i("Activity Result", it.resultCode.toString())
         when (it.resultCode) {
             Activity.RESULT_OK -> {
             }
             Activity.RESULT_CANCELED -> {
             }
+        }
+    }
+    // 갤러리 액티비티
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val uri = it.data?.data as Uri
+            val imgPath = convertUri2Path(context, uri)
+            saveSharedCardImage(context, BitmapFactory.decodeFile(imgPath))
+            Toast.makeText(context, "카드를 불러왔어요", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -95,15 +116,18 @@ fun MainScreen(
                                         )
                                     )
                                 } else {
-                                    bCardCreateDialog = true
+                                    bCardCreateDialogInNaya = true
                                 }
                             }
-                            "nuya" -> launcher.launch(
-                                Intent(
-                                    activity,
-                                    MediaCardActivity::class.java
-                                )
-                            )
+                            "nuya" -> {
+                                if (NayaTabStore.isNayaCard()) {
+                                    val intent = Intent(Intent.ACTION_PICK)
+                                    intent.type = "image/*"
+                                    galleryLauncher.launch(intent)
+                                } else {
+                                    bCardCreateDialogInNuya = true
+                                }
+                            }
                             else -> {
 //                                    var intent = Intent(activity, ShareActivity::class.java)
 //                                    intent.putExtra("cardUri", card.uri.toString())
@@ -118,10 +142,8 @@ fun MainScreen(
                 ) {
                     Box(
                         Modifier
-                            .width(60.dp)
-                            .height(
-                                60.dp
-                            )
+                            .width(64.dp)
+                            .height(64.dp)
                             .background(
                                 SecondaryGradientBrush,
                                 CircleShape
@@ -140,8 +162,8 @@ fun MainScreen(
                             painter = painterResource(setCenterIcon()),
                             contentDescription = "send",
                             modifier = Modifier
-                                .width(40.dp)
-                                .height(40.dp),
+                                .width(44.dp)
+                                .height(44.dp),
                             tint = NeutralWhite
                         )
                     }
@@ -174,13 +196,18 @@ fun MainScreen(
                 setShareAlert(false)
             }
         }
-        if (bCardCreateDialog) {
+        if (bCardCreateDialogInNaya) {
             BusinessCardCreateDialog(navController) {
-                bCardCreateDialog = false
+                bCardCreateDialogInNaya = false
+            }
+        }
+        if (bCardCreateDialogInNuya) {
+            BusinessCardCreateDialog(navController, isNuya = true) {
+                bCardCreateDialogInNuya = false
             }
         }
         if (saveImage != "") {
-            SharedSaveImageDialog(saveImage) { setSaveImage("") }
+            SharedSaveImageDialog(saveImage, navController) { setSaveImage("") }
         }
     }
 }
@@ -203,6 +230,7 @@ fun BottomBar(
         cutoutShape = CircleShape,
         backgroundColor = PrimaryLight,
         modifier = Modifier
+            .height(72.dp)
             .background(
                 color = PrimaryLight,
                 shape = RoundedCornerShape(
@@ -216,7 +244,7 @@ fun BottomBar(
                     topEnd = 20.dp
                 )
                 clip = true
-            }
+            },
     ) {
         screens.forEach { screen ->
             AddItem(
@@ -225,6 +253,7 @@ fun BottomBar(
                 navController = navController
             )
         }
+
     }
 }
 
@@ -235,12 +264,11 @@ fun RowScope.AddItem(
     navController: NavHostController
 ) {
     BottomNavigationItem(
-        modifier = Modifier
-            .height(72.dp),
+        modifier = Modifier.padding(bottom = 6.dp),
         label = {
             Text(
                 screen.title,
-                fontSize = 10.sp,
+                fontSize = 11.sp,
                 fontFamily = pico,
             )
         },
@@ -250,8 +278,8 @@ fun RowScope.AddItem(
                     painter = it,
                     contentDescription = screen.title,
                     modifier = Modifier
-                        .width(24.dp)
-                        .height(24.dp)
+                        .width(28.dp)
+                        .height(28.dp)
                 )
             }
         },

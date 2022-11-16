@@ -50,7 +50,7 @@ fun CardItemPlus(
     ) {
         Log.i("Media Card Custom", it.resultCode.toString())
         if (it.resultCode == RESULT_OK) {
-            viewModel.fetchCards()
+            viewModel.fetchNayaCards()
         }
     }
     // 이미지 선택 액티비티
@@ -77,7 +77,7 @@ fun CardItemPlus(
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}")
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&isNuya=false")
             }
         }
     }

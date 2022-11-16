@@ -19,12 +19,12 @@ fun PrimaryBigButton(
     text: String,
     // 클릭 가능 / 불가능 여부
     enabled: Boolean = true,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Button(
         modifier = Modifier
-            .width(300.dp)
-            .height(48.dp),
+            .fillMaxWidth(0.8f)
+            .height(50.dp),
         colors = ButtonDefaults.buttonColors(
             backgroundColor = PrimaryBlue,
             contentColor = NeutralWhite,
@@ -53,6 +53,47 @@ fun PrimaryBigButton(
 }
 
 @Composable
+fun PrimaryBigButton2(
+    text: String,
+    // 클릭 가능 / 불가능 여부
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = PrimaryBlue,
+            contentColor = NeutralWhite,
+            disabledBackgroundColor = PrimaryBlue
+                .copy(alpha = 0.7f),
+            disabledContentColor = NeutralWhite
+                .copy(alpha = 0.3f)
+        ),
+        shape = Shapes.large,
+        elevation = ButtonDefaults.elevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp
+            /* disabledElevation = 0.dp */
+        ),
+        onClick = { onClick() },
+        enabled = enabled,
+
+
+        contentPadding = PaddingValues(),
+    )
+    {
+        Text(
+            text = text,
+            style = Typography.button)
+    }
+}
+
+
+
+
+@Composable
 fun PrimarySmallButton(
     text: String,
     enabled: Boolean = true,
@@ -61,7 +102,7 @@ fun PrimarySmallButton(
     Button(
         modifier = Modifier
             .width(120.dp)
-            .height(48.dp),
+            .height(50.dp),
         shape = Shapes.large,
         onClick = { onClick() },
         enabled = enabled,
@@ -92,8 +133,8 @@ fun PrimaryTinySmallButton(
 ) {
     Button(
         modifier = Modifier
-            .width(72.dp)
-            .height(32.dp),
+            .width(78.dp)
+            .height(36.dp),
         shape = Shapes.large,
         onClick = { onClick() },
         enabled = enabled,
@@ -124,8 +165,8 @@ fun OutlinedBigButton(
 ) {
     Button(
         modifier = Modifier
-            .width(300.dp)
-            .height(48.dp),
+            .fillMaxWidth(0.8f)
+            .height(50.dp),
         shape = Shapes.large,
         onClick = { onClick() },
         enabled = enabled,
@@ -153,7 +194,7 @@ fun OutlinedSmallButton(
     Button(
         modifier = Modifier
             .width(120.dp)
-            .height(48.dp),
+            .height(50.dp),
         shape = Shapes.large,
         onClick = { onClick() },
         enabled = enabled,
@@ -208,7 +249,7 @@ fun SecondaryIconButton(
     Button(
         modifier = Modifier
             .width(240.dp)
-            .height(48.dp),
+            .height(50.dp),
         shape = Shapes.large,
         onClick = { onClick() },
         enabled = enabled,
@@ -283,7 +324,7 @@ fun RegisterButton(
     Button(
         modifier = Modifier
             .fillMaxWidth(0.88f)
-            .height(48.dp),
+            .height(50.dp),
         shape = Shapes.large,
         onClick = { onClick() },
         enabled = enabled,

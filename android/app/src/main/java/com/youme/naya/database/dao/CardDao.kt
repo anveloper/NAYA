@@ -15,8 +15,11 @@ interface CardDao {
     @Query("SELECT * FROM naya_card WHERE kind = 0")
     fun getNayaCards(): Flow<List<Card>>
 
-    @Query("SELECT * FROM naya_card WHERE kind = 1")
-    fun getBusinessCards(): Flow<List<Card>>
+    @Query("SELECT * FROM naya_card WHERE kind = 1 AND is_nuya = 0")
+    fun getBusinessCardsInNaya(): Flow<List<Card>>
+
+    @Query("SELECT * FROM naya_card WHERE kind = 1 AND is_nuya = 1")
+    fun getBusinessCardsInNuya(): Flow<List<Card>>
 
     @Query("SELECT * FROM naya_card WHERE NayaCardId = :id")
     fun getCardById(id: Int): Flow<Card>
