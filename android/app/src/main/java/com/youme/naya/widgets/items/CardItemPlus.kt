@@ -77,7 +77,7 @@ fun CardItemPlus(
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}")
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&isNuya=false")
             }
         }
     }

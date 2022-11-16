@@ -32,6 +32,7 @@ import com.youme.naya.database.entity.Card
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ui.theme.PrimaryBlue
 import com.youme.naya.utils.saveCardImage
+import com.youme.naya.utils.saveSharedCardImage
 
 
 //val fieldsNameList = listOf(
@@ -69,11 +70,15 @@ fun removeBlankLines(ocrResult: String): MutableList<String> {
 }
 
 @Composable
-fun BCardCreateByCameraScreen(navController: NavHostController, result: String, path: String) {
+fun BCardCreateByCameraScreen(
+    navController: NavHostController,
+    result: String,
+    path: String,
+    isNuya: Boolean
+) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
     val resultLines = removeBlankLines(Uri.decode(result))
-//    var idx by remember { mutableStateOf(0) }
 
     // 필드 입력 값 리스트 (입력 창 생성순)
     val fieldsValueState = remember(resultLines) {
@@ -207,7 +212,11 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
             item {
                 PrimaryBigButton(text = "저장") {
                     if (isValid(mappedValueMap)) {
-                        val newPath = saveCardImage(ctx, cardImageBitmap, true)
+                        val newPath = if (isNuya) {
+                            saveSharedCardImage(ctx, cardImageBitmap, true)
+                        } else {
+                            saveCardImage(ctx, cardImageBitmap, true)
+                        }
 
                         val card = Card(
                             0,
@@ -229,7 +238,8 @@ fun BCardCreateByCameraScreen(navController: NavHostController, result: String, 
 //                            memo2 = mappedValueMap["memo2"],
 //                            memo3 = mappedValueMap["memo3"],
                             path = newPath,
-                            templateId = -1
+                            templateId = -1,
+                            isNuya = if (isNuya) 1 else 0
                         )
 
                         cardViewModel.addCard(card)
