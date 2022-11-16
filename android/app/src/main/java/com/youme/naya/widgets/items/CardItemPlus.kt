@@ -50,7 +50,7 @@ fun CardItemPlus(
     ) {
         Log.i("Media Card Custom", it.resultCode.toString())
         if (it.resultCode == RESULT_OK) {
-            viewModel.fetchCards()
+            viewModel.fetchNayaCards()
         }
     }
     // 이미지 선택 액티비티

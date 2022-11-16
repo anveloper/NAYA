@@ -39,8 +39,7 @@ fun ScheduleCreateThird(
 ){
     Column(
         modifier = Modifier
-            .width(300.dp)
-            .height(320.dp)
+            .fillMaxHeight(0.8f)
             .verticalScroll(rememberScrollState()),
         content = {
     val keyboardController = LocalSoftwareKeyboardController.current

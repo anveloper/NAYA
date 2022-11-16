@@ -21,7 +21,6 @@ import com.chargemap.compose.numberpicker.HoursNumberPicker
 import com.chargemap.compose.numberpicker.ListItemPicker
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 // 시간 / 알림 설정
 @RequiresApi(Build.VERSION_CODES.O)
@@ -31,8 +30,7 @@ fun ScheduleCreateSecond(
 ){
     Column(
         modifier = Modifier
-            .width(300.dp)
-            .height(320.dp)
+            .fillMaxHeight(0.8f)
             .verticalScroll(rememberScrollState()),
         content = {
             // 시작 시간 선택
@@ -68,7 +66,7 @@ fun ScheduleCreateSecond(
                 mutableStateOf(false)
             }
 
-            Column(modifier = Modifier.width(300.dp)) {
+            Column(modifier = Modifier.fillMaxWidth(0.8f)) {
                 Text("시간 설정",
                     modifier = Modifier.padding(vertical = 12.dp),
                     color = PrimaryDark,
@@ -77,7 +75,7 @@ fun ScheduleCreateSecond(
                     fontSize = 16.sp
                 )
                 Row(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth()
                     .clickable(onClick = { showPickerStartDate = !showPickerStartDate }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("시작 시간",
@@ -100,7 +98,7 @@ fun ScheduleCreateSecond(
             }
             if (showPickerStartDate) {
                 Column(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth(0.8f)
                     .padding(horizontal = 8.dp, vertical = 10.dp)) {
                     HoursNumberPicker(
                         dividersColor = SecondaryLightBlue,
@@ -129,7 +127,7 @@ fun ScheduleCreateSecond(
                 }
             }
             Row(modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth(0.8f)
                 .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("종료 시간",
@@ -151,12 +149,12 @@ fun ScheduleCreateSecond(
             }
             if (showErrors) {
                 Text("종료 시간을 제대로 설정해주세요", style = Typography.body2, color = SystemRed,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(0.8f),
                     textAlign = TextAlign.Center)
             }
             if (showPickerEndDate) {
                 Column(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth(0.8f)
                     .padding(horizontal = 8.dp, vertical = 10.dp)) {
                     HoursNumberPicker(
                         dividersColor = SecondaryLightBlue,
@@ -211,9 +209,9 @@ fun ScheduleCreateSecond(
 
                 }
             }
-            Divider(modifier = Modifier.width(300.dp).padding(vertical = 20.dp), color = PrimaryLight)
+            Divider(modifier = Modifier.fillMaxWidth(0.8f).padding(vertical = 20.dp), color = PrimaryLight)
             Row(modifier = Modifier
-                .width(300.dp)
+                .fillMaxWidth(0.8f)
                 .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("일정 알람",
@@ -240,7 +238,7 @@ fun ScheduleCreateSecond(
                 val possibleValues = listOf("시작 시간", "1시간 전", "3시간 전", "종료 시간")
                 var state by remember { mutableStateOf(possibleValues[0]) }
                 Row(modifier = Modifier
-                    .width(300.dp)
+                    .fillMaxWidth(0.8f)
                     .clickable(onClick = { showAlarmSetting = !showAlarmSetting }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("알람 시간 설정",
@@ -262,7 +260,7 @@ fun ScheduleCreateSecond(
                 }
                 if (showAlarmSetting) {
                     Column(modifier = Modifier
-                        .width(300.dp)
+                        .fillMaxWidth(0.8f)
                         .padding(vertical = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

@@ -33,15 +33,14 @@ fun ScheduleCreateFinal(
 ) {
     Column(
         modifier = Modifier
-            .width(300.dp)
-            .height(320.dp)
+            .fillMaxHeight(0.8f)
             .verticalScroll(rememberScrollState()),
         content = {
     val keyboardController = LocalSoftwareKeyboardController.current
     // focus
     val focusRequester = remember { FocusRequester() }
 
-    Column (modifier = Modifier.width(300.dp)) {
+    Column {
         Text("추가 기록 사항",
             modifier = Modifier.padding(vertical = 12.dp),
             color = PrimaryDark,
