@@ -1,5 +1,6 @@
 package com.youme.naya.components
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,7 +35,7 @@ fun BasicTextField(
 ) {
     OutlinedTextField(
         modifier = modifier
-            .width(300.dp)
+            .fillMaxWidth(0.8f)
             .height(52.dp),
         value = text,
         onValueChange = onChange,

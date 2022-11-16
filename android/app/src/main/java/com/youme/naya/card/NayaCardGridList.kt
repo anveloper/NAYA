@@ -16,9 +16,13 @@ import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.items.GalleryItem
 
 @Composable
-fun NayaCardGridList(context: Context, navController: NavHostController) {
+fun NayaCardGridList(context: Context, navController: NavHostController, isNuya: Boolean = false) {
     val nayaCards = viewModel<CardListViewModel>()
-    nayaCards.fetchCards()
+    if (isNuya) {
+        nayaCards.fetchNayaCardsInNuya()
+    } else {
+        nayaCards.fetchNayaCards()
+    }
     val cardList = nayaCards.viewCards.value
 
     LazyVerticalGrid(
@@ -28,31 +32,7 @@ fun NayaCardGridList(context: Context, navController: NavHostController) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(cardList) { card ->
-            GalleryItem(context as Activity, navController, nayaCard = card)
+            GalleryItem(context as Activity, navController, nayaCard = card, enableShare = !isNuya)
         }
     }
-//        if (nayaCards.isEmpty()) {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxSize()
-//                    .padding(bottom = 56.dp),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Text("받은 나야 카드가 없어요", color = NeutralLight)
-//            }
-//        } else {
-//            AndroidViewBinding(
-//                { inflater, parent, _ ->
-//                    CardStackViewMainBinding.inflate(inflater, parent)
-//                },
-//                Modifier
-//                    .fillMaxSize()
-//                    // Material Design 기준 Bottom Navigation 최소 높이는 56dp
-//                    .padding(start = 16.dp, end = 16.dp, bottom = 56.dp)
-//            ) {
-//                val mCardStackAdapter = CardStackAdapter(context, launcher);
-//                stackviewMain.setAdapter(mCardStackAdapter)
-//                mCardStackAdapter.updateData(nayaCards)
-//            }
-//        }
 }

@@ -44,33 +44,37 @@ fun ScheduleCreateFirst(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth(0.88f)
-            .height(320.dp)
+            .fillMaxHeight(0.8f)
             .verticalScroll(rememberScrollState()),
         content = {
+
             val keyboardController = LocalSoftwareKeyboardController.current
             // focus
             val focusRequester = remember { FocusRequester() }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+            Column( modifier = Modifier
+                .fillMaxWidth(0.8f)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
 
-                ) {
-                Schedule.scheduleColors.forEach { color ->
-                    val colorInt = color.toArgb()
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(color.copy(alpha = if (viewModel.color.value == colorInt) 1f else 0.3f))
-                            .clickable(onClick = { viewModel.onColorChange(colorInt) }),
-                    )
+                    ) {
+                    Schedule.scheduleColors.forEach { color ->
+                        val colorInt = color.toArgb()
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(color.copy(alpha = if (viewModel.color.value == colorInt) 1f else 0.3f))
+                                .clickable(onClick = { viewModel.onColorChange(colorInt) }),
+                        )
 
+                    }
                 }
             }
+
             Spacer(modifier = Modifier.height(16.dp))
             Column {
                 Text(
