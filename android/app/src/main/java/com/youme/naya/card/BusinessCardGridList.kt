@@ -25,10 +25,11 @@ fun BusinessCardGridList(
     cardViewModel: CardViewModel = viewModel(),
     isNuya: Boolean = false
 ) {
-    val businessCardsInNaya = cardViewModel.businessCardList.collectAsState().value
-    val cardListViewModel = viewModel<CardListViewModel>()
-    cardListViewModel.fetchBusinessCardsInNuya()
-    val businessCardsInNuya = cardListViewModel.viewCards.value
+    val cardList = if (isNuya) {
+        cardViewModel.businessCardListInNuya.collectAsState().value
+    } else {
+        cardViewModel.businessCardListInNaya.collectAsState().value
+    }
 
     LazyVerticalGrid(
         modifier = Modifier
@@ -38,19 +39,8 @@ fun BusinessCardGridList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (isNuya) {
-            items(businessCardsInNuya) { card ->
-                GalleryItem(
-                    context as Activity,
-                    navController,
-                    nayaCard = card,
-                    enableShare = !isNuya
-                )
-            }
-        } else {
-            items(businessCardsInNaya) { card ->
-                GalleryItem(context as Activity, navController, bCard = card, enableShare = !isNuya)
-            }
+        items(cardList) { card ->
+            GalleryItem(context as Activity, navController, bCard = card, enableShare = !isNuya)
         }
     }
 }

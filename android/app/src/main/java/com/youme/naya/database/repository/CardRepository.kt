@@ -20,7 +20,9 @@ class CardRepository @Inject constructor(private val cardDao: CardDao) {
 
     fun getNayaCards(): Flow<List<Card>> = cardDao.getNayaCards().flowOn(Dispatchers.IO).conflate()
 
-    fun getBusinessCards(): Flow<List<Card>> = cardDao.getBusinessCards().flowOn(Dispatchers.IO).conflate()
+    fun getBusinessCardsInNaya(): Flow<List<Card>> = cardDao.getBusinessCardsInNaya().flowOn(Dispatchers.IO).conflate()
+
+    fun getBusinessCardsInNuya(): Flow<List<Card>> = cardDao.getBusinessCardsInNuya().flowOn(Dispatchers.IO).conflate()
 
     fun getCardById(id: Int): Flow<Card> = cardDao.getCardById(id).flowOn(Dispatchers.IO).conflate()
 
