@@ -27,7 +27,11 @@ import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.utils.convertUri2Path
 
 @Composable
-fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest: () -> Unit) {
+fun BusinessCardCreateDialog(
+    navController: NavHostController,
+    isNuya: Boolean = false,
+    onDismissRequest: () -> Unit
+) {
     val context = LocalContext.current
     val activity = context as? Activity
 
@@ -43,7 +47,7 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}")
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&isNuya=${isNuya}")
             }
             onDismissRequest()
         }
@@ -106,9 +110,11 @@ fun BusinessCardCreateDialog(navController: NavHostController, onDismissRequest:
                     intent.type = "image/*"
                     mediaLauncher.launch(intent)
                 }
-                OutlinedBigButton(text = "템플릿에서 만들기") {
-                    onDismissRequest()
-                    navController.navigate("bCardCreate")
+                if (!isNuya) {
+                    OutlinedBigButton(text = "템플릿에서 만들기") {
+                        onDismissRequest()
+                        navController.navigate("bCardCreate")
+                    }
                 }
             }
         }

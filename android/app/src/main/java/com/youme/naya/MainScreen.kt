@@ -3,8 +3,12 @@ package com.youme.naya
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -34,13 +38,17 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.BusinessCardCreateDialog
 import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
+import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
+import com.youme.naya.utils.convertUri2Path
+import com.youme.naya.utils.saveSharedCardImage
 import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaTabStore
 import com.youme.naya.widgets.home.SharedSaveImageDialog
 import com.youme.naya.widgets.items.CurrentCard
 import com.youme.naya.widgets.share.ShareButtonDialog
+import java.io.File
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -60,20 +68,32 @@ fun MainScreen(
     val (saveImage, setSaveImage) = remember { mutableStateOf(sharedImageUrl) }
 
     // 선택된 카드 가져오기
-    val card = CurrentCard.getCurrentCard.value
+//    val card = CurrentCard.getCurrentCard.value
 
     // 비즈니스 카드 생성 방법 선택 다이얼로그 표시 여부
-    var bCardCreateDialog by remember { mutableStateOf(false) }
+    var bCardCreateDialogInNaya by remember { mutableStateOf(false) }
+    var bCardCreateDialogInNuya by remember { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) { it ->
+    ) {
         Log.i("Activity Result", it.resultCode.toString())
         when (it.resultCode) {
             Activity.RESULT_OK -> {
             }
             Activity.RESULT_CANCELED -> {
             }
+        }
+    }
+    // 갤러리 액티비티
+    val galleryLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val uri = it.data?.data as Uri
+            val imgPath = convertUri2Path(context, uri)
+            saveSharedCardImage(context, BitmapFactory.decodeFile(imgPath))
+            Toast.makeText(context, "카드를 불러왔어요", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -96,7 +116,16 @@ fun MainScreen(
                                         )
                                     )
                                 } else {
-                                    bCardCreateDialog = true
+                                    bCardCreateDialogInNaya = true
+                                }
+                            }
+                            "nuya" -> {
+                                if (NayaTabStore.isNayaCard()) {
+                                    val intent = Intent(Intent.ACTION_PICK)
+                                    intent.type = "image/*"
+                                    galleryLauncher.launch(intent)
+                                } else {
+                                    bCardCreateDialogInNuya = true
                                 }
                             }
                             else -> {
@@ -125,6 +154,7 @@ fun MainScreen(
                             return when (currentDestination.toString()) {
                                 "schedule" -> R.drawable.nav_schedule_plus_icon
                                 "naya" -> R.drawable.nav_naya_plus_icon
+                                "nuya" -> R.drawable.nav_naya_plus_icon
                                 else -> R.drawable.nav_send_icon
                             }
                         }
@@ -166,13 +196,18 @@ fun MainScreen(
                 setShareAlert(false)
             }
         }
-        if (bCardCreateDialog) {
+        if (bCardCreateDialogInNaya) {
             BusinessCardCreateDialog(navController) {
-                bCardCreateDialog = false
+                bCardCreateDialogInNaya = false
+            }
+        }
+        if (bCardCreateDialogInNuya) {
+            BusinessCardCreateDialog(navController, isNuya = true) {
+                bCardCreateDialogInNuya = false
             }
         }
         if (saveImage != "") {
-            SharedSaveImageDialog(saveImage) { setSaveImage("") }
+            SharedSaveImageDialog(saveImage, navController) { setSaveImage("") }
         }
     }
 }

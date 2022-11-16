@@ -61,7 +61,7 @@ class DocumentScannerActivity : AppCompatActivity() {
 
         go_ocr.setOnClickListener {
 //            val intent = Intent(activity, StillImageActivity::class.java)
-            val intent = Intent(activity, DocumentScannerActivity::class.java)
+            val newIntent = Intent(activity, DocumentScannerActivity::class.java)
 
             // 1. R.id.cropped_image_view에 들어있는 이미지를 저장한다.
             val bitmap: Bitmap? = getBitmapFromView(croppedImageView)
@@ -72,10 +72,10 @@ class DocumentScannerActivity : AppCompatActivity() {
             }
 
             // 2. 저장된 이미지의 경로를 인텐트에 저장한다.
-            intent.putExtra("savedImgAbsolutePath", savedImgAbsolutePath)
+            newIntent.putExtra("savedImgAbsolutePath", savedImgAbsolutePath)
 
             // 3. 정상적으로 처리했음을 이전 액티비티에 알리고 종료한다.
-            setResult(RESULT_OK, intent)
+            setResult(RESULT_OK, newIntent)
             finish()
         }
     }
