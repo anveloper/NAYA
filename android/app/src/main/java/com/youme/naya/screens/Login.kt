@@ -123,7 +123,7 @@ fun LoginInfoText() {
             color = PrimaryBlue,
             modifier = Modifier,
             fontWeight = FontWeight.Bold,
-            fontSize = 24.sp,
+            fontSize = 28.sp,
             fontFamily = pico
         )
         Text(
@@ -143,7 +143,9 @@ fun LoginInfoText() {
             fontSize = 20.sp,
             fontFamily = fonts
         )
-        Image(painterResource(R.drawable.home_logo_text), null)
+        Image(painterResource(R.drawable.home_logo_text),
+            null,
+        )
     }
     Spacer(Modifier.height(8.dp))
     Text(

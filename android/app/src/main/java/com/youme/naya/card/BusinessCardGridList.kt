@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.items.GalleryItem
@@ -23,9 +22,14 @@ import com.youme.naya.widgets.items.GalleryItem
 fun BusinessCardGridList(
     context: Context,
     navController: NavHostController,
-    cardViewModel: CardViewModel = viewModel()
+    cardViewModel: CardViewModel = viewModel(),
+    isNuya: Boolean = false
 ) {
-    val businessCards = cardViewModel.businessCardList.collectAsState().value
+    val cardList = if (isNuya) {
+        cardViewModel.businessCardListInNuya.collectAsState().value
+    } else {
+        cardViewModel.businessCardListInNaya.collectAsState().value
+    }
 
     LazyVerticalGrid(
         modifier = Modifier
@@ -35,8 +39,8 @@ fun BusinessCardGridList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(businessCards) { card ->
-            GalleryItem(context as Activity, navController, bCard = card)
+        items(cardList) { card ->
+            GalleryItem(context as Activity, navController, bCard = card, enableShare = !isNuya)
         }
     }
 }
