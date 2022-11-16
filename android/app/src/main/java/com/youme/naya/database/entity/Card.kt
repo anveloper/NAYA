@@ -27,7 +27,9 @@ data class Card(
     @ColumnInfo(name = "memo3") val memo3: String? = null,
     @ColumnInfo(name = "memo_content") val memoContent: String? = null,
     @ColumnInfo(name = "path") val path: String? = null,
-    @ColumnInfo(name = "templateId") val templateId: Int? = -1  // 비즈니스 카드 템플릿 ID (-1는 카메라 촬영)
+    @ColumnInfo(name = "template_id") val templateId: Int? = -1,  // 비즈니스 카드 템플릿 ID (-1는 카메라 촬영)
+    @ColumnInfo(name = "is_nuya") val isNuya: Int? = 0  // SQLite에는 Boolean 타입이 없어서 Int로 대체
+
 
 )
 // mainCardId : NayaCardId 1개
