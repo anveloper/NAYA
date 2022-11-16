@@ -46,17 +46,28 @@ fun BottomNavGraph(navController: NavHostController) {
             BCardCreateScreen(navController = navController)
         }
         // Nuya 명함 생성 (카메라 촬영)
-        composable(route = "bCardCreateByCamera?result={result}&path={path}", arguments = listOf(
-            navArgument("result") {
-                type = NavType.StringType
-            },
-            navArgument("path") {
-                type = NavType.StringType
-            }
-        )) {
+        composable(route = "bCardCreateByCamera?result={result}&path={path}&isNuya={isNuya}",
+            arguments = listOf(
+                navArgument("result") {
+                    type = NavType.StringType
+                },
+                navArgument("path") {
+                    type = NavType.StringType
+                },
+                navArgument("isNuya") {
+                    type = NavType.BoolType
+                }
+            )) {
             val result = it.arguments?.getString("result")!!
             val path = it.arguments?.getString("path")!!
-            BCardCreateByCameraScreen(navController = navController, result = result, path = path)
+            val isNuya = it.arguments?.getBoolean("isNuya", false)!!
+
+            BCardCreateByCameraScreen(
+                navController = navController,
+                result = result,
+                path = path,
+                isNuya = isNuya
+            )
         }
         composable(route = "bCardModify?card={card}", arguments = listOf(
             navArgument("card") {
@@ -73,29 +84,35 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = "scheduleCreate") {
             ScheduleCreateScreen(navController = navController)
         }
-        composable(route = "scheduleDetail/{scheduleId}",
-        arguments = listOf(
-            navArgument(
-            name = "scheduleId"
-        ) {
-            type = NavType.IntType
-            defaultValue = -1
-        },))
-            {
-            val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
-            ScheduleDetailScreen(
-                navController = navController,
-                scheduleId = scheduleId
-            )
-        }
-        composable(route = "scheduleEdit/{scheduleId}",
+        composable(
+            route = "scheduleDetail/{scheduleId}",
             arguments = listOf(
                 navArgument(
                     name = "scheduleId"
                 ) {
                     type = NavType.IntType
                     defaultValue = -1
-                },))
+                },
+            )
+        )
+        {
+            val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
+            ScheduleDetailScreen(
+                navController = navController,
+                scheduleId = scheduleId
+            )
+        }
+        composable(
+            route = "scheduleEdit/{scheduleId}",
+            arguments = listOf(
+                navArgument(
+                    name = "scheduleId"
+                ) {
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+            )
+        )
         {
             val scheduleId = it.arguments?.getInt("scheduleId") ?: -1
             ScheduleUpdateScreen(

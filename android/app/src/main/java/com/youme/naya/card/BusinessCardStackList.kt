@@ -24,7 +24,7 @@ fun BusinessCardStackList(
     context: Context,
     cardViewModel: CardViewModel = viewModel(),
 ) {
-    val businessCards = cardViewModel.businessCardList.collectAsState().value
+    val businessCards = cardViewModel.businessCardListInNaya.collectAsState().value
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
