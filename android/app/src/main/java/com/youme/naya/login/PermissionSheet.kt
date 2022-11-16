@@ -1,10 +1,8 @@
 package com.youme.naya.login
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -24,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.youme.naya.R
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.ui.theme.*
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun PermissionSheet(
@@ -67,12 +66,12 @@ fun PrivacyComp(
             color = PrimaryDark,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontFamily = fonts
         )
         Column(
             Modifier
-                .fillMaxWidth(0.82f), Arrangement.SpaceBetween, Alignment.CenterHorizontally
+                .fillMaxWidth(0.8f), Arrangement.SpaceBetween, Alignment.CenterHorizontally
         ) {
             TextButton(onClick = { setTerms(!terms) }) {
                 Row(Modifier.fillMaxWidth(), Arrangement.Start, Alignment.CenterVertically) {
@@ -86,7 +85,7 @@ fun PrivacyComp(
                         text = "이용약관",
                         color = PrimaryDark,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = fonts
                     )
                     Spacer(Modifier.width(4.dp))
@@ -94,25 +93,36 @@ fun PrivacyComp(
                         text = "(필수)",
                         color = PrimaryBlue,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = fonts
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(2.dp))
             Box(
                 Modifier
-                    .fillMaxWidth()
-                    .height(80.dp)
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(0.96f)
+                    .border(width = 1.dp,
+                        color = NeutralLightness,
+                        shape = RoundedCornerShape(8.dp))
+                    .fillMaxHeight(0.24f),
+                contentAlignment = Alignment.Center
             ) {
+                Box(
+                    Modifier
+                        .fillMaxWidth(0.9f)
+                        .fillMaxHeight(0.9f)
+                        .verticalScroll(rememberScrollState())
+                ){
                 Text(
                     text = viewModel.termsText.value,
                     color = NeutralGray,
                     fontWeight = FontWeight.Normal,
                     fontSize = 12.sp,
                     fontFamily = fonts
-                )
+                )}
             }
+            Spacer(modifier = Modifier.height(12.dp))
             TextButton(onClick = { setPrivacy(!privacy) }) {
                 Row(Modifier.fillMaxWidth(), Arrangement.Start, Alignment.CenterVertically) {
                     Icon(
@@ -125,7 +135,7 @@ fun PrivacyComp(
                         text = "개인정보 처리방침",
                         color = PrimaryDark,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = fonts
                     )
                     Spacer(Modifier.width(4.dp))
@@ -133,29 +143,40 @@ fun PrivacyComp(
                         text = "(필수)",
                         color = PrimaryBlue,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,
+                        fontSize = 14.sp,
                         fontFamily = fonts
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(2.dp))
             Box(
                 Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(0.96f)
+                    .border(width = 1.dp,
+                        color = NeutralLightness,
+                        shape = RoundedCornerShape(8.dp))
+                    .fillMaxHeight(0.52f),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = viewModel.privacyText.value,
-                    color = NeutralGray,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
-                    fontFamily = fonts
-                )
+                Box(
+                    Modifier
+                        .fillMaxWidth(0.9f)
+                        .fillMaxHeight(0.9f)
+                        .verticalScroll(rememberScrollState())
+                ){
+                    Text(
+                        text = viewModel.privacyText.value,
+                        color = NeutralGray,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 12.sp,
+                        fontFamily = fonts
+                    )
+                }
+
             }
         }
         PrimaryBigButton(text = "동의합니다", terms && privacy) {
             userConfirm()
-
         }
     }
 }
@@ -177,7 +198,7 @@ fun PermissionComp(
             color = PrimaryDark,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             fontFamily = fonts
         )
         Column(
