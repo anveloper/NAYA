@@ -61,6 +61,7 @@ fun CardDetailsDialog(
     navController: NavHostController,
     nayaCard: ViewCard? = null,
     bCard: Card? = null,
+    enableShare: Boolean = true,
     onDismissRequest: () -> Unit
 ) {
     val cardViewModel: CardViewModel = hiltViewModel()
@@ -173,26 +174,28 @@ fun CardDetailsDialog(
                     }
                 }
 
-                PrimaryBigButton(text = "공유하기") {
-                    if (!isShareOpened) {
-                        if (nayaCard != null && bCard == null) {
-                            Log.i("Card", "Up ${nayaCard.uri}")
-                            val intent = Intent(activity, ShareActivity::class.java)
-                            intent.putExtra("cardUri", nayaCard.uri.toString())
-                            intent.putExtra("filename", nayaCard.filename)
-                            shareLauncher.launch(intent)
-                        } else if (nayaCard == null && bCard != null) {
-                            val bCardUri = convertPath2Uri(activity, bCard.path!!).toString()
-                            Log.i("Card", "Up $bCardUri")
-                            val intent = Intent(activity, ShareActivity::class.java)
-                            intent.putExtra("cardUri", bCardUri)
-                            intent.putExtra(
-                                "filename",
-                                bCard.path.substring(bCard.path.lastIndexOf('/') + 1)
-                            )
-                            shareLauncher.launch(intent)
+                if (enableShare) {
+                    PrimaryBigButton(text = "공유하기") {
+                        if (!isShareOpened) {
+                            if (nayaCard != null && bCard == null) {
+                                Log.i("Card", "Up ${nayaCard.uri}")
+                                val intent = Intent(activity, ShareActivity::class.java)
+                                intent.putExtra("cardUri", nayaCard.uri.toString())
+                                intent.putExtra("filename", nayaCard.filename)
+                                shareLauncher.launch(intent)
+                            } else if (nayaCard == null && bCard != null) {
+                                val bCardUri = convertPath2Uri(activity, bCard.path!!).toString()
+                                Log.i("Card", "Up $bCardUri")
+                                val intent = Intent(activity, ShareActivity::class.java)
+                                intent.putExtra("cardUri", bCardUri)
+                                intent.putExtra(
+                                    "filename",
+                                    bCard.path.substring(bCard.path.lastIndexOf('/') + 1)
+                                )
+                                shareLauncher.launch(intent)
+                            }
+                            isShareOpened = true
                         }
-                        isShareOpened = true
                     }
                 }
                 if (nayaCard == null && bCard != null) {

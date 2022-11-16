@@ -52,7 +52,7 @@ fun NuyaCardScreen(navController: NavHostController) {
                     NayaCardGridList(context, navController, true)
                 },
                 bCardTab = {
-                    BusinessCardGridList(context, navController, cardViewModel)
+                    BusinessCardGridList(context, navController, cardViewModel, true)
                 }
             )
         }

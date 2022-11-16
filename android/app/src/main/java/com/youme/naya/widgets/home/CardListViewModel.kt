@@ -23,17 +23,21 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
         fetchCards("NAYA")
     }
 
-    fun fetchNuyaCards() {
+    fun fetchNayaCardsInNuya() {
         fetchCards("NUYA")
     }
 
-    fun fetchCards(prefix: String) {
+    fun fetchBusinessCardsInNuya() {
+        fetchCards("NUYA", true)
+    }
+
+    fun fetchCards(prefix: String, isBusinessCard: Boolean = false) {
         val viewCards = mutableListOf<ViewCard>()
         getApplication<Application>().contentResolver.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
             MediaStore.Files.FileColumns.TITLE + " LIKE ?",
-            arrayOf("$prefix-MEDIA-%"),
+            arrayOf("$prefix-${if (isBusinessCard) "BUSINESS" else "MEDIA"}-%"),
             "${MediaStore.Images.ImageColumns.DATE_TAKEN} ASC"
         )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)

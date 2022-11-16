@@ -19,7 +19,7 @@ import com.youme.naya.widgets.items.GalleryItem
 fun NayaCardGridList(context: Context, navController: NavHostController, isNuya: Boolean = false) {
     val nayaCards = viewModel<CardListViewModel>()
     if (isNuya) {
-        nayaCards.fetchNuyaCards()
+        nayaCards.fetchNayaCardsInNuya()
     } else {
         nayaCards.fetchNayaCards()
     }
@@ -32,7 +32,7 @@ fun NayaCardGridList(context: Context, navController: NavHostController, isNuya:
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(cardList) { card ->
-            GalleryItem(context as Activity, navController, nayaCard = card)
+            GalleryItem(context as Activity, navController, nayaCard = card, enableShare = !isNuya)
         }
     }
 }

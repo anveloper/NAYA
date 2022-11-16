@@ -35,6 +35,7 @@ fun GalleryItem(
     activity: Activity,
     navController: NavHostController,
     nayaCard: ViewCard? = null,
+    enableShare: Boolean = true,
     bCard: Card? = null
 ) {
     var isDetailsDialogOpened by remember { mutableStateOf(false) }
@@ -62,7 +63,12 @@ fun GalleryItem(
             ImageContainer(nayaCard.uri)
         }
         if (isDetailsDialogOpened) {
-            CardDetailsDialog(activity, navController, nayaCard = nayaCard) {
+            CardDetailsDialog(
+                activity,
+                navController,
+                nayaCard = nayaCard,
+                enableShare = enableShare
+            ) {
                 isDetailsDialogOpened = false
             }
         }
@@ -95,7 +101,7 @@ fun GalleryItem(
             )
         }
         if (isDetailsDialogOpened) {
-            CardDetailsDialog(activity, navController, bCard = bCard) {
+            CardDetailsDialog(activity, navController, bCard = bCard, enableShare = enableShare) {
                 isDetailsDialogOpened = false
             }
         }

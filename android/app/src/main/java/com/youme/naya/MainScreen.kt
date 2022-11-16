@@ -98,12 +98,6 @@ fun MainScreen(
                                     bCardCreateDialog = true
                                 }
                             }
-                            "nuya" -> launcher.launch(
-                                Intent(
-                                    activity,
-                                    MediaCardActivity::class.java
-                                )
-                            )
                             else -> {
 //                                    var intent = Intent(activity, ShareActivity::class.java)
 //                                    intent.putExtra("cardUri", card.uri.toString())
@@ -132,7 +126,6 @@ fun MainScreen(
                             return when (currentDestination.toString()) {
                                 "schedule" -> R.drawable.nav_schedule_plus_icon
                                 "naya" -> R.drawable.nav_naya_plus_icon
-                                "nuya" -> R.drawable.nav_naya_plus_icon
                                 else -> R.drawable.nav_send_icon
                             }
                         }
