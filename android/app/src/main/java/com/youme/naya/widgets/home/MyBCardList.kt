@@ -36,7 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MyBCardList(context: Context, navController: NavHostController) {
     val cardViewModel: CardViewModel = hiltViewModel()
-    val businessCards = cardViewModel.businessCardList.collectAsState().value
+    val businessCards = cardViewModel.businessCardListInNaya.collectAsState().value
 
     // page를 이동하기 위한 상태 값
     val currentCardId = rememberLazyListState()
