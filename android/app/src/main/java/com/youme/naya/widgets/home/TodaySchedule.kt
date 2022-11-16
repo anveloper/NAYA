@@ -69,7 +69,7 @@ fun TodaySchedule(
         ),
     ) {
         Row(modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 36.dp),
+            .padding(horizontal = 28.dp, vertical = 36.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
                 Column() {
@@ -117,7 +117,6 @@ fun TodaySchedule(
                 }
             }
         } else {
-
                 Spacer(modifier = Modifier.height(16.dp))
                 ScheduleNone(
                     navController = navController,

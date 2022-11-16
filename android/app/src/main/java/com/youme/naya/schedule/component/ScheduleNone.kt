@@ -21,7 +21,7 @@ import com.youme.naya.ui.theme.pico
 fun ScheduleNone(selectedDate : String, navController: NavController) {
     Column(modifier = Modifier.fillMaxWidth(0.88f),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Spacer(modifier = Modifier.height(60.dp))
+        Spacer(modifier = Modifier.height(40.dp))
         Text("NAYA is FREE", fontFamily = pico, fontSize = 32.sp, color = PrimaryDark, modifier = Modifier.padding(vertical = 4.dp))
         Text("${selectedDate}등록된 일정이 없어요", color = NeutralMedium, style = Typography.body2)
         Spacer(modifier = Modifier.height(16.dp))
@@ -32,8 +32,8 @@ fun ScheduleNone(selectedDate : String, navController: NavController) {
                 .width(95.dp)
                 .height(95.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
         if (navController.currentDestination.toString() == "home") {
+            Spacer(modifier = Modifier.height(40.dp))
             PrimaryBigButton(text = "일정 등록하러 가기", onClick = {navController.navigate("scheduleCreate")})
         }
     }
