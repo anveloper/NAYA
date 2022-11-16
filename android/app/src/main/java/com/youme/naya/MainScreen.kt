@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -118,10 +119,8 @@ fun MainScreen(
                 ) {
                     Box(
                         Modifier
-                            .width(60.dp)
-                            .height(
-                                60.dp
-                            )
+                            .width(64.dp)
+                            .height(64.dp)
                             .background(
                                 SecondaryGradientBrush,
                                 CircleShape
@@ -140,8 +139,8 @@ fun MainScreen(
                             painter = painterResource(setCenterIcon()),
                             contentDescription = "send",
                             modifier = Modifier
-                                .width(40.dp)
-                                .height(40.dp),
+                                .width(44.dp)
+                                .height(44.dp),
                             tint = NeutralWhite
                         )
                     }
@@ -203,6 +202,7 @@ fun BottomBar(
         cutoutShape = CircleShape,
         backgroundColor = PrimaryLight,
         modifier = Modifier
+            .height(72.dp)
             .background(
                 color = PrimaryLight,
                 shape = RoundedCornerShape(
@@ -216,7 +216,7 @@ fun BottomBar(
                     topEnd = 20.dp
                 )
                 clip = true
-            }
+            },
     ) {
         screens.forEach { screen ->
             AddItem(
@@ -225,6 +225,7 @@ fun BottomBar(
                 navController = navController
             )
         }
+
     }
 }
 
@@ -235,12 +236,11 @@ fun RowScope.AddItem(
     navController: NavHostController
 ) {
     BottomNavigationItem(
-        modifier = Modifier
-            .height(72.dp),
+        modifier = Modifier.padding(bottom = 6.dp),
         label = {
             Text(
                 screen.title,
-                fontSize = 10.sp,
+                fontSize = 11.sp,
                 fontFamily = pico,
             )
         },
@@ -250,8 +250,8 @@ fun RowScope.AddItem(
                     painter = it,
                     contentDescription = screen.title,
                     modifier = Modifier
-                        .width(24.dp)
-                        .height(24.dp)
+                        .width(28.dp)
+                        .height(28.dp)
                 )
             }
         },

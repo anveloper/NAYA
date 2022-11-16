@@ -37,7 +37,7 @@ fun AnimatedSplashScreen(navController: NavHostController, loginViewModel: Login
     val alphaAnim = animateFloatAsState(
         targetValue = if (startAnimation) 1f else 0f,
         animationSpec = tween(
-            durationMillis = 3000
+            durationMillis = 2000
         )
     )
 
@@ -59,7 +59,7 @@ fun AnimatedSplashScreen(navController: NavHostController, loginViewModel: Login
 
     LaunchedEffect(key1 = true) {
         startAnimation = true
-        delay(4000)
+        delay(3000)
         // 뒤로 가기 버튼 누르면 바깥으로 나가게
         navController.popBackStack()
         navController.navigate(Graph.BOTTOM)
