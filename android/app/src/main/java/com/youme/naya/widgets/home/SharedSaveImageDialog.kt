@@ -3,6 +3,7 @@ package com.youme.naya.widgets.home
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
@@ -85,7 +86,7 @@ fun SharedSaveImageDialog(
 
             PrimaryBigButton(text = "저장하기", tmpImage != null) {
                 if (tmpImage != null) {
-                    saveSharedCardImage(context, tmpImage)
+                    saveSharedCardImage(context, tmpImage, sharedImageUrl.contains("-BUSINESS-"))
                     setSaveImage()
                 }
             }
