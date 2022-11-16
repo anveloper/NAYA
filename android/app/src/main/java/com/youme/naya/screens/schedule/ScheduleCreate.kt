@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import com.youme.naya.components.PrimaryBigButton2
 import com.youme.naya.components.RegisterButton
 import com.youme.naya.database.entity.Member.Companion.memberIcons
+import com.youme.naya.database.entity.Member.Companion.memberIconsCancel
 import com.youme.naya.schedule.component.*
 import kotlinx.coroutines.launch
 
@@ -257,7 +258,7 @@ fun ScheduleCreateScreen(
                                             Row() {
                                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                                     Image(
-                                                        painter = painterResource(memberIcons[viewModel.memberList.value[index].memberIcon!!]),
+                                                        painter = painterResource(memberIconsCancel[viewModel.memberList.value[index].memberIcon!!]),
                                                         contentDescription = "",
                                                         modifier = Modifier
                                                             .clickable(
