@@ -1,8 +1,14 @@
 package com.youme.naya.widgets.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
@@ -19,6 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -26,8 +34,8 @@ import coil.request.SuccessResult
 import com.youme.naya.R
 import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.components.PrimaryBigButton
+import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.ui.theme.fonts
-import com.youme.naya.utils.saveSharedCardImage
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import kotlinx.coroutines.launch
 
@@ -35,6 +43,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SharedSaveImageDialog(
     sharedImageUrl: String,
+    navController: NavHostController = rememberNavController(),
     setSaveImage: () -> Unit
 ) {
     val context = LocalContext.current
@@ -60,7 +69,22 @@ fun SharedSaveImageDialog(
         val bitmap = (result as BitmapDrawable).bitmap
         setTmpImage(bitmap)
     }
+    // OCR 액티비티 런처
+    val ocrLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            // OCR 문자열 인식 결과
+            val ocrResult = it.data?.getStringExtra("ocrResult")
+            val imgPath = it.data?.getStringExtra("croppedImage")
 
+            if (ocrResult.isNullOrBlank()) {
+                Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
+            } else {
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&isNuya=true")
+            }
+        }
+    }
 
     AlertDialog(onDismissRequest = { setSaveImage() }, buttons = {
         Column(
@@ -85,7 +109,10 @@ fun SharedSaveImageDialog(
 
             PrimaryBigButton(text = "저장하기", tmpImage != null) {
                 if (tmpImage != null) {
-                    saveSharedCardImage(context, tmpImage)
+//                    saveSharedCardImage(context, tmpImage, sharedImageUrl.contains("-BUSINESS-"))
+                    val ocrIntent = Intent(context, StillImageActivity::class.java)
+                    ocrIntent.putExtra("savedImgAbsolutePath", sharedImageUrl)
+                    ocrLauncher.launch(ocrIntent)
                     setSaveImage()
                 }
             }
