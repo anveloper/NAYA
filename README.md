@@ -38,8 +38,6 @@
     - 
 
     - 
-
-    ※ [설치 파일](./back/pythonProject/requirements.txt/)
     
   ### **👩‍💻 CI/CD**  
     
@@ -67,119 +65,206 @@
 1. **git clone**
   
   ```bash
-  git clone https://lab.ssafy.com/s07-bigdata-recom-sub2/S07P22B205.git
+  git clone https://lab.ssafy.com/s07-final/S07P31B104.git
   ```
     
 2. **[도커 설치](https://docs.docker.com/get-docker/) 및 도커 [컴포즈 설치](https://docs.docker.com/compose/install/)**
   
 3. **Dockerfile 및 docker-compose.yml작성**
   
-   - nginx Dockerfile
+   - frontend Dockerfile
      ~~~docker
-      FROM node:16.17.0 as builder
-      # 작업 폴더로 소스 파일 복사
-      COPY {git 폴더}/front/sharkshark /home/react
-      WORKDIR /home/react
-      # node 패키지 설치 후 빌드
-      RUN npm install
+      FROM node:16 as build-stage
+
+      # 앱 디렉터리 생성
+      WORKDIR /jenkins/workspace/NAYA/frontend
+      ENV TZ Asia/Seoul
+
+      # 앱 의존성 설치
+      # 가능한 경우(npm@5+) package.json과 package-lock.json을 모두 복사하기 위해
+      # 와일드카드를 사용
+      COPY package*.json ./
+
+      RUN npm install --save --legacy-peer-deps
+      # 프로덕션을 위한 코드를 빌드하는 경우
+      # RUN npm ci --only=production
+
+      # 앱 소스 추가
+      COPY . .
+
       RUN npm run build
 
-      FROM nginx
-      # nginx 설정 복사
-      COPY {nginx.conf 위치} /etc/nginx
-      # 빌드 파일 복사
-      COPY --from=builder /home/react/build /home/build
-      # 포트 개방
-      EXPOSE 80
+      FROM nginx:stable-alpine as production-stage
+      COPY --from=build-stage /jenkins/workspace/NAYA/frontend/build /usr/share/nginx/html
+      COPY --from=build-stage /jenkins/workspace/NAYA/frontend/deploy_conf/nginx.conf /etc/nginx/conf.d/default.conf
+
+      EXPOSE 3000
       CMD ["nginx", "-g", "daemon off;"]
      ~~~
 
-   - fastapi dockerfile
+   - backend dockerfile
      ~~~docker
-      FROM python:3.9
-      # 작업 폴더로 실행 폴더 복사
-      WORKDIR /code
-      COPY {git 폴더}/back/pythonProject /code
-      # 파이썬 패키지 설치 후 실행
-      RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-      CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+      FROM openjdk:8
+      WORKDIR /var/jenkins_home/workspace/NAYA/backend/naya
+      ENV TZ Asia/Seoul
+      #VOLUME /tmp
+      #ARG JAR_FILE=build/libs/*.jar
+      #COPY {JAR_FILE} app.jar
+      #RUN ln -snf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+      COPY build/libs/NAYA-0.0.1-SNAPSHOT.jar app.jar
+      ENTRYPOINT ["java","-jar","app.jar"]
      ~~~
 
    - nginx.conf 파일
      ~~~bash
-      user nginx;
-      worker_processes auto;
-      events {
-        worker_connections 1024;
+      upstream backend{
+        ip_hash;
+        server {내부 로컬 주소:포트번호}; ex)172.26.14.37:8080;
       }
-      http{
-        include mime.types;
-        access_log /var/log/nginx/access.log;
-        error_log /var/log/nginx/error.log;
-        
-        server {
-          // 포트 지정
-          listen 80;
-          listen [::]:80;
-          
-          // 프론트 빌드파일 경로설정
+
+      map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ''      close;
+      }
+
+      server {
+              listen  80;
+              server_name     {도메인 주소}; ex) k7b104.p.ssafy.io;
+              location / {
+                      return 301 https://$host$request_uri;
+              }
+              #location /naya/api {
+              #       proxy_name http://localhost:8080/naya/api;
+              #}
+      }
+
+      server {
+          listen       443 ssl;
+      #    listen  [::]:443;
+          server_name  {도메인 주소}; ex) k7b104.p.ssafy.io;
+
+          access_log  /var/log/nginx/host.access.log  main;
+
+        ssl_certificate /etc/letsencrypt/live/{도메인 주소}/fullchain.pem;
+      # ex)   ssl_certificate /etc/letsencrypt/live/k7b104.p.ssafy.io/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/{도메인 주소}/privkey.pem;
+      # ex)   ssl_certificate_key /etc/letsencrypt/live/k7b104.p.ssafy.io/privkey.pem;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3 SSLv3;
+        ssl_ciphers ALL;
+
           location / {
-            root	/home/build;
-            index	index.html index.htm;
-            try_files 	$uri $uri/ /index.html;
+              root   /usr/share/nginx/html;
+              index  index.html index.htm;
+              error_page 405 = $uri;
+              proxy_redirect off;
+              try_files $uri.html $uri $uri/ /index.html;
+
+              charset utf-8;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Nginx-Proxy true;
           }
-          // 백엔드 api 요청 포워딩
-          location /api/{
-            proxy_pass http://172.17.0.1:8000/;
+
+              location /api/ {
+              proxy_pass http://backend/;
+              proxy_redirect     off;
+              charset utf-8;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Nginx-Proxy true;
           }
-        }
-      }
      ~~~
 
    - docker-compose.yml
 
      ~~~yml
       version: '3'
-      services:
-        nginx:
-          build:
-            context: .
-            dockerfile: {nginx dockerfile 이름}
-          ports:
-            - 80:80
-        api:
-          build:
-            context: .
-            dockerfile: {fastapi dockerfile 이름}
-          ports:
-            - 8000:8000
-          extra_hosts:
-            - "localhost:host-gateway"
+        services:
+            jenkins:
+                image: jenkins/jenkins:lts
+                container_name: jenkins
+                volumes:
+                    - /var/run/docker.sock:/var/run/docker.sock
+                    - /jenkins:/var/jenkins_home
+                ports:
+                    - "9090:8080"
+                privileged: true
+                user: root
 
      ~~~
 
 4. **도커 컨테이너 실행**
-   - mysql 이미지 실행하기
+  - mysql 이미지 실행하기
 
      ~~~bash
-      # mysql 이미지 가져오기
-      docker pull mysql
+      # MySQL 컨테이너 생성
+      docker run --name naya_DB -e MYSQL_ROOT_PASSWORD -d mysql
 
-      # 컨테이너 실행
-      docker run --name mysql -e MYSQL_ROOT_PASSWORD={password} -d -p 3306:3306 mysql
+      # Dump 넣기
+      docker cp {덤프파일 위치} naya_DB:/home
+
+      # naya_DB 내부 접속
+      docker exec -it naya_DB bash
+
+      # Dump import
+      mysql -hlocalhost -uroot -p{password} < /home/{덤프파일명}
      ~~~
   
-   - 3306포트로 mySQL 접속하여 b205 스키마 생성
+    - 또는 3306포트로 mySQL 접속하여 naya 스키마 생성
 
-   - docker-compose 실행
+  - docker-compose 실행
 
      ~~~bash
-     docker compose up -d --build
-     # 혹은
-     docker-compose up -d --build
+     sudo docker-compose up -d
      ~~~
+  
+  - 젠킨스에 접속해 빌드 설정
 
+    - Build Steps - Excute shell 추가
 
+     ~~~bash
+      docker image prune -a --force
+      mkdir -p /var/jenkins_home/images
+      cd /var/jenkins_home/workspace/NAYA/frontend/
+      docker build -t react .
+      docker save react > /var/jenkins_home/images/react.tar
+
+      cd /var/jenkins_home/workspace/NAYA/backend/NAYA/
+      chmod +x ./gradlew
+      ./gradlew clean build
+      docker build -t springboot .
+      docker save springboot > /var/jenkins_home/images/springboot.tar
+
+      ls /var/jenkins_home/images
+    ~~~
+      
+    - 빌드 후 조치 추가
+
+    ~~~bash
+      sudo docker load < /jenkins/images/react.tar
+      sudo docker load < /jenkins/images/springboot.tar
+
+      if (sudo docker ps -a | grep "react"); then sudo docker stop react; fi
+      if (sudo docker ps -a | grep "springboot"); then sudo docker stop springboot; fi
+
+      sudo docker run -it -d --rm -p 80:80 -p 443:443 -v /home/ubuntu/certbot/conf:/etc/letsencrypt/ -v /home/ubuntu/certbot/www:/var/www/certbot --name react react
+      echo "Run frontend"
+      sudo docker run -it -d --rm -p 8080:8080 --name springboot springboot
+      echo "Run backend"
+    ~~~
+    
+
+  
 5. **작동 확인**
 
   - 실행 중인 컨테이너 조회
@@ -187,8 +272,6 @@
      ~~~bash
      docker ps
      ~~~
-    
-  - mySQL 접속하여 DB [덤프 파일](/exec/sharkshark_dp_dump.zip) 실행
 
 --------------------------
 
@@ -197,13 +280,10 @@
 
 # 4. ⭐ 주요 기능
 ------------------------------------------------------
-  ![PT_8](./images/README/)
-  ![PT_9](./images/README/)
 
   1. 
 
-  ![회원가입_연동](./images/README/)
-  ![로그인](./images/README/)
+
     
 
   2. 
@@ -215,8 +295,7 @@
 
       - 
 
-  ![실력별_풀이유형별_추천](./images/README/)
-  ![주요알고리즘_추천](./images/README/)
+
 
   3. 
 
@@ -225,9 +304,7 @@
       - 
 
     - 
-  
-  ![라이벌추천_등록_해지](./images/README/)
-  ![라이벌추천_비교](./images/README/)
+
 
 
   4. 
@@ -238,11 +315,6 @@
 
     - 
 
-    - 
-
-  ![모의테스트_시작](./images/README/)
-  ![모의테스트_제출확인](./images/README/)
-  ![모의테스트_결과](./images/README/)
   
 
   5. 
@@ -250,9 +322,7 @@
     - 
 
     - 
-  ![블로그계정설정](./images/README/)
-  ![블로그_포스팅](./images/README/)
-  ![블로그_포스팅2](./images/README/)
+
 
   6. 
 
@@ -262,9 +332,6 @@
 
     - 
 
-  ![알고리즘실력분석](./images/README/)
-  ![티어로드맵](./images/README/)
-  ![유사사용자분석](./images/README/)
 
 
 --------------------------
@@ -276,12 +343,12 @@
   - 
     - 
 
-  ![라이벌_추천_알고리즘](./images/README/)
+
 
   - 
     - 
 
-  ![문제추천_알고리즘](./images/README/)
+
 --------------------------
 
 
