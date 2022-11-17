@@ -48,7 +48,7 @@ fun NuyaCardScreen(navController: NavHostController) {
         ) {
 //            SearchInput()
             NayaBcardSwitchButtons(
-                nayaTab = {
+                nuyaTab = {
                     NayaCardGridList(context, navController, true)
                 },
                 bCardTab = {
