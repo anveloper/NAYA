@@ -66,7 +66,7 @@ fun MyNayaCardList(context: Context, navController: NavHostController) {
                 CardItem(nayaCard = card)
             }
             item() {
-                CardItemPlus()
+                CardItemPlus(navController = navController)
             }
         }
         Spacer(Modifier.height(16.dp))

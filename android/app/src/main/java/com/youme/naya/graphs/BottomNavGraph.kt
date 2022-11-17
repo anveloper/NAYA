@@ -18,6 +18,7 @@ import com.youme.naya.screens.schedule.ScheduleCreateScreen
 import com.youme.naya.screens.schedule.ScheduleDetailScreen
 import com.youme.naya.screens.schedule.ScheduleMainScreen
 import com.youme.naya.screens.schedule.ScheduleUpdateScreen
+import com.youme.naya.widgets.common.NayaTabStore
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -28,12 +29,15 @@ fun BottomNavGraph(navController: NavHostController) {
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(navController = navController)
+            NayaTabStore.setCurrTabState("naya")
         }
-        composable(route = BottomBarScreen.NuyaCardHolder.route) {
+        composable(route = BottomBarScreen.NuyaCard.route) {
             NuyaCardScreen(navController = navController)
+            NayaTabStore.setCurrTabState("nuya")
         }
         composable(route = BottomBarScreen.NayaCard.route) {
             NayaCardScreen(navController = navController)
+            NayaTabStore.setCurrTabState("naya")
         }
         composable(route = BottomBarScreen.Calendar.route) {
             ScheduleMainScreen(navController = navController)
