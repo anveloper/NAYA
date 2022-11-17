@@ -36,7 +36,8 @@ private val CardModifier = Modifier
 @Composable
 fun CardItemPlus(
     navController: NavHostController = rememberNavController(),
-    isBCard: Boolean = false
+    isBCard: Boolean = false,
+    isNuya: Boolean = false
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
@@ -102,7 +103,13 @@ fun CardItemPlus(
             if (isBCard) {
                 bCardCreateDialog = true
             } else {
-                setImgSelector(true)
+                if (isNuya) {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    mediaLauncher.launch(intent)
+                } else {
+                    setImgSelector(true)
+                }
 //                mediaCameraLauncher.launch(Intent(activity, MediaCardActivity::class.java))
             }
         }) {
@@ -138,7 +145,7 @@ fun CardItemPlus(
         })
     }
     if (bCardCreateDialog) {
-        BusinessCardCreateDialog(navController = navController) {
+        BusinessCardCreateDialog(navController = navController, isNuya = isNuya) {
             bCardCreateDialog = false
         }
     }

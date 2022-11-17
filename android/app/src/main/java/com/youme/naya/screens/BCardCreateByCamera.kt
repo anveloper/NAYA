@@ -144,9 +144,7 @@ fun BCardCreateByCameraScreen(
         }
 
         LazyColumn(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -184,12 +182,25 @@ fun BCardCreateByCameraScreen(
                                         mappedFieldLabelMap[idx] = null
                                         mappedValueMap[fieldName] = ""
                                     } else {
-                                        // 이미 해당 필드가 선택된 입력창이 있다면
-                                        mappedFieldNameMap[prevSelected.key] = null
-                                        mappedFieldLabelMap[prevSelected.key] = null
-                                        mappedFieldNameMap[idx] = fieldName
-                                        mappedFieldLabelMap[idx] = fieldsLabelList[fieldIdx]
-                                        mappedValueMap[fieldName] = fieldsValueState[idx]
+                                        if (fieldSelectedMap[fieldName] == false) {
+                                            // 선택한 필드가 이전에 선택된 적이 없다면
+                                            fieldSelectedMap[fieldName] = true
+                                            fieldSelectedMap[prevSelected.value!!] = false
+                                            mappedFieldNameMap[prevSelected.key] = null
+                                            mappedFieldNameMap[idx] = fieldName
+                                            mappedFieldLabelMap[prevSelected.key] = null
+                                            mappedFieldLabelMap[idx] = fieldsLabelList[fieldIdx]
+                                            mappedValueMap[prevSelected.value!!] = ""
+                                            mappedValueMap[fieldName] = fieldsValueState[idx]
+                                        } else {
+                                            // 이미 해당 필드가 선택된 입력창이 있다면
+                                            mappedFieldNameMap[prevSelected.key] = mappedFieldNameMap[idx]
+                                            mappedFieldNameMap[idx] = fieldName
+                                            mappedFieldLabelMap[prevSelected.key] = mappedFieldLabelMap[idx]
+                                            mappedFieldLabelMap[idx] = fieldsLabelList[fieldIdx]
+                                            mappedValueMap[prevSelected.value!!] = mappedValueMap[fieldName]!!
+                                            mappedValueMap[fieldName] = fieldsValueState[idx]
+                                        }
                                     }
                                 }) {
                                     Text(text = fieldsLabelList[fieldIdx], color = PrimaryBlue)
