@@ -30,7 +30,7 @@ fun ShareButtonDialog(
     setDismiss: () -> Unit
 ) {
     val viewModel = viewModel<CardListViewModel>()
-    viewModel.fetchAllMyCard()
+    viewModel.fetchNayaCards()
     val cardList = viewModel.viewCards.value
 
     AlertDialog(
