@@ -356,7 +356,17 @@ class ScheduleMainViewModel @Inject constructor(
                     if (compareTimeResult < 0) {
                         createEndErrorMadeNotification(selectedDate, compareTimeResult.toString(),title.value.text)
                     } else {
-                        setOneTimeNotification(compareTimeResult,selectedDate, compareTimeResult.toString(),title.value.text, 0)
+                        if (scheduleId == null) {
+                            currentScheduleId?.let {
+                                setOneTimeNotification(
+                                    it,
+                                    compareTimeResult,selectedDate, compareTimeResult.toString(),title.value.text, 0)
+                            }
+                        } else {
+                            setOneTimeNotification(scheduleId,
+                                compareTimeResult,selectedDate, compareTimeResult.toString(),title.value.text, 0)
+                        }
+
                     }
                 } else {
                     val reservationHour =
@@ -375,7 +385,16 @@ class ScheduleMainViewModel @Inject constructor(
                     if (compareTimeResult < 0) {
                         createStartErrorMadeNotification(selectedDate, compareTimeResult.toString(),title.value.text)
                     } else {
-                        setOneTimeNotification(compareTimeResult, selectedDate, compareTimeResult.toString(),title.value.text, 1)
+                        if (scheduleId == null) {
+                            currentScheduleId?.let {
+                                setOneTimeNotification(
+                                    it,
+                                    compareTimeResult, selectedDate, compareTimeResult.toString(),title.value.text, 1)
+                            }
+                        } else {
+                            setOneTimeNotification(scheduleId,
+                                compareTimeResult,selectedDate, compareTimeResult.toString(),title.value.text, 1)
+                        }
                     }
                 }
 
@@ -383,8 +402,6 @@ class ScheduleMainViewModel @Inject constructor(
         }
 
     }
-
-
 
     fun insertTemporaryMember(memberType: Int, memberNum: Int, scheduleId: Int) {
         viewModelScope.launch {
@@ -422,20 +439,6 @@ class ScheduleMainViewModel @Inject constructor(
             }
             _memberList.value = list
         }
-    }
-
-    fun deleteMember(memberId: Int) {
-        viewModelScope.launch {
-            val member = repository.getMemberById(memberId)
-            if (member != null) {
-                repository.deleteMember(member)
-            }
-        }
-        var list = emptyList<Member>()
-        for (index in memberList.value.indices) {
-            if (index != memberId) list += memberList.value[index]
-        }
-        _memberList.value = list
     }
 
     private fun createScheduleMadeNotification(selectedDate: String, startTime: String, title: String) {
@@ -478,7 +481,7 @@ class ScheduleMainViewModel @Inject constructor(
 
 }
 
-private fun setOneTimeNotification(time: Long, selectedDate: String, startTime: String, title: String, type: Int) {
+private fun setOneTimeNotification(scheduleId: Int, time: Long, selectedDate: String, startTime: String, title: String, type: Int) {
     val workManager = WorkManager.getInstance(AppModule.appContext)
     val constraints = Constraints.Builder()
         .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
@@ -496,8 +499,8 @@ private fun setOneTimeNotification(time: Long, selectedDate: String, startTime: 
         .observeForever { workInfo ->
             if (workInfo.state == WorkInfo.State.SUCCEEDED) {
                 when {
-                    (type == 0) ->  createEndNotification(selectedDate, startTime, title)
-                    (type == 1) -> createStartNotification(selectedDate, startTime, title)
+                    (type == 0) ->  createEndNotification(scheduleId, selectedDate, startTime, title)
+                    (type == 1) -> createStartNotification(scheduleId, selectedDate, startTime, title)
                 }
 
         }
@@ -520,8 +523,7 @@ private fun createNotificationChannel(context: Context) {
     }
 }
 
-private fun createStartNotification(selectedDate: String, startTime: String, title: String) {
-    val notificationId = 1
+private fun createStartNotification(scheduleId: Int, selectedDate: String, startTime: String, title: String) {
     val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
         .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
         .setContentTitle("일정 알림 :)")
@@ -529,12 +531,11 @@ private fun createStartNotification(selectedDate: String, startTime: String, tit
         .setPriority(NotificationCompat.PRIORITY_HIGH)
     with(NotificationManagerCompat.from(AppModule.appContext)) {
         //notificationId is unique for each notification that you define
-        notify(notificationId, builder.build())
+        notify(scheduleId, builder.build())
     }
 }
 
-private fun createEndNotification(selectedDate: String, startTime: String, title: String) {
-    val notificationId = 1
+private fun createEndNotification(scheduleId: Int, selectedDate: String, startTime: String, title: String) {
     val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
         .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
         .setContentTitle("일정 알림 :)")
@@ -542,6 +543,6 @@ private fun createEndNotification(selectedDate: String, startTime: String, title
         .setPriority(NotificationCompat.PRIORITY_HIGH)
     with(NotificationManagerCompat.from(AppModule.appContext)) {
         //notificationId is unique for each notification that you define
-        notify(notificationId, builder.build())
+        notify(scheduleId, builder.build())
     }
 }

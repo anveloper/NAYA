@@ -105,7 +105,7 @@ fun ScheduleDetailScreen(
             Row (
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.1f),
+                    .height(72.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -255,7 +255,23 @@ fun ScheduleDetailScreen(
                                             })
                                         ,
                                     )
-                                } else {
+                                }
+                                else if (detailOpen.value && viewModel.memberList.value[index] != temporaryMember.value) {
+                                    Image(
+                                        painter = painterResource(Member.memberIconsFocus[viewModel.memberList.value[index].memberIcon!!]),
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .width(60.dp)
+                                            .height(60.dp)
+                                            .clickable(onClick = {
+                                                detailOpen.value =
+                                                    detailOpen.value
+                                                temporaryMember.value = viewModel.memberList.value[index]
+                                            })
+                                        ,
+                                    )
+                                }
+                                else {
                                     Image(
                                         painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
                                         contentDescription = "",
