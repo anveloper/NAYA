@@ -53,7 +53,7 @@ fun NayaCardGridList(context: Context, navController: NavHostController, isNuya:
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CardItemPlus(isNuya = isNuya)
+            CardItemPlus(navController = navController, isNuya = isNuya)
             Spacer(Modifier.height(16.dp))
             Text(text = "카드를 등록해 보세요", color = Color(0xFFCED3D6))
         }

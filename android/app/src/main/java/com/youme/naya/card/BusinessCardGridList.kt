@@ -53,7 +53,7 @@ fun BusinessCardGridList(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CardItemPlus(isBCard = true, isNuya = isNuya)
+            CardItemPlus(navController = navController, isBCard = true, isNuya = isNuya)
             Spacer(Modifier.height(16.dp))
             Text(text = "명함을 등록해 보세요", color = Color(0xFFCED3D6))
         }
