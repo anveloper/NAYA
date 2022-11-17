@@ -218,7 +218,7 @@ fun BottomBar(
 ) {
     val screens = listOf(
         BottomBarScreen.Home,
-        BottomBarScreen.NuyaCardHolder,
+        BottomBarScreen.NuyaCard,
         BottomBarScreen.Spacer,
         BottomBarScreen.NayaCard,
         BottomBarScreen.Calendar,
