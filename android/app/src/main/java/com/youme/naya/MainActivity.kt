@@ -3,7 +3,6 @@ package com.youme.naya
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.Keep
@@ -26,18 +25,6 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
     private val loginViewModel by viewModels<LoginViewModel>()
     private lateinit var retrofit: Retrofit
     private lateinit var supplementService: RetrofitService
-    var waitTime=0L
-
-    override fun onBackPressed() {
-        if(System.currentTimeMillis()-waitTime >= 1500){
-            waitTime=System.currentTimeMillis()
-            Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
-        }else{
-//            finish()
-            finishAffinity()
-        }
-
-    }
 
 
     @RequiresApi(Build.VERSION_CODES.O)

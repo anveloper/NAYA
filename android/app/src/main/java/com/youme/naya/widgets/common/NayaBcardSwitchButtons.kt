@@ -28,12 +28,11 @@ private val CardListModifier = Modifier
 
 @Composable
 fun NayaBcardSwitchButtons(
-    nayaTab: @Composable (() -> Unit)? = null,
-    nuyaTab: @Composable (() -> Unit)? = null,
+    nayaTab: @Composable (() -> Unit),
     bCardTab: @Composable (() -> Unit)
 ) {
     val (cardTab, setCardTab) = rememberSaveable {
-        mutableStateOf(if (nuyaTab != null) CardTabConstant.NUYA else CardTabConstant.NAYA)
+        mutableStateOf(CardTabConstant.NAYA)
     }
 
     Column(TabContainerModifier) {
@@ -42,32 +41,17 @@ fun NayaBcardSwitchButtons(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (nuyaTab == null) {
-                TextButton(
-                    onClick = {
-                        setCardTab(CardTabConstant.NAYA)
-                        NayaTabStore.setCurrTabState("naya")
-                    }
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.home_tab_naya),
-                        contentDescription = "naya tab",
-                        alpha = if (cardTab == CardTabConstant.NAYA) 1f else 0.3f
-                    )
+            TextButton(
+                onClick = {
+                    setCardTab(CardTabConstant.NAYA)
+                    NayaTabStore.setCurrTabState("naya")
                 }
-            } else {
-                TextButton(
-                    onClick = {
-                        setCardTab(CardTabConstant.NUYA)
-                        NayaTabStore.setCurrTabState("nuya")
-                    }
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.home_tab_nuya),
-                        contentDescription = "nuya tab",
-                        alpha = if (cardTab == CardTabConstant.NUYA) 1f else 0.3f
-                    )
-                }
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.home_tab_naya),
+                    contentDescription = "home naya tab",
+                    alpha = if (cardTab == CardTabConstant.NAYA) 1f else 0.3f
+                )
             }
             Spacer(modifier = Modifier.width(4.dp))
             Box(
@@ -83,16 +67,14 @@ fun NayaBcardSwitchButtons(
             }) {
                 Image(
                     painter = painterResource(R.drawable.home_tab_b),
-                    contentDescription = "business tab",
+                    contentDescription = "home business tab",
                     alpha = if (cardTab == CardTabConstant.BCARD) 1f else 0.3f
                 )
             }
         }
         Row(CardListModifier) {
-            if (nayaTab != null && cardTab == CardTabConstant.NAYA) {
+            if (cardTab == CardTabConstant.NAYA) {
                 nayaTab()
-            } else if (nuyaTab != null && cardTab == CardTabConstant.NUYA) {
-                nuyaTab()
             } else {
                 bCardTab()
             }
