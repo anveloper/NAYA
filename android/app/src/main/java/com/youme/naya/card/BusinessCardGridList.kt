@@ -35,7 +35,7 @@ fun BusinessCardGridList(
     if (cardList.isNotEmpty()) {
         LazyVerticalGrid(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 72.dp)
                 .fillMaxSize(),
             columns = GridCells.Fixed(3),
             verticalArrangement = Arrangement.spacedBy(8.dp),

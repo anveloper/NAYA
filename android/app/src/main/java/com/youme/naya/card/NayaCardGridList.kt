@@ -30,7 +30,8 @@ fun NayaCardGridList(context: Context, navController: NavHostController, isNuya:
 
     if (cardList.isNotEmpty()) {
         LazyVerticalGrid(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, bottom = 72.dp),
             columns = GridCells.Fixed(3),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
