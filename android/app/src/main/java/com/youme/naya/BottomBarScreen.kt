@@ -7,7 +7,7 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Int
         icon = R.drawable.nav_home_icon
     )
 
-    object NuyaCardHolder : BottomBarScreen(
+    object NuyaCard : BottomBarScreen(
         route = "nuya",
         title = "Nuya",
         icon = R.drawable.nav_nuya_icon
