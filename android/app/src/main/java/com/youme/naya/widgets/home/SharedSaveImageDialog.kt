@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -36,6 +37,7 @@ import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.ui.theme.fonts
+import com.youme.naya.utils.saveSharedCardImage
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import kotlinx.coroutines.launch
 
@@ -83,6 +85,7 @@ fun SharedSaveImageDialog(
             } else {
                 navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&isNuya=true")
             }
+            setSaveImage()
         }
     }
 
@@ -109,11 +112,15 @@ fun SharedSaveImageDialog(
 
             PrimaryBigButton(text = "저장하기", tmpImage != null) {
                 if (tmpImage != null) {
-//                    saveSharedCardImage(context, tmpImage, sharedImageUrl.contains("-BUSINESS-"))
-                    val ocrIntent = Intent(context, StillImageActivity::class.java)
-                    ocrIntent.putExtra("savedImgAbsolutePath", sharedImageUrl)
-                    ocrLauncher.launch(ocrIntent)
-                    setSaveImage()
+                    if (sharedImageUrl.contains("-BUSINESS-")) {
+                        val imagePath = saveSharedCardImage(context, tmpImage, true)
+                        val ocrIntent = Intent(context, StillImageActivity::class.java)
+                        ocrIntent.putExtra("savedImgAbsolutePath", imagePath)
+                        ocrLauncher.launch(ocrIntent)
+                    } else {
+                        saveSharedCardImage(context, tmpImage)
+                        setSaveImage()
+                    }
                 }
             }
             OutlinedBigButton(text = "취소") {
