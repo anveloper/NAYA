@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,13 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -38,7 +37,8 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.BusinessCardCreateDialog
 import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
-import com.youme.naya.ocr.StillImageActivity
+import com.youme.naya.intro.IntroDialog
+import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.utils.convertUri2Path
@@ -46,20 +46,20 @@ import com.youme.naya.utils.saveSharedCardImage
 import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaTabStore
 import com.youme.naya.widgets.home.SharedSaveImageDialog
-import com.youme.naya.widgets.items.CurrentCard
 import com.youme.naya.widgets.share.ShareButtonDialog
-import java.io.File
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
     sharedImageUrl: String,
+    introViewModel: IntroViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
     val focusManager = LocalFocusManager.current
+    val lifeCycleOwner = LocalLifecycleOwner.current
 
     // 현재 위치 추적
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -97,6 +97,11 @@ fun MainScreen(
         }
     }
 
+    //
+//    val introViewModel = viewModel<IntroViewModel>()
+    val (isFirst, openIntro) = remember { mutableStateOf(false) }
+    setObserver(introViewModel, lifeCycleOwner) { openIntro(true) }
+
     Scaffold(
         floatingActionButton = {
             if (currentDestination.toString() != "scheduleCreate"
@@ -129,10 +134,6 @@ fun MainScreen(
                                 }
                             }
                             else -> {
-//                                    var intent = Intent(activity, ShareActivity::class.java)
-//                                    intent.putExtra("cardUri", card.uri.toString())
-//                                    intent.putExtra("filename", card.filename)
-//                                    launcher.launch(intent)
                                 setShareAlert(true)
                             }
                         }
@@ -208,6 +209,25 @@ fun MainScreen(
         }
         if (saveImage != "") {
             SharedSaveImageDialog(saveImage, navController) { setSaveImage("") }
+        }
+        if (isFirst) {
+            IntroDialog {
+                openIntro(false)
+                introViewModel.saveIsFirst()
+                introViewModel.loadIsFirst()
+            }
+        }
+    }
+}
+
+fun setObserver(
+    introViewModel: IntroViewModel,
+    owner: LifecycleOwner,
+    openIntro: () -> Unit
+) {
+    introViewModel.isFirst.observe(owner) {
+        if (it) {
+            openIntro()
         }
     }
 }
@@ -297,11 +317,4 @@ fun RowScope.AddItem(
             }
         }
     )
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview
-@Composable
-fun MainScreenPreview() {
-    MainScreen("", rememberNavController())
 }

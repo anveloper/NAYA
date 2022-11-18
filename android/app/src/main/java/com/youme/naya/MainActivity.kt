@@ -8,10 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.graphs.RootNavigationGraph
+import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.login.LoginViewModel
 import com.youme.naya.network.RetrofitClient
 import com.youme.naya.network.RetrofitService
@@ -24,21 +23,10 @@ import retrofit2.Retrofit
 class MainActivity : BaseActivity(TransitionMode.NONE) {
     // login viewModel
     private val loginViewModel by viewModels<LoginViewModel>()
+    private val introViewModel by viewModels<IntroViewModel>()
     private lateinit var retrofit: Retrofit
     private lateinit var supplementService: RetrofitService
-    var waitTime=0L
-
-    override fun onBackPressed() {
-        if(System.currentTimeMillis()-waitTime >= 1500){
-            waitTime=System.currentTimeMillis()
-            Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.",Toast.LENGTH_SHORT).show()
-        }else{
-//            finish()
-            finishAffinity()
-        }
-
-    }
-
+    var waitTime = 0L
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +45,25 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
                 Log.i("sharedImageUrl", sharedImageUrl)
             }
             AndroidTheme {
-                RootNavigationGraph(sharedImageUrl, rememberNavController(), loginViewModel)
+                RootNavigationGraph(
+                    sharedImageUrl,
+                    rememberNavController(),
+                    loginViewModel,
+                    introViewModel
+                )
             }
+        }
+        introViewModel.loadIsFirst()
+    }
+
+    // 이게 맞나
+    override fun onBackPressed() {
+        if (System.currentTimeMillis() - waitTime >= 1500) {
+            waitTime = System.currentTimeMillis()
+            Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+        } else {
+//            finish()
+            finishAffinity()
         }
     }
 
@@ -66,18 +71,4 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
         retrofit = RetrofitClient.getInstance()
         supplementService = retrofit.create(RetrofitService::class.java)
     }
-
-
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(
-    name = "naya Project",
-    showBackground = true,
-    showSystemUi = true
-)
-
-@Composable
-fun MainPreview() {
-//    RootNavigationGraph(rememberNavController(), null)
 }
