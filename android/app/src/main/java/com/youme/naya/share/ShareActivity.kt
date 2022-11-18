@@ -145,7 +145,7 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
                     ) {
                         Column(Modifier.fillMaxWidth(0.8f)) {
                             Text(
-                                text = "URL을 생성중입니다.",
+                                text = "공유를 준비중입니다.\n잠시만 기다려주세요.",
                                 color = NeutralLightness,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
