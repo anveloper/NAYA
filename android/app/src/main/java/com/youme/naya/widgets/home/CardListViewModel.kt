@@ -31,31 +31,6 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
         fetchCards("NUYA", true)
     }
 
-    fun fetchAllMyCard(){
-        val viewCards = mutableListOf<ViewCard>()
-        getApplication<Application>().contentResolver.query(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null,
-            MediaStore.Files.FileColumns.TITLE + " LIKE ?",
-            arrayOf("NAYA-%"),
-            "${MediaStore.Images.ImageColumns.DATE_TAKEN} ASC"
-        )?.use { cursor ->
-            val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(idIndex)
-                val contentUri = ContentUris.withAppendedId(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    id
-                )
-                val contentFilename = cursor.getString(
-                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-                )
-                viewCards.add(ViewCard(id, contentUri, contentFilename))
-            }
-            _viewCards.value = viewCards
-        }
-    }
-
     fun fetchCards(prefix: String, isBusinessCard: Boolean = false) {
         val viewCards = mutableListOf<ViewCard>()
         getApplication<Application>().contentResolver.query(
