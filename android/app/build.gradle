@@ -14,8 +14,8 @@ android {
         applicationId "com.youme.naya"
         minSdk 21
         targetSdk 33
-        versionCode 21
-        versionName "1.5.1"
+        versionCode 22
+        versionName "1.6.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
