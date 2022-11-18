@@ -116,6 +116,10 @@ dependencies {
     // with Android ColorInt extensions
     implementation 'com.godaddy.android.colorpicker:compose-color-picker-android:0.5.1'
 
+    // pager
+    implementation "com.google.accompanist:accompanist-pager:0.27.1"
+    implementation "com.google.accompanist:accompanist-pager-indicators:0.27.1"
+
     // glide GIF 이미지 랜더 compose
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
 
