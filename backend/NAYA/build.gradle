@@ -35,6 +35,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation('org.slf4j:jcl-over-slf4j')
     implementation('ch.qos.logback:logback-classic')
+    implementation('com.googlecode.json-simple:json-simple:1.1.1')
 }
 
 tasks.named('test') {
