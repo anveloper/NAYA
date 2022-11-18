@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import com.youme.naya.AnimatedSplashScreen
 import com.youme.naya.MainScreen
 import com.youme.naya.SplashScreen
+import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.login.LoginViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -16,7 +17,8 @@ import com.youme.naya.login.LoginViewModel
 fun RootNavigationGraph(
     sharedImageUrl: String,
     navController: NavHostController,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    introViewModel: IntroViewModel
 ) {
     NavHost(
         navController = navController,
@@ -27,7 +29,7 @@ fun RootNavigationGraph(
             AnimatedSplashScreen(navController, loginViewModel)
         }
         composable(route = Graph.BOTTOM) {
-            MainScreen(sharedImageUrl)
+            MainScreen(sharedImageUrl, introViewModel)
         }
     }
 }
