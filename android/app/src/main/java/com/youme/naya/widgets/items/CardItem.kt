@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -24,7 +26,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import com.youme.naya.card.CardFace
+import com.youme.naya.card.FlippableCard
+import com.youme.naya.card.RotationAxis
 import com.youme.naya.database.entity.Card
 import com.youme.naya.share.ShareActivity
 import com.youme.naya.utils.convertPath2Uri
@@ -39,13 +45,14 @@ private val CardModifier = Modifier
     .height(360.dp)
     .shadow(elevation = 6.dp)
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun CardItem(nayaCard: ViewCard? = null, bCard: Card? = null) {
+fun CardItem(nayaCard: ViewCard? = null, bCard: Card? = null, flipState: CardFace) {
     val context = LocalContext.current
     val activity = context as? Activity
 
     var isShareOpened by remember { mutableStateOf(false) }
+//    var flipState by remember { mutableStateOf(CardFace.Front) }
 
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -61,8 +68,11 @@ fun CardItem(nayaCard: ViewCard? = null, bCard: Card? = null) {
         }
     }
 
-    Card(
-        CardModifier
+    FlippableCard(
+        cardFace = flipState,
+        onClick = {},
+        axis = RotationAxis.AxisY,
+        modifier = CardModifier
             .draggable(
                 orientation = Orientation.Vertical,
                 state = rememberDraggableState { delta ->
@@ -106,10 +116,10 @@ fun CardItem(nayaCard: ViewCard? = null, bCard: Card? = null) {
                 true
             }) {
         if (nayaCard != null && bCard == null) {
-            Image(rememberImagePainter(data = nayaCard.uri), null, Modifier.fillMaxSize())
+            Image(rememberAsyncImagePainter(nayaCard.uri), null, Modifier.fillMaxSize())
         } else if (nayaCard == null && bCard != null) {
             Image(
-                painter = rememberImagePainter(
+                painter = rememberAsyncImagePainter(
                     rotateBitmap(
                         BitmapFactory.decodeFile(bCard.path),
                         90f

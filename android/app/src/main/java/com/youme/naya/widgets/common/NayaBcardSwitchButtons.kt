@@ -1,5 +1,6 @@
 package com.youme.naya.widgets.common
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -29,7 +30,9 @@ private val CardListModifier = Modifier
 @Composable
 fun NayaBcardSwitchButtons(
     nayaTab: @Composable (() -> Unit),
-    bCardTab: @Composable (() -> Unit)
+    bCardTab: @Composable (() -> Unit),
+    videoTab: @Composable (() -> Unit) = {},
+    isHome: Boolean = false
 ) {
     val (cardTab, setCardTab) = rememberSaveable {
         mutableStateOf(CardTabConstant.NAYA)
@@ -71,12 +74,32 @@ fun NayaBcardSwitchButtons(
                     alpha = if (cardTab == CardTabConstant.BCARD) 1f else 0.3f
                 )
             }
+            if (isHome && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Box(
+                    modifier = Modifier
+                        .height(24.dp)
+                        .width(2.dp)
+                        .background(NeutralLightness)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                TextButton(onClick = {
+                    setCardTab(CardTabConstant.VIDEO)
+//                NayaTabStore.setCurrTabState("video")
+                }) {
+                    Image(
+                        painter = painterResource(R.drawable.home_tab_video),
+                        contentDescription = "home business tab",
+                        alpha = if (cardTab == CardTabConstant.VIDEO) 1f else 0.3f
+                    )
+                }
+            }
         }
         Row(CardListModifier) {
-            if (cardTab == CardTabConstant.NAYA) {
-                nayaTab()
-            } else {
-                bCardTab()
+            when (cardTab) {
+                CardTabConstant.NAYA -> nayaTab()
+                CardTabConstant.BCARD -> bCardTab()
+                CardTabConstant.VIDEO -> videoTab()
             }
         }
     }

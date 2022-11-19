@@ -4,26 +4,36 @@ import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Card
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
 import com.youme.naya.card.BusinessCardCreateDialog
+import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.custom.MediaCardActivity
+import com.youme.naya.custom.VideoCardActivity
 import com.youme.naya.ocr.StillImageActivity
 import com.youme.naya.utils.convertUri2Path
 import com.youme.naya.widgets.home.CardListViewModel
@@ -37,7 +47,8 @@ private val CardModifier = Modifier
 fun CardItemPlus(
     navController: NavHostController = rememberNavController(),
     isBCard: Boolean = false,
-    isNuya: Boolean = false
+    isNuya: Boolean = false,
+    test: Boolean = false
 ) {
     val context = LocalContext.current
     val activity = context as? Activity
@@ -52,6 +63,8 @@ fun CardItemPlus(
         Log.i("Media Card Custom", it.resultCode.toString())
         if (it.resultCode == RESULT_OK) {
             viewModel.fetchNayaCards()
+            viewModel.fetchVideoCard()
+            viewModel.fetchSupportCard()
         }
     }
     // 이미지 선택 액티비티
@@ -63,6 +76,20 @@ fun CardItemPlus(
             val imgPath = convertUri2Path(context, uri)
             val mediaIntent = Intent(activity, MediaCardActivity::class.java)
             mediaIntent.putExtra("savedImgAbsolutePath", imgPath)
+            mediaCameraLauncher.launch(mediaIntent)
+        }
+    }
+    // 비디오 선택 액티비티
+    val videoLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) {
+            val uri = it.data?.data as Uri
+            val videoPath = convertUri2Path(context, uri)
+            val videoUri = uri.toString()
+            val mediaIntent = Intent(activity, VideoCardActivity::class.java)
+            mediaIntent.putExtra("savedVideoAbsolutePath", videoPath)
+            mediaIntent.putExtra("savedVideoUri", videoUri)
             mediaCameraLauncher.launch(mediaIntent)
         }
     }
@@ -122,27 +149,48 @@ fun CardItemPlus(
     }
 
     if (imgSelector) {
-        AlertDialog(onDismissRequest = { setImgSelector(false) }, {
-            TextButton(onClick = {
-                mediaCameraLauncher.launch(
-                    Intent(
-                        activity,
-                        MediaCardActivity::class.java
-                    )
+        AlertDialog({ setImgSelector(false) }, {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "어떤 방법으로 카드를 만들까요?",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
-                setImgSelector(false)
-            }) {
-                Text("카메라")
+                OutlinedBigButton(text = "카메라로 촬영하기") {
+                    mediaCameraLauncher.launch(
+                        Intent(
+                            activity,
+                            MediaCardActivity::class.java
+                        )
+                    )
+                    setImgSelector(false)
+                }
+                OutlinedBigButton(text = "갤러리에서 불러오기") {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    mediaLauncher.launch(intent)
+                    setImgSelector(false)
+                }
+                if (!test && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    OutlinedBigButton("Beta") {
+                        val intent = Intent(Intent.ACTION_PICK)
+                        intent.type = "video/*"
+                        videoLauncher.launch(intent)
+                        setImgSelector(false)
+                    }
+                }
             }
-            TextButton(onClick = {
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.type = "image/*"
-                mediaLauncher.launch(intent)
-                setImgSelector(false)
-            }) {
-                Text("갤러리")
-            }
-        })
+        }, Modifier.wrapContentSize(),
+            shape = RoundedCornerShape(12.dp),
+            backgroundColor = Color.White
+        )
     }
     if (bCardCreateDialog) {
         BusinessCardCreateDialog(navController = navController, isNuya = isNuya) {

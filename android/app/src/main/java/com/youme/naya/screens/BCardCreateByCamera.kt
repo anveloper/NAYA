@@ -74,7 +74,9 @@ fun BCardCreateByCameraScreen(
     navController: NavHostController,
     result: String,
     path: String,
-    isNuya: Boolean
+    path2: String,
+    isNuya: Boolean,
+    isSameImage: Boolean,
 ) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
@@ -194,11 +196,14 @@ fun BCardCreateByCameraScreen(
                                             mappedValueMap[fieldName] = fieldsValueState[idx]
                                         } else {
                                             // 이미 해당 필드가 선택된 입력창이 있다면
-                                            mappedFieldNameMap[prevSelected.key] = mappedFieldNameMap[idx]
+                                            mappedFieldNameMap[prevSelected.key] =
+                                                mappedFieldNameMap[idx]
                                             mappedFieldNameMap[idx] = fieldName
-                                            mappedFieldLabelMap[prevSelected.key] = mappedFieldLabelMap[idx]
+                                            mappedFieldLabelMap[prevSelected.key] =
+                                                mappedFieldLabelMap[idx]
                                             mappedFieldLabelMap[idx] = fieldsLabelList[fieldIdx]
-                                            mappedValueMap[prevSelected.value!!] = mappedValueMap[fieldName]!!
+                                            mappedValueMap[prevSelected.value!!] =
+                                                mappedValueMap[fieldName]!!
                                             mappedValueMap[fieldName] = fieldsValueState[idx]
                                         }
                                     }

@@ -34,7 +34,7 @@ fun ScheduleCreateSecond(
             .verticalScroll(rememberScrollState()),
         content = {
             // 시작 시간 선택
-            var pickerStartValue by remember { mutableStateOf<Hours>(AMPMHours(0, 0, AMPMHours.DayTime.PM )) }
+            var pickerStartValue by remember { mutableStateOf<Hours>(AMPMHours(1, 0, AMPMHours.DayTime.PM )) }
             var pickerStartString = pickerStartValue.toString().reversed()
 
             fun StringConverter (start: String, end: String, AMPM: String) : String {
