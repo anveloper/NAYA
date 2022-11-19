@@ -74,11 +74,12 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
             null,
             MediaStore.Files.FileColumns.TITLE + " LIKE ?",
             arrayOf("NAYA-VIDEO-%"),
-            "${MediaStore.Video.VideoColumns.DATE_TAKEN} ASC"
+            "${MediaStore.Video.VideoColumns.DATE_TAKEN} DESC"
         )?.use { cursor ->
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
 
             while (cursor.moveToNext()) {
+                if (videoCards.size > 8) break
                 val id = cursor.getLong(idIndex)
                 val contentUri = ContentUris.withAppendedId(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,

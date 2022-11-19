@@ -3,13 +3,16 @@ package com.youme.naya.custom
 import android.app.Activity
 import android.graphics.Bitmap
 import android.media.MediaPlayer
+import android.media.MediaRecorder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.SurfaceView
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -40,6 +43,7 @@ import com.youme.naya.BaseActivity
 import com.youme.naya.ui.theme.*
 
 class VideoCardActivity : BaseActivity(TransitionMode.HORIZON) {
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -75,6 +79,7 @@ class VideoCardActivity : BaseActivity(TransitionMode.HORIZON) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 fun VideoCardScreen(
@@ -116,6 +121,7 @@ fun VideoCardScreen(
             val surfaceView = SurfaceView(boxContext)
             val holder = surfaceView.holder
             val player = MediaPlayer.create(boxContext, savedVideoUri)
+            val recorder = MediaRecorder(boxContext)
 //            DisposableEffect(
 //                AndroidView(factory = {
 //                    PlayerView(boxContext).apply {
