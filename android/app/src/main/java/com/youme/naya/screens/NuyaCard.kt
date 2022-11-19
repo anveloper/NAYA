@@ -53,7 +53,8 @@ fun NuyaCardScreen(navController: NavHostController) {
                 },
                 bCardTab = {
                     BusinessCardGridList(context, navController, cardViewModel, true)
-                }
+                },
+                isNuya = true
             )
         }
     }

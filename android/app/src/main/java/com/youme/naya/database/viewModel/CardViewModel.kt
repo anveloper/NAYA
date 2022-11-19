@@ -1,14 +1,14 @@
 package com.youme.naya.database.viewModel
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.youme.naya.database.entity.Card
 import com.youme.naya.database.repository.CardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,14 +23,14 @@ class CardViewModel @Inject constructor(private val repository: CardRepository) 
     val selectResult = _selectResult.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             repository.getBusinessCardsInNaya().distinctUntilChanged().collect { listOfCards ->
                 _businessCardListInNaya.value = listOfCards
             }
         }
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getBusinessCardsInNuya().distinctUntilChanged().collect { listOfCards ->
-                _businessCardListInNuya.value = listOfCards
+            repository.getBusinessCardsInNuya().collect {
+                _businessCardListInNuya.value = it
             }
         }
     }
