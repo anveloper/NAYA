@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.Keep
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -140,12 +141,13 @@ class ShareActivity : BaseActivity(TransitionMode.VERTICAL) {
                     Box(
                         Modifier
                             .fillMaxSize()
-                            .background(Color(0xDD000000)), // 임시
+                            .background(Color(0xDD000000))
+                            .clickable(enabled = false) {}, // 임시
                         Alignment.Center
                     ) {
                         Column(Modifier.fillMaxWidth(0.8f)) {
                             Text(
-                                text = "URL을 생성중입니다.",
+                                text = "공유를 준비중입니다.\n잠시만 기다려주세요.",
                                 color = NeutralLightness,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,

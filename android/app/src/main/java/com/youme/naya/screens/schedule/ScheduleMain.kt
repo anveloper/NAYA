@@ -97,7 +97,6 @@ fun ScheduleMainScreen(
                            ScheduleItem(
                                schedule = schedule,
                                navController = navController,
-
                            )
                        }
                    }

@@ -27,6 +27,7 @@ import com.youme.naya.ui.theme.*
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.widgets.home.MyBCardList
 import com.youme.naya.widgets.home.MyNayaCardList
+import com.youme.naya.widgets.home.MyVideoCardList
 import com.youme.naya.widgets.home.TodaySchedule
 import kotlinx.coroutines.launch
 
@@ -43,9 +44,6 @@ fun HomeScreen(
     navController: NavHostController,
 ) {
     val context = LocalContext.current
-    var (currentCardId, setCurrentCardId) = rememberSaveable {
-        mutableStateOf(1)
-    }
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -64,8 +62,9 @@ fun HomeScreen(
         Column(HomeModifier) {
             Column(modifier = Modifier.fillMaxHeight(0.78f)) {
                 NayaBcardSwitchButtons(
-                    nayaTab = { MyNayaCardList(context, navController = navController) },
-                    bCardTab = { MyBCardList(context, navController = navController) }
+                    nayaTab = { MyNayaCardList(context, navController) },
+                    bCardTab = { MyBCardList(context, navController) },
+                    videoTab = { MyVideoCardList(context, navController) }, true
                 )
             }
             Column(modifier = Modifier
@@ -104,9 +103,11 @@ fun HomeScreen(
                 }),
                 verticalArrangement = Arrangement.Center
             ) {
-                Row(modifier = Modifier
-                    .padding(horizontal = 28.dp, vertical = 24.dp),
-                    verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 28.dp, vertical = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         "오늘의 일정 ",
                         color = PrimaryDark,
@@ -120,7 +121,7 @@ fun HomeScreen(
                             .height(24.dp)
                     )
                 }
-                Spacer(Modifier.height(120.dp))
+                Spacer(Modifier.height(72.dp))
             }
         }
     }
