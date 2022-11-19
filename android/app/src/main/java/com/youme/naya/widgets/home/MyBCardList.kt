@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -39,7 +40,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
     val businessCards = cardViewModel.businessCardListInNaya.collectAsState().value
 
     // page를 이동하기 위한 상태 값
-    val currentCardId = rememberLazyListState()
+    val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     // 처음 아이템의 padding을 정해주기 위한 식
@@ -53,7 +54,10 @@ fun MyBCardList(context: Context, navController: NavHostController) {
     val listVerticalPadding = (px2dp(deviceWidth!!) - 200) / 2
     val listSize = businessCards.size
 
-    var flipState by remember { mutableStateOf(CardFace.Front) }
+    val listSizeRange = (0 until listSize).map { _ -> CardFace.Front }.toMutableStateList()
+    val flipStates = remember {
+        mutableStateListOf(*listSizeRange.map { _ -> CardFace.Front }.toTypedArray())
+    }
 
     Column(
         Modifier.fillMaxSize(),
@@ -65,10 +69,11 @@ fun MyBCardList(context: Context, navController: NavHostController) {
             verticalAlignment = Alignment.CenterVertically,
             contentPadding = PaddingValues(horizontal = listVerticalPadding.dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp),
-            state = currentCardId
+            state = listState
         ) {
-            items(businessCards) { value ->
-                CardItem(bCard = value, flipState = flipState)
+            itemsIndexed(businessCards) { index, value ->
+                CardItem(bCard = value,
+                    flipState = flipStates[index])
             }
             item() {
                 CardItemPlus(navController = navController, isBCard = true)
@@ -81,7 +86,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
             } else {
                 if (listSize > 2) {
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(0) }
+                        coroutineScope.launch { listState.animateScrollToItem(0) }
                     }) {
                         Icon(
                             Icons.Filled.ArrowLeft,
@@ -90,7 +95,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                     }
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize) }
+                        coroutineScope.launch { listState.animateScrollToItem(listSize) }
                     }) {
                         Icon(
                             Icons.Outlined.Add,
@@ -98,7 +103,8 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                         )
                     }
                     Spacer(Modifier.width(8.dp))
-                    IconButton(onClick = { flipState = flipState.next }) {
+                    IconButton(onClick = { flipStates[listState.firstVisibleItemIndex] =
+                        flipStates[listState.firstVisibleItemIndex].next }) {
                         Icon(
                             Icons.Outlined.Flip,
                             "flip"
@@ -106,7 +112,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                     }
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize - 1) }
+                        coroutineScope.launch { listState.animateScrollToItem(listSize - 1) }
                     }) {
                         Icon(
                             Icons.Filled.ArrowRight,
@@ -116,7 +122,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                     Spacer(Modifier.width(8.dp))
                 } else {
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize) }
+                        coroutineScope.launch { listState.animateScrollToItem(listSize) }
                     }) {
                         Icon(
                             Icons.Outlined.Add,
@@ -124,7 +130,8 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                         )
                     }
                     Spacer(Modifier.width(8.dp))
-                    IconButton(onClick = { flipState = flipState.next }) {
+                    IconButton(onClick = { flipStates[listState.firstVisibleItemIndex] =
+                        flipStates[listState.firstVisibleItemIndex].next }) {
                         Icon(
                             Icons.Outlined.Flip,
                             "flip"
