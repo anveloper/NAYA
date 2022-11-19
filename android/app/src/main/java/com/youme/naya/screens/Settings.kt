@@ -9,7 +9,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBackIosNew
+import androidx.compose.material.icons.outlined.ArrowForwardIos
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,10 +42,9 @@ fun SettingsScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp), Arrangement.spacedBy(8.dp),
+                .padding(horizontal = 24.dp), Arrangement.spacedBy(8.dp),
             Alignment.Start
         ) {
-
             SettingsText(
                 "About Naya",
                 24.sp,
@@ -57,7 +56,7 @@ fun SettingsScreen(
             }, Modifier.fillMaxWidth()) {
                 Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                     SettingsText("도움말", 20.sp)
-                    Icon(Icons.Outlined.ArrowBackIosNew, null, Modifier.size(24.dp), PrimaryDark)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
                 }
             }
             TextButton(onClick = {
@@ -65,25 +64,35 @@ fun SettingsScreen(
             }, Modifier.fillMaxWidth()) {
                 Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                     SettingsText("약관 및 개인정보 처리 동의", 20.sp)
-                    Icon(Icons.Outlined.ArrowBackIosNew, null, Modifier.size(24.dp), NeutralMetal)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
                 }
             }
             TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
                 Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                     SettingsText("앱버전", 20.sp)
-                    Icon(Icons.Outlined.ArrowBackIosNew, null, Modifier.size(24.dp), NeutralMetal)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
                 }
             }
             TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
                 Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
                     SettingsText("팀원 소개", 20.sp)
-                    Icon(Icons.Outlined.ArrowBackIosNew, null, Modifier.size(24.dp), NeutralMetal)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
                 }
             }
-            Spacer(Modifier.height(120.dp))
-            Row(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterVertically) {
-                Text("Copyright by")
-                Image(painterResource(R.drawable.home_logo_text), null)
+            Spacer(Modifier.height(160.dp))
+            Column(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterHorizontally) {
+                Image(
+                    painterResource(R.drawable.home_logo_text),
+                    null,
+                    Modifier.size(120.dp, 40.dp)
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "© Copyright 2022. YouMe. All Rights Reserved.",
+                    fontSize = 8.sp,
+                    fontFamily = fonts,
+                    color = NeutralGray
+                )
             }
         }
     }
@@ -174,7 +183,7 @@ fun SettingsScreen(
 fun SettingsText(content: String, fontSize: TextUnit) {
     Text(
         content,
-        Modifier.fillMaxWidth(),
+        Modifier,
         PrimaryDark,
         fontSize,
         FontStyle.Normal,
