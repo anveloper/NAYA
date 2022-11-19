@@ -22,7 +22,7 @@
     <string name="base_url">https://k7b104.p.ssafy.io</string>
     <string name="sample_card">https://firebasestorage.googleapis.com/v0/b/naya–365407.appspot.com/o/main_naya.png?alt=media&amp;token=00773b70–6232–4514–9822–2b1e2d8528bc</string>
 
-    <string name="privacy">
-
-    </string>
+    <!--  SharedPreferences  -->
+    <string name="pref_name">SETTING</string>
+    <string name="shared_pref_naya">com.youme.naya.SHARE_PREF_NAYA_IS_FIRST</string>
 </resources>
