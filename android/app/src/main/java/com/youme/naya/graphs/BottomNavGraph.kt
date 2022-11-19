@@ -50,7 +50,7 @@ fun BottomNavGraph(navController: NavHostController) {
             BCardCreateScreen(navController = navController)
         }
         // Nuya 명함 생성 (카메라 촬영)
-        composable(route = "bCardCreateByCamera?result={result}&path={path}&isNuya={isNuya}",
+        composable(route = "bCardCreateByCamera?result={result}&path={path}&path2={path2}&isNuya={isNuya}&isSameImage={isSameImage}",
             arguments = listOf(
                 navArgument("result") {
                     type = NavType.StringType
@@ -58,19 +58,29 @@ fun BottomNavGraph(navController: NavHostController) {
                 navArgument("path") {
                     type = NavType.StringType
                 },
+                navArgument("path2") {
+                    type = NavType.StringType
+                },
                 navArgument("isNuya") {
+                    type = NavType.BoolType
+                },
+                navArgument("isSameImage") {
                     type = NavType.BoolType
                 }
             )) {
             val result = it.arguments?.getString("result")!!
             val path = it.arguments?.getString("path")!!
+            val path2 = it.arguments?.getString("path2")!!
             val isNuya = it.arguments?.getBoolean("isNuya", false)!!
+            val isSameImage = it.arguments?.getBoolean("isSameImage", false)!!
 
             BCardCreateByCameraScreen(
                 navController = navController,
                 result = result,
                 path = path,
-                isNuya = isNuya
+                path2 = path2,
+                isNuya = isNuya,
+                isSameImage = isSameImage
             )
         }
         composable(route = "bCardModify?card={card}", arguments = listOf(
