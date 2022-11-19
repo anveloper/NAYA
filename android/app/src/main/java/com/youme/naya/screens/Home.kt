@@ -44,9 +44,6 @@ fun HomeScreen(
     navController: NavHostController,
 ) {
     val context = LocalContext.current
-    var (currentCardId, setCurrentCardId) = rememberSaveable {
-        mutableStateOf(1)
-    }
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -67,7 +64,7 @@ fun HomeScreen(
                 NayaBcardSwitchButtons(
                     nayaTab = { MyNayaCardList(context, navController) },
                     bCardTab = { MyBCardList(context, navController) },
-                    videoTab = { MyVideoCardList(context, navController) }, false
+                    videoTab = { MyVideoCardList(context, navController) }, true
                 )
             }
             Column(modifier = Modifier
