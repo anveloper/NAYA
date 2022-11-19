@@ -1,10 +1,8 @@
 package com.youme.naya.widgets.common
 
 import android.app.Activity
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -23,24 +21,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.youme.naya.R
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.fonts
-import com.youme.naya.widgets.calendar.SearchHeaderBar
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeaderBar(
     navController: NavController,
     title: String = ""
 ) {
     var title = title
-    var logo: Boolean = false
-    var main: Boolean = true
+    var logo = false
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val activity = LocalContext.current as? Activity
@@ -50,15 +44,12 @@ fun HeaderBar(
     when (navBackStackEntry?.destination?.route) {
         "home" -> {
             logo = true
-            main = true
         }
         "naya" -> {
             logo = true
-            main = true
         }
         "nuya" -> {
             logo = true
-            main = true
         }
         "bCardCreate" -> {
             logo = false
@@ -74,17 +65,14 @@ fun HeaderBar(
         }
         "details" -> {
             logo = false
-            main = true
             title = "카드 상세 보기"
             closeActivityButton = true
         }
         "schedule" -> {
             logo = true
-            main = true
         }
     }
 
-    if (main) {
         TopAppBar(
             modifier = Modifier.height(64.dp),
             backgroundColor = NeutralWhite,
@@ -117,7 +105,7 @@ fun HeaderBar(
                          Modifier.height(24.dp),
                          verticalAlignment = Alignment.CenterVertically
                      ) {
-                         IconButton(onClick = { navController.navigate("settings") }) {
+                         IconButton(onClick = { navController.navigate("alarm") }) {
                              Image(
                                  painter = painterResource(R.drawable.home_icon_alarm),
                                  contentDescription = "Alarm button"
@@ -168,11 +156,4 @@ fun HeaderBar(
             }
             }
         }
-    } else {
-        LazyColumn {
-            stickyHeader {
-                SearchHeaderBar(navController)
-            }
-        }
-    }
 }
