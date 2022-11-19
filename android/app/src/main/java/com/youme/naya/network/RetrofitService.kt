@@ -1,6 +1,5 @@
 package com.youme.naya.network
 
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable.Param
 import com.youme.naya.vo.*
 import retrofit2.Call
 import retrofit2.http.*
@@ -18,5 +17,7 @@ interface RetrofitService {
     ): Call<SendCardResponseVO>
 
     @GET("map")
-    fun map():Call<MapResponseVO>
+    fun map(
+        @Query("address") address: String
+    ): Call<MapResponseVO>
 }
