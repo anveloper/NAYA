@@ -251,22 +251,23 @@ fun ScheduleDetailScreen(
                                             .height(60.dp)
                                             .clickable(onClick = {
                                                 detailOpen.value = !detailOpen.value
-                                                temporaryMember.value = viewModel.memberList.value[index]
+                                                temporaryMember.value =
+                                                    viewModel.memberList.value[index]
                                             })
                                         ,
                                     )
                                 }
                                 else if (detailOpen.value && viewModel.memberList.value[index] != temporaryMember.value) {
                                     Image(
-                                        painter = painterResource(Member.memberIconsFocus[viewModel.memberList.value[index].memberIcon!!]),
+                                        painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
                                         contentDescription = "",
                                         modifier = Modifier
                                             .width(60.dp)
                                             .height(60.dp)
                                             .clickable(onClick = {
-                                                detailOpen.value =
-                                                    detailOpen.value
-                                                temporaryMember.value = viewModel.memberList.value[index]
+                                                detailOpen.value = detailOpen.value
+                                                temporaryMember.value =
+                                                    viewModel.memberList.value[index]
                                             })
                                         ,
                                     )
@@ -280,7 +281,8 @@ fun ScheduleDetailScreen(
                                             .height(60.dp)
                                             .clickable(onClick = {
                                                 detailOpen.value = !detailOpen.value
-                                                temporaryMember.value = viewModel.memberList.value[index]
+                                                temporaryMember.value =
+                                                    viewModel.memberList.value[index]
                                             }),
                                     )
                                 }
@@ -316,12 +318,43 @@ fun ScheduleDetailScreen(
                             Box(modifier = Modifier
                                 .width(220.dp)
                                 .height(130.dp)
-                                .border(width = 2.dp, color = memberIconsColor[temporaryMember.value.memberIcon!!]),
+                                .border(width = 2.dp,
+                                    color = memberIconsColor[temporaryMember.value.memberIcon!!]),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                temporaryMember.value.name?.let {
-                                    Text(it, color = PrimaryDark, style = Typography.h6)
+                                Column() {
+                                    temporaryMember.value.name?.let {
+                                        Text(it, color = PrimaryDark, style = Typography.h6)
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    temporaryMember.value.phoneNum?.let {
+                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                            Text("전화번호", color = NeutralGray, style = Typography.body2)
+                                            Text(it, color = PrimaryDark, style = Typography.body2)
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    temporaryMember.value.email?.let {
+                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                            Text("이메일", color = NeutralGray, style = Typography.body2)
+                                            Text(it, color = PrimaryDark, style = Typography.body2)
+                                    }
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    temporaryMember.value.etcInfo?.let {
+                                        Row(modifier = Modifier.fillMaxWidth(0.8f),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text("추가 정보", color = NeutralGray, style = Typography.body2)
+                                            Text(it, color = PrimaryDark, style = Typography.body2)
+                                        }
+                                    }
                                 }
+
                             }
                         }
 

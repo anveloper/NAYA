@@ -44,8 +44,6 @@ fun SettingsScreen(navController: NavHostController) {
             PrimarySmallButton(text = "홈으로 돌아가기", onClick = {
                 navController.navigate("home")
             })
-
         }
-
     }
 }
