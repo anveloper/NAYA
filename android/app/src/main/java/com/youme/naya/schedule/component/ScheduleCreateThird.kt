@@ -10,6 +10,8 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -44,75 +46,94 @@ import retrofit2.Response
 @Composable
 fun ScheduleCreateThird(
     viewModel: ScheduleMainViewModel = hiltViewModel()
-){
+) {
     var retrofit = RetrofitClient.getInstance()
     var supplementService = retrofit.create(RetrofitService::class.java)
-    val place = LatLng(37.5666805, 126.9784147)
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(place, 10f)
+    var place = remember {
+        mutableStateOf(LatLng(37.5666805, 126.9784147))
     }
-
+    var cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(place.value, 15f)
+    }
+    var address = "";
+    LaunchedEffect(key1 = place.value) {
+        cameraPositionState.position = CameraPosition.fromLatLngZoom(place.value, 15f)
+    }
     Column(
-        modifier = Modifier
+        modifier = Modifier.fillMaxWidth(0.96f)
             .fillMaxHeight(0.8f)
             .verticalScroll(rememberScrollState()),
         content = {
-    val keyboardController = LocalSoftwareKeyboardController.current
-    // focus
-    val focusRequester = remember { FocusRequester() }
+            val keyboardController = LocalSoftwareKeyboardController.current
+            // focus
+            val focusRequester = remember { FocusRequester() }
 
-    Text("장소 검색",
-        modifier = Modifier.padding(vertical = 12.dp),
-        color = PrimaryDark,
-        fontFamily = fonts,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp
-    )
-    Spacer(modifier = Modifier.height(4.dp))
-    BasicTextField(
-        modifier = Modifier
-            .focusRequester(focusRequester),
-        text = viewModel.address.value.text,
-        onChange = { viewModel.onAddressChange(it) },
-        placeholder = "주소 입력",
-        imeAction = ImeAction.Done,
-        keyBoardActions = KeyboardActions(onDone = {
-            supplementService.map(viewModel.address.value.text).enqueue(object : Callback<MapResponseVO> {
-                override fun onFailure(
-                    call: Call<MapResponseVO>,
-                    t: Throwable
-                ) {
-                    Log.d("TAG", "실패 : {$t}")
-                }
+            Text(
+                "장소 검색",
+                modifier = Modifier.padding(vertical = 12.dp),
+                color = PrimaryDark,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            BasicTextField(
+                modifier = Modifier
+                    .focusRequester(focusRequester),
+                text = viewModel.address.value.text,
+                onChange = { viewModel.onAddressChange(it) },
+                placeholder = "주소 입력",
+                imeAction = ImeAction.Done,
+                keyBoardActions = KeyboardActions(onDone = {
+                    supplementService.map(viewModel.address.value.text)
+                        .enqueue(object : Callback<MapResponseVO> {
+                            override fun onFailure(
+                                call: Call<MapResponseVO>,
+                                t: Throwable
+                            ) {
+                                Log.d("TAG", "실패 : {$t}")
+                            }
 
-                override fun onResponse(
-                    call: Call<MapResponseVO>,
-                    response: Response<MapResponseVO>
-                ) {
-                    Log.i("x",response.body()?.x.toString())
-                    Log.i("y",response.body()?.y.toString())
-                    Log.i("jibun",response.body()?.jibunAddress.toString())
-                    Log.i("road",response.body()?.roadAddress.toString())
-                }
+                            override fun onResponse(
+                                call: Call<MapResponseVO>,
+                                response: Response<MapResponseVO>
+                            ) {
+                                Log.i("x", response.body()?.x.toString())
+                                Log.i("y", response.body()?.y.toString())
+                                Log.i("jibun", response.body()?.jibunAddress.toString())
+                                Log.i("road", response.body()?.roadAddress.toString())
 
-            })
-            keyboardController?.hide()
-        }),
+                                if (response.body() != null) {
+                                    var x = response.body()!!.x
+                                    var y = response.body()!!.y
+                                    if (x != null && y != null)
+                                        place.value = LatLng(y.toDouble(), x.toDouble())
+//                                    cameraPositionState.position =
+//                                        CameraPosition.fromLatLngZoom(place.value, 12f)
+                                }
+                            }
+
+                        })
+                    keyboardController?.hide()
+                }),
 //        trailingIcon = {
 //            Image(
 //            painter = painterResource(R.drawable.home_icon_search),
 //                "setting",
 //                colorFilter = ColorFilter.tint(PrimaryBlue)
 //        )}
-    )
+            )
             GoogleMap(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp),
                 cameraPositionState = cameraPositionState
             ) {
                 Marker(
-                    state = MarkerState(position = place),
+                    state = MarkerState(position = place.value),
                     title = "place",
                     snippet = "Marker in place"
                 )
             }
-})}
+        })
+}
