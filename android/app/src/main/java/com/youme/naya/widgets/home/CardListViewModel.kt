@@ -4,12 +4,17 @@ import android.app.Application
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 
 class ViewCard(id: Long, uri: Uri, filename: String) {
+    val id = id
+    val uri = uri
+    val filename = filename
+}
+
+class VideoCard(id: Long, uri: Uri, filename: String) {
     val id = id
     val uri = uri
     val filename = filename
@@ -57,4 +62,34 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+
+    // video
+    private val _videoCards = mutableStateOf(emptyList<VideoCard>())
+    val videoCards = _videoCards
+
+    fun fetchVideoCards() {
+        val videoCards = mutableListOf<VideoCard>()
+        getApplication<Application>().contentResolver.query(
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            null,
+            MediaStore.Files.FileColumns.TITLE + " LIKE ?",
+            arrayOf("NAYA-VIDEO-%"),
+            "${MediaStore.Video.VideoColumns.DATE_TAKEN} ASC"
+        )?.use { cursor ->
+            val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
+
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(idIndex)
+                val contentUri = ContentUris.withAppendedId(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+                val contentFilename = cursor.getString(
+                    cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
+                )
+                videoCards.add(VideoCard(id, contentUri, contentFilename))
+            }
+            _videoCards.value = videoCards
+        }
+    }
 }

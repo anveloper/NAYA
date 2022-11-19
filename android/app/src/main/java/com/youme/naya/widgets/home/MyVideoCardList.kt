@@ -24,13 +24,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.youme.naya.widgets.items.CardItem
 import com.youme.naya.widgets.items.CardItemPlus
+import com.youme.naya.widgets.items.VideoItem
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun MyNayaCardList(context: Context, navController: NavHostController) {
+fun MyVideoCardList(context: Context, navController: NavHostController) {
     // 처음 아이템의 padding을 정해주기 위한 식
     val context = LocalContext.current
     val activity = context as? Activity
@@ -46,8 +46,8 @@ fun MyNayaCardList(context: Context, navController: NavHostController) {
     val coroutineScope = rememberCoroutineScope()
 
     val viewModel = viewModel<CardListViewModel>()
-    viewModel.fetchNayaCards()
-    val cardList = viewModel.viewCards.value
+    viewModel.fetchVideoCards()
+    val cardList = viewModel.videoCards.value
     val listSize = cardList.size
 
     Column(
@@ -63,7 +63,7 @@ fun MyNayaCardList(context: Context, navController: NavHostController) {
             state = currentCardId
         ) {
             items(cardList) { card ->
-                CardItem(nayaCard = card)
+                VideoItem(card)
             }
             item() {
                 CardItemPlus(navController = navController)
