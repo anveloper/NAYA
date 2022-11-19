@@ -63,6 +63,8 @@ fun CardItemPlus(
         Log.i("Media Card Custom", it.resultCode.toString())
         if (it.resultCode == RESULT_OK) {
             viewModel.fetchNayaCards()
+            viewModel.fetchVideoCard()
+            viewModel.fetchSupportCard()
         }
     }
     // 이미지 선택 액티비티
@@ -176,7 +178,7 @@ fun CardItemPlus(
                     mediaLauncher.launch(intent)
                     setImgSelector(false)
                 }
-                if (test && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                if (!test && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     OutlinedBigButton("Beta") {
                         val intent = Intent(Intent.ACTION_PICK)
                         intent.type = "video/*"
