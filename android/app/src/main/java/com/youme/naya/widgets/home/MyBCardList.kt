@@ -14,9 +14,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.outlined.Flip
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -26,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidViewBinding
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.youme.naya.card.CardFace
 import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.databinding.BusinessCardBinding
 import com.youme.naya.widgets.items.CardItem
@@ -53,6 +53,8 @@ fun MyBCardList(context: Context, navController: NavHostController) {
     val listVerticalPadding = (px2dp(deviceWidth!!) - 200) / 2
     val listSize = businessCards.size
 
+    var flipState by remember { mutableStateOf(CardFace.Front) }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -66,7 +68,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
             state = currentCardId
         ) {
             items(businessCards) { value ->
-                CardItem(bCard = value)
+                CardItem(bCard = value, flipState = flipState)
             }
             item() {
                 CardItemPlus(navController = navController, isBCard = true)
@@ -96,6 +98,13 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                         )
                     }
                     Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = { flipState = flipState.next }) {
+                        Icon(
+                            Icons.Outlined.Flip,
+                            "flip"
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
                     IconButton(onClick = {
                         coroutineScope.launch { currentCardId.animateScrollToItem(listSize - 1) }
                     }) {
@@ -112,6 +121,13 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                         Icon(
                             Icons.Outlined.Add,
                             "plus"
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = { flipState = flipState.next }) {
+                        Icon(
+                            Icons.Outlined.Flip,
+                            "flip"
                         )
                     }
                 }
