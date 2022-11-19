@@ -25,9 +25,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -35,6 +37,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.card.BusinessCardCreateDialog
+import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
 import com.youme.naya.intro.IntroDialog
@@ -45,6 +48,7 @@ import com.youme.naya.utils.convertUri2Path
 import com.youme.naya.utils.saveSharedCardImage
 import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaTabStore
+import com.youme.naya.widgets.home.CardListViewModel
 import com.youme.naya.widgets.home.SharedSaveImageDialog
 import com.youme.naya.widgets.share.ShareButtonDialog
 
@@ -60,6 +64,7 @@ fun MainScreen(
     val activity = context as? Activity
     val focusManager = LocalFocusManager.current
     val lifeCycleOwner = LocalLifecycleOwner.current
+    val viewModel = viewModel<CardListViewModel>()
 
     // 현재 위치 추적
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -69,7 +74,7 @@ fun MainScreen(
 
     // 선택된 카드 가져오기
 //    val card = CurrentCard.getCurrentCard.value
-
+    val (imgSelector, setImgSelector) = remember { mutableStateOf(false) }
     // 비즈니스 카드 생성 방법 선택 다이얼로그 표시 여부
     var bCardCreateDialogInNaya by remember { mutableStateOf(false) }
     var bCardCreateDialogInNuya by remember { mutableStateOf(false) }
@@ -80,6 +85,7 @@ fun MainScreen(
         Log.i("Activity Result", it.resultCode.toString())
         when (it.resultCode) {
             Activity.RESULT_OK -> {
+                viewModel.fetchNayaCards()
             }
             Activity.RESULT_CANCELED -> {
             }
@@ -96,7 +102,17 @@ fun MainScreen(
             Toast.makeText(context, "카드를 불러왔어요", Toast.LENGTH_SHORT).show()
         }
     }
-
+    val mediaLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            val uri = it.data?.data as Uri
+            val imgPath = convertUri2Path(context, uri)
+            val mediaIntent = Intent(activity, MediaCardActivity::class.java)
+            mediaIntent.putExtra("savedImgAbsolutePath", imgPath)
+            launcher.launch(mediaIntent)
+        }
+    }
     //
 //    val introViewModel = viewModel<IntroViewModel>()
     val (isFirst, openIntro) = remember { mutableStateOf(false) }
@@ -114,12 +130,7 @@ fun MainScreen(
                             "schedule" -> navController.navigate("scheduleCreate")
                             "naya" -> {
                                 if (NayaTabStore.isNayaCard()) {
-                                    launcher.launch(
-                                        Intent(
-                                            activity,
-                                            MediaCardActivity::class.java
-                                        )
-                                    )
+                                    setImgSelector(true)
                                 } else {
                                     bCardCreateDialogInNaya = true
                                 }
@@ -216,6 +227,42 @@ fun MainScreen(
                 introViewModel.saveIsFirst()
                 introViewModel.loadIsFirst()
             }
+        }
+        if (imgSelector) {
+            AlertDialog({ setImgSelector(false) }, {
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "어떤 방법으로 카드를 만들까요?",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    OutlinedBigButton(text = "카메라로 촬영하기") {
+                        launcher.launch(
+                            Intent(
+                                activity,
+                                MediaCardActivity::class.java
+                            )
+                        )
+                        setImgSelector(false)
+                    }
+                    OutlinedBigButton(text = "갤러리에서 불러오기") {
+                        val intent = Intent(Intent.ACTION_PICK)
+                        intent.type = "image/*"
+                        mediaLauncher.launch(intent)
+                        setImgSelector(false)
+                    }
+                }
+            }, Modifier.wrapContentSize(),
+                shape = RoundedCornerShape(12.dp),
+                backgroundColor = Color.White
+            )
         }
     }
 }
