@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.youme.naya.BaseActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.saveCardImage
+import com.youme.naya.utils.saveSharedCardImage
 import dev.shreyaspatil.capturable.Capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import java.util.concurrent.ExecutorService
@@ -56,12 +57,17 @@ class MediaCardActivity : BaseActivity(TransitionMode.HORIZON) {
             val activity = LocalContext.current as? Activity
 
             val savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
+            val isNuya = intent.getBooleanExtra("isNuya", false)
             val tmpImage: Bitmap? = BitmapFactory.decodeFile(savedImgAbsolutePath)
             AndroidTheme() {
                 MediaCardScreen(tmpImage, cameraExecutor,
                     // 액티비티 기준 커스텀 사진 저장 함수
                     { bitmap ->
-                        saveCardImage(baseContext, bitmap)
+                        if (isNuya) {
+                            saveSharedCardImage(baseContext, bitmap)
+                        } else {
+                            saveCardImage(baseContext, bitmap)
+                        }
                         intent.putExtra("Custom Exit", 1)
                         setResult(RESULT_OK, intent)
                         activity?.finish()

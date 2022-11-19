@@ -64,7 +64,7 @@ fun HeaderBar(
             logo = false
             title = "명함 직접 입력"
         }
-        "bCardCreateByCamera?result={result}&path={path}&isNuya={isNuya}" -> {
+        "bCardCreateByCamera?result={result}&path={path}&path2={path2}&isNuya={isNuya}&isSameImage={isSameImage}" -> {
             logo = false
             title = "카메라로 명함 등록"
         }
@@ -113,59 +113,58 @@ fun HeaderBar(
                             modifier = Modifier.fillMaxHeight()
                         )
                     }
-                     Row(
-                         Modifier.height(24.dp),
-                         verticalAlignment = Alignment.CenterVertically
-                     ) {
-                         IconButton(onClick = { navController.navigate("settings") }) {
-                             Image(
-                                 painter = painterResource(R.drawable.home_icon_alarm),
-                                 contentDescription = "Alarm button"
-                             )
-                         }
-                         IconButton(onClick = { navController.navigate("settings")  }) {
-                             Image(
-                                 painter = painterResource(R.drawable.home_icon_setting),
-                                 contentDescription = "Settings button"
-                             )
-                         }
-                     }
-                }
-                else {
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(24.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = if (closeActivityButton) Arrangement.SpaceBetween else Arrangement.Start
-                ) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_baseline_arrow_back_ios_24),
-                            contentDescription = "Prev page button",
-                            colorFilter = ColorFilter.tint(NeutralLight)
-                        )
+                    Row(
+                        Modifier.height(24.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { navController.navigate("settings") }) {
+                            Image(
+                                painter = painterResource(R.drawable.home_icon_alarm),
+                                contentDescription = "Alarm button"
+                            )
+                        }
+                        IconButton(onClick = { navController.navigate("settings") }) {
+                            Image(
+                                painter = painterResource(R.drawable.home_icon_setting),
+                                contentDescription = "Settings button"
+                            )
+                        }
                     }
-                    Text(
-                        title,
-                        modifier = if (closeActivityButton) Modifier else Modifier
+                } else {
+                    Row(
+                        Modifier
                             .fillMaxWidth()
-                            .padding(end = 48.dp),
-                        textAlign = TextAlign.Center,
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        color = PrimaryDark
-                    )
-                    if (closeActivityButton) {
-                        IconButton(
-                            onClick = { activity?.finish() }
-                        ) {
-                            Icon(Icons.Filled.Close, Icons.Filled.Close.toString())
+                            .height(24.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = if (closeActivityButton) Arrangement.SpaceBetween else Arrangement.Start
+                    ) {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Image(
+                                painter = painterResource(R.drawable.ic_baseline_arrow_back_ios_24),
+                                contentDescription = "Prev page button",
+                                colorFilter = ColorFilter.tint(NeutralLight)
+                            )
+                        }
+                        Text(
+                            title,
+                            modifier = if (closeActivityButton) Modifier else Modifier
+                                .fillMaxWidth()
+                                .padding(end = 48.dp),
+                            textAlign = TextAlign.Center,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
+                            color = PrimaryDark
+                        )
+                        if (closeActivityButton) {
+                            IconButton(
+                                onClick = { activity?.finish() }
+                            ) {
+                                Icon(Icons.Filled.Close, Icons.Filled.Close.toString())
+                            }
                         }
                     }
                 }
-            }
             }
         }
     } else {
