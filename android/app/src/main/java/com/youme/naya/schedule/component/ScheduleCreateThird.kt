@@ -21,6 +21,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.network.RetrofitClient
 import com.youme.naya.network.RetrofitService
@@ -41,6 +47,11 @@ fun ScheduleCreateThird(
 ){
     var retrofit = RetrofitClient.getInstance()
     var supplementService = retrofit.create(RetrofitService::class.java)
+    val place = LatLng(37.5666805, 126.9784147)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(place, 10f)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxHeight(0.8f)
@@ -83,6 +94,7 @@ fun ScheduleCreateThird(
                     Log.i("jibun",response.body()?.jibunAddress.toString())
                     Log.i("road",response.body()?.roadAddress.toString())
                 }
+
             })
             keyboardController?.hide()
         }),
@@ -93,4 +105,14 @@ fun ScheduleCreateThird(
 //                colorFilter = ColorFilter.tint(PrimaryBlue)
 //        )}
     )
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState
+            ) {
+                Marker(
+                    state = MarkerState(position = place),
+                    title = "place",
+                    snippet = "Marker in place"
+                )
+            }
 })}
