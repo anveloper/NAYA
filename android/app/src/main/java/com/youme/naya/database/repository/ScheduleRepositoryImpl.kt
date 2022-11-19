@@ -1,6 +1,7 @@
 package com.youme.naya.database.repository
 
 import com.youme.naya.database.dao.ScheduleDao
+import com.youme.naya.database.entity.Alarm
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.entity.relations.ScheduleWithMembers
@@ -93,5 +94,24 @@ class ScheduleRepositoryImpl @Inject constructor(
     override suspend fun deleteScheduleWithMembers(schedule: Schedule, members: List<Member>) {
         return dao.deleteScheduleWithMembers(schedule, members)
     }
+
+
+
+    /**
+     * Alarm
+     */
+
+    override suspend fun insertAlarm(alarm: Alarm) {
+        return dao.insertAlarm(alarm)
+    }
+
+    override fun getAlarms(): Flow<List<Alarm>> {
+        return dao.getAlarms()
+    }
+
+    override fun getAlarmsByDate(date: String): Flow<List<Alarm>> {
+        return dao.getAlarmsByDate(date)
+    }
+
 
 }

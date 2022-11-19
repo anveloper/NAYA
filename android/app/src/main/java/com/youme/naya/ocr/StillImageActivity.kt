@@ -53,6 +53,8 @@ class StillImageActivity : AppCompatActivity() {
 
     // 이미지 경로
     private var savedImgAbsolutePath: String? = null
+    private var savedImgAbsolutePath2: String? = null
+    private var isSameImage: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +86,8 @@ class StillImageActivity : AppCompatActivity() {
 
         // 4. 전달된 savedImgAbsolutePath가 잘 뜨는지 확인하기
         savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
+        savedImgAbsolutePath2 = intent.getStringExtra("savedImgAbsolutePath2")
+        isSameImage = intent.getBooleanExtra("isSameImage", false)
         if (savedImgAbsolutePath != null) {
             val bitmap = BitmapFactory.decodeFile(savedImgAbsolutePath)
             preview?.setImageBitmap(bitmap)
@@ -225,6 +229,10 @@ class StillImageActivity : AppCompatActivity() {
         val newIntent = Intent(context, StillImageActivity::class.java)
         newIntent.putExtra("ocrResult", ocrResult)
         newIntent.putExtra("croppedImage", savedImgAbsolutePath)
+        if (savedImgAbsolutePath2 != null) {
+            newIntent.putExtra("secondImage", savedImgAbsolutePath2)
+        }
+        newIntent.putExtra("isSameImage", isSameImage)
         setResult(RESULT_OK, newIntent)
         finish()
     }

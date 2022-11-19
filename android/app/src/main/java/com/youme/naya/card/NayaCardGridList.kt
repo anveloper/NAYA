@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -55,7 +56,14 @@ fun NayaCardGridList(context: Context, navController: NavHostController, isNuya:
         ) {
             CardItemPlus(navController = navController, isNuya = isNuya)
             Spacer(Modifier.height(16.dp))
-            Text(text = "카드를 등록해 보세요", color = Color(0xFFCED3D6))
+            if (isNuya) {
+                Row {
+                    Text(text = "상대방", color = Color(0xFFCED3D6), fontWeight = FontWeight.Black)
+                    Text(text = "의 카드를 등록해 보세요", color = Color(0xFFCED3D6))
+                }
+            } else {
+                Text(text = "카드를 등록해 보세요", color = Color(0xFFCED3D6))
+            }
         }
     }
 }
