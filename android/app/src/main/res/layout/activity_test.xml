@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ocr.DocumentScannerActivity">
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/cropped_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/scanned_image" />
 
-        <Button
-            android:id="@+id/ocr_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="clickOcrBtn"
-            android:text="카드 저장"
-            android:layout_gravity="bottom"
-            android:layout_marginHorizontal="80dp"
-            android:layout_marginBottom="20dp"
-            android:textAllCaps="false" />
-    </FrameLayout>
+    <ImageView
+        android:id="@+id/cropped_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="281dp"
+        android:contentDescription="@string/scanned_image"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <ImageView
+        android:id="@+id/cropped_image_view2"
+        android:layout_width="match_parent"
+        android:layout_height="281dp"
+        android:contentDescription="@string/scanned_image2"
+        app:layout_constraintBottom_toTopOf="@+id/ocr_btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cropped_image_view"
+        app:layout_constraintVertical_bias="0.238" />
+
+    <Button
+        android:id="@+id/ocr_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="80dp"
+        android:layout_marginBottom="52dp"
+        android:onClick="clickOcrBtn"
+        android:text="카드 저장"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
