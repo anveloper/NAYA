@@ -3,7 +3,6 @@ package com.youme.naya
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -45,7 +44,6 @@ import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.utils.convertUri2Path
-import com.youme.naya.utils.saveSharedCardImage
 import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaTabStore
 import com.youme.naya.widgets.home.CardListViewModel
@@ -91,17 +89,6 @@ fun MainScreen(
             }
         }
     }
-    // 갤러리 액티비티
-    val galleryLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == Activity.RESULT_OK) {
-            val uri = it.data?.data as Uri
-            val imgPath = convertUri2Path(context, uri)
-            saveSharedCardImage(context, BitmapFactory.decodeFile(imgPath))
-            Toast.makeText(context, "카드를 불러왔어요", Toast.LENGTH_SHORT).show()
-        }
-    }
     val mediaLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
@@ -137,11 +124,13 @@ fun MainScreen(
                             }
                             "nuya" -> {
                                 if (NayaTabStore.isNayaCard()) {
-                                    val intent = Intent(Intent.ACTION_PICK)
-                                    intent.type = "image/*"
-                                    galleryLauncher.launch(intent)
+                                    Toast.makeText(
+                                        context,
+                                        "너야 카드는 직접 등록할 수 없어요",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 } else {
-                                    bCardCreateDialogInNuya = true
+                                    bCardCreateDialogInNaya = true
                                 }
                             }
                             else -> {

@@ -62,11 +62,7 @@ fun CardItemPlus(
     ) {
         Log.i("Media Card Custom", it.resultCode.toString())
         if (it.resultCode == RESULT_OK) {
-            if (isNuya) {
-                viewModel.fetchNayaCardsInNuya()
-            } else {
-                viewModel.fetchNayaCards()
-            }
+            viewModel.fetchNayaCards()
         }
     }
     // 이미지 선택 액티비티
@@ -78,7 +74,6 @@ fun CardItemPlus(
             val imgPath = convertUri2Path(context, uri)
             val mediaIntent = Intent(activity, MediaCardActivity::class.java)
             mediaIntent.putExtra("savedImgAbsolutePath", imgPath)
-            mediaIntent.putExtra("isNuya", isNuya)
             mediaCameraLauncher.launch(mediaIntent)
         }
     }

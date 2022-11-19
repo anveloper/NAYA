@@ -33,7 +33,7 @@ fun BottomNavGraph(navController: NavHostController) {
         }
         composable(route = BottomBarScreen.NuyaCard.route) {
             NuyaCardScreen(navController = navController)
-            NayaTabStore.setCurrTabState("nuya")
+            NayaTabStore.setCurrTabState("naya")
         }
         composable(route = BottomBarScreen.NayaCard.route) {
             NayaCardScreen(navController = navController)
