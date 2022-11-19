@@ -48,6 +48,23 @@ data class Member(
             R.drawable.member_icon_cancel_5,
             R.drawable.member_icon_cancel_6,
             R.drawable.member_icon_cancel_7)
+        val memberIconsFocus = listOf(
+            R.drawable.member_icon_focus_1,
+            R.drawable.member_icon_focus_2,
+            R.drawable.member_icon_focus_3,
+            R.drawable.member_icon_focus_4,
+            R.drawable.member_icon_focus_5,
+            R.drawable.member_icon_focus_6,
+            R.drawable.member_icon_focus_7)
+        val memberIconsColor = listOf(
+            SystemPink,
+            SystemOrange,
+            SystemYellow,
+            SystemGreen,
+            SecondaryDarkBlue,
+            SystemPurple,
+            SecondarySystemBlue
+        )
     }
 
 }

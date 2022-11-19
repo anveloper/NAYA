@@ -1,4 +1,4 @@
-package com.youme.naya.widgets.calendar
+package com.youme.naya.schedule.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -17,13 +17,13 @@ private val CalendarHeaderBtnGroupModifier = Modifier
     .padding(start = 8.dp, end = 8.dp)
 
 @Composable
-fun SearchHeaderBar(navController: NavController,) {
+fun SearchHeaderBar(navController: NavController) {
     Row(
         CalendarHeaderBtnGroupModifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End
     ) {
-        IconButton(onClick = { navController.navigate("settings")  }) {
+        IconButton(onClick = { navController.navigate("alarm")  }) {
             Image(
                 painter = painterResource(R.drawable.home_icon_alarm),
                 contentDescription = "home alarm button"
