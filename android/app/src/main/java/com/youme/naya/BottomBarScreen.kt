@@ -37,4 +37,10 @@ sealed class BottomBarScreen(val route: String, val title: String, val icon: Int
         icon = R.drawable.home_icon_setting
     )
 
+    object Alarm : BottomBarScreen(
+        route = "alarm",
+        title = "Alarm",
+        icon = R.drawable.home_icon_setting
+    )
+
 }

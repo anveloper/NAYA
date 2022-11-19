@@ -45,6 +45,9 @@ fun BottomNavGraph(navController: NavHostController) {
         composable(route = BottomBarScreen.Settings.route) {
             SettingsScreen(navController = navController)
         }
+        composable(route = BottomBarScreen.Alarm.route) {
+            AlarmScreen(navController = navController)
+        }
         // Nuya 명함 생성 (직접 입력)
         composable(route = "bCardCreate") { entry ->
             BCardCreateScreen(navController = navController)

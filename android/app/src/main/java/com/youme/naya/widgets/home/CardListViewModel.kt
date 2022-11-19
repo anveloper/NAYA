@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.ContentUris
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -64,11 +65,12 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
 
 
     // video
-    private val _videoCards = mutableStateOf(emptyList<VideoCard>())
-    val videoCards = _videoCards
+    private val _videoCard = mutableStateOf<VideoCard?>(null)
+    val videoCard = _videoCard
 
-    fun fetchVideoCards() {
-        val videoCards = mutableListOf<VideoCard>()
+    fun fetchVideoCard() {
+        val videoCard = mutableStateOf<VideoCard?>(null)
+        Log.i("CARD VM S", "FETCH VIDEO")
         getApplication<Application>().contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
             null,
@@ -79,7 +81,8 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
             val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
 
             while (cursor.moveToNext()) {
-                if (videoCards.size > 8) break
+                Log.i("CARD VM S", "CURSOR")
+                if (videoCard.value != null) break
                 val id = cursor.getLong(idIndex)
                 val contentUri = ContentUris.withAppendedId(
                     MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
@@ -88,9 +91,41 @@ class CardListViewModel(application: Application) : AndroidViewModel(application
                 val contentFilename = cursor.getString(
                     cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
                 )
-                videoCards.add(VideoCard(id, contentUri, contentFilename))
+                Log.i("CARD VM", contentUri.toString())
+                videoCard.value = VideoCard(id, contentUri, contentFilename)
             }
-            _videoCards.value = videoCards
+            _videoCard.value = videoCard.value
+        }
+    }
+    // video support
+
+    private val _supportCard = mutableStateOf<ViewCard?>(null)
+    val supportCard = _supportCard
+
+    fun fetchSupportCard() {
+        val supportCard = mutableStateOf<ViewCard?>(null)
+        getApplication<Application>().contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            null,
+            MediaStore.Files.FileColumns.TITLE + " LIKE ?",
+            arrayOf("NAYA-SUPPORT-%"),
+            "${MediaStore.Images.ImageColumns.DATE_TAKEN} DESC"
+        )?.use { cursor ->
+            val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+
+            while (cursor.moveToNext()) {
+                if (supportCard != null) break
+                val id = cursor.getLong(idIndex)
+                val contentUri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    id
+                )
+                val contentFilename = cursor.getString(
+                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+                )
+                supportCard.value = ViewCard(id, contentUri, contentFilename)
+            }
+            _supportCard.value = supportCard.value
         }
     }
 }
