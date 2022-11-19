@@ -41,6 +41,7 @@ import com.youme.naya.custom.MediaCardActivity
 import com.youme.naya.graphs.BottomNavGraph
 import com.youme.naya.intro.IntroDialog
 import com.youme.naya.intro.IntroViewModel
+import com.youme.naya.login.PermissionViewModel
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.addFocusCleaner
 import com.youme.naya.utils.convertUri2Path
@@ -56,6 +57,7 @@ import com.youme.naya.widgets.share.ShareButtonDialog
 fun MainScreen(
     sharedImageUrl: String,
     introViewModel: IntroViewModel,
+    permissionViewModel: PermissionViewModel,
     navController: NavHostController = rememberNavController(),
 ) {
     val context = LocalContext.current
@@ -193,7 +195,7 @@ fun MainScreen(
         modifier = Modifier
             .addFocusCleaner(focusManager)
     ) {
-        BottomNavGraph(navController = navController)
+        BottomNavGraph(introViewModel, permissionViewModel, navController)
         if (shareAlert) {
             ShareButtonDialog(activity!!, navController) {
                 setShareAlert(false)
