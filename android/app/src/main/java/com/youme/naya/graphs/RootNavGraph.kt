@@ -11,6 +11,7 @@ import com.youme.naya.MainScreen
 import com.youme.naya.SplashScreen
 import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.login.LoginViewModel
+import com.youme.naya.login.PermissionViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -18,7 +19,8 @@ fun RootNavigationGraph(
     sharedImageUrl: String,
     navController: NavHostController,
     loginViewModel: LoginViewModel,
-    introViewModel: IntroViewModel
+    introViewModel: IntroViewModel,
+    permissionViewModel: PermissionViewModel
 ) {
     NavHost(
         navController = navController,
@@ -29,7 +31,7 @@ fun RootNavigationGraph(
             AnimatedSplashScreen(navController, loginViewModel)
         }
         composable(route = Graph.BOTTOM) {
-            MainScreen(sharedImageUrl, introViewModel)
+            MainScreen(sharedImageUrl, introViewModel, permissionViewModel)
         }
     }
 }

@@ -1,49 +1,193 @@
 package com.youme.naya.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ArrowForwardIos
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.compose.ui.unit.sp
 import com.youme.naya.R
-import com.youme.naya.components.PrimarySmallButton
-import com.youme.naya.ui.theme.NeutralLight
-import com.youme.naya.ui.theme.NeutralWhite
-import com.youme.naya.ui.theme.PrimaryDark
-import com.youme.naya.ui.theme.Typography
+import com.youme.naya.intro.IntroViewModel
+import com.youme.naya.login.PermissionViewModel
+import com.youme.naya.ui.theme.*
 
 @Composable
-fun SettingsScreen(navController: NavHostController) {
+fun SettingsScreen(
+    introViewModel: IntroViewModel,
+    permissionViewModel: PermissionViewModel
+) {
+    val (openPolicy, setOpenPolicy) = remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(NeutralWhite),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_service_fix),
-                "service",
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp), Arrangement.spacedBy(8.dp),
+            Alignment.Start
+        ) {
+            SettingsText(
+                "About Naya",
+                24.sp,
             )
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = "서비스 준비중입니다 :)",
-                style = Typography.h4,
-                color = PrimaryDark
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            PrimarySmallButton(text = "홈으로 돌아가기", onClick = {
-                navController.navigate("home")
-            })
+            Spacer(Modifier.height(16.dp))
+            TextButton(onClick = {
+                introViewModel.resetIsFirst()
+                introViewModel.loadIsFirst()
+            }, Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+                    SettingsText("도움말", 20.sp)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+                }
+            }
+            TextButton(onClick = {
+                setOpenPolicy(true)
+            }, Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+                    SettingsText("약관 및 개인정보 처리 동의", 20.sp)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+                }
+            }
+            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+                    SettingsText("앱버전", 20.sp)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+                }
+            }
+            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
+                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+                    SettingsText("팀원 소개", 20.sp)
+                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+                }
+            }
+            Spacer(Modifier.height(160.dp))
+            Column(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterHorizontally) {
+                Image(
+                    painterResource(R.drawable.home_logo_text),
+                    null,
+                    Modifier.size(120.dp, 40.dp)
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    "© Copyright 2022. YouMe. All Rights Reserved.",
+                    fontSize = 8.sp,
+                    fontFamily = fonts,
+                    color = NeutralGray
+                )
+            }
         }
     }
+    if (openPolicy) {
+        AlertDialog(onDismissRequest = { setOpenPolicy(false) }, buttons = {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .height(420.dp),
+                Arrangement.SpaceEvenly,
+                Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "이용약관",
+                    color = PrimaryDark,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    fontFamily = fonts
+                )
+                Box(
+                    Modifier
+                        .fillMaxWidth(0.96f)
+                        .border(
+                            width = 1.dp,
+                            color = NeutralLightness,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .fillMaxHeight(0.30f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        Modifier
+                            .fillMaxWidth(0.9f)
+                            .fillMaxHeight(0.9f)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = permissionViewModel.termsText.value,
+                            color = NeutralGray,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 12.sp,
+                            fontFamily = fonts
+                        )
+                    }
+                }
+                Text(
+                    text = "개인정보 처리방침",
+                    color = PrimaryDark,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    fontFamily = fonts
+                )
+                Box(
+                    Modifier
+                        .fillMaxWidth(0.96f)
+                        .border(
+                            width = 1.dp,
+                            color = NeutralLightness,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .fillMaxHeight(0.60f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        Modifier
+                            .fillMaxWidth(0.9f)
+                            .fillMaxHeight(0.9f)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            text = permissionViewModel.privacyText.value,
+                            color = NeutralGray,
+                            fontWeight = FontWeight.Normal,
+                            fontSize = 12.sp,
+                            fontFamily = fonts
+                        )
+                    }
+
+                }
+            }
+        })
+    }
+
+}
+
+
+@Composable
+fun SettingsText(content: String, fontSize: TextUnit) {
+    Text(
+        content,
+        Modifier,
+        PrimaryDark,
+        fontSize,
+        FontStyle.Normal,
+        FontWeight.Bold,
+        fonts
+    )
 }

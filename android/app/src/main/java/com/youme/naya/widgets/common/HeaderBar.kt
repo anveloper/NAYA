@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -112,10 +113,7 @@ fun HeaderBar(
                         )
                     }
                     IconButton(onClick = { navController.navigate("settings") }) {
-                        Image(
-                            painter = painterResource(R.drawable.home_icon_setting),
-                            contentDescription = "Settings button"
-                        )
+                        Icon(Icons.Filled.Info, null, Modifier.size(24.dp), NeutralLight)
                     }
                 }
             } else {

@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.login.LoginViewModel
+import com.youme.naya.login.PermissionViewModel
 import com.youme.naya.network.RetrofitClient
 import com.youme.naya.network.RetrofitService
 import com.youme.naya.ui.theme.AndroidTheme
@@ -24,6 +25,7 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
     // login viewModel
     private val loginViewModel by viewModels<LoginViewModel>()
     private val introViewModel by viewModels<IntroViewModel>()
+    private val permissionViewModel by viewModels<PermissionViewModel>()
     private lateinit var retrofit: Retrofit
     private lateinit var supplementService: RetrofitService
     var waitTime = 0L
@@ -49,11 +51,15 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
                     sharedImageUrl,
                     rememberNavController(),
                     loginViewModel,
-                    introViewModel
+                    introViewModel,
+                    permissionViewModel
                 )
             }
         }
         introViewModel.loadIsFirst()
+
+        permissionViewModel.loadTerms(this)
+        permissionViewModel.loadPrivacy(this)
     }
 
     // 이게 맞나
