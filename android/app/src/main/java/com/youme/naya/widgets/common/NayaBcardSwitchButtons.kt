@@ -32,7 +32,8 @@ fun NayaBcardSwitchButtons(
     nayaTab: @Composable (() -> Unit),
     bCardTab: @Composable (() -> Unit),
     videoTab: @Composable (() -> Unit) = {},
-    isHome: Boolean = false
+    isHome: Boolean = false,
+    isNuya: Boolean = false
 ) {
     val (cardTab, setCardTab) = rememberSaveable {
         mutableStateOf(CardTabConstant.NAYA)
@@ -50,11 +51,19 @@ fun NayaBcardSwitchButtons(
                     NayaTabStore.setCurrTabState("naya")
                 }
             ) {
-                Image(
-                    painter = painterResource(R.drawable.home_tab_naya),
-                    contentDescription = "home naya tab",
-                    alpha = if (cardTab == CardTabConstant.NAYA) 1f else 0.3f
-                )
+                if (isNuya) {
+                    Image(
+                        painter = painterResource(R.drawable.home_tab_nuya),
+                        contentDescription = "home nuya tab",
+                        alpha = if (cardTab == CardTabConstant.NAYA) 1f else 0.3f
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(R.drawable.home_tab_naya),
+                        contentDescription = "home naya tab",
+                        alpha = if (cardTab == CardTabConstant.NAYA) 1f else 0.3f
+                    )
+                }
             }
             Spacer(modifier = Modifier.width(4.dp))
             Box(

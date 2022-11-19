@@ -55,7 +55,7 @@ fun HeaderBar(
             logo = false
             title = "명함 직접 입력"
         }
-        "bCardCreateByCamera?result={result}&path={path}&isNuya={isNuya}" -> {
+        "bCardCreateByCamera?result={result}&path={path}&path2={path2}&isNuya={isNuya}&isSameImage={isSameImage}" -> {
             logo = false
             title = "카메라로 명함 등록"
         }
@@ -73,53 +73,52 @@ fun HeaderBar(
         }
     }
 
-        TopAppBar(
-            modifier = Modifier.height(64.dp),
-            backgroundColor = NeutralWhite,
-            elevation = 0.dp,
-            contentPadding = PaddingValues(horizontal = 8.dp),
-        ) {
+    TopAppBar(
+        modifier = Modifier.height(64.dp),
+        backgroundColor = NeutralWhite,
+        elevation = 0.dp,
+        contentPadding = PaddingValues(horizontal = 8.dp),
+    ) {
 
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                if (logo) {
-                    Row(
-                        Modifier
-                            .height(24.dp)
-                            .padding(start = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            if (logo) {
+                Row(
+                    Modifier
+                        .height(24.dp)
+                        .padding(start = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.home_logo_image),
+                        contentDescription = "logo",
+                        modifier = Modifier
+                            .fillMaxHeight(0.9f)
+                            .padding(end = 4.dp)
+                    )
+                    Image(
+                        painter = painterResource(R.drawable.home_logo_text),
+                        contentDescription = "logo text",
+                        modifier = Modifier.fillMaxHeight()
+                    )
+                }
+                Row(
+                    Modifier.height(24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(onClick = { navController.navigate("alarm") }) {
                         Image(
-                            painter = painterResource(R.drawable.home_logo_image),
-                            contentDescription = "logo",
-                            modifier = Modifier
-                                .fillMaxHeight(0.9f)
-                                .padding(end = 4.dp)
-                        )
-                        Image(
-                            painter = painterResource(R.drawable.home_logo_text),
-                            contentDescription = "logo text",
-                            modifier = Modifier.fillMaxHeight()
+                            painter = painterResource(R.drawable.home_icon_alarm),
+                            contentDescription = "Alarm button"
                         )
                     }
-                     Row(
-                         Modifier.height(24.dp),
-                         verticalAlignment = Alignment.CenterVertically
-                     ) {
-                         IconButton(onClick = { navController.navigate("alarm") }) {
-                             Image(
-                                 painter = painterResource(R.drawable.home_icon_alarm),
-                                 contentDescription = "Alarm button"
-                             )
-                         }
-                         IconButton(onClick = { navController.navigate("settings")  }) {
-                             Image(
-                                 painter = painterResource(R.drawable.home_icon_setting),
-                                 contentDescription = "Settings button"
-                             )
-                         }
-                     }
+                    IconButton(onClick = { navController.navigate("settings") }) {
+                        Image(
+                            painter = painterResource(R.drawable.home_icon_setting),
+                            contentDescription = "Settings button"
+                        )
+                    }
                 }
-                else {
+            } else {
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -154,6 +153,6 @@ fun HeaderBar(
                     }
                 }
             }
-            }
         }
+    }
 }
