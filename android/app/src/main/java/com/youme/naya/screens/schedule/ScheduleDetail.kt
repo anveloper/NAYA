@@ -415,48 +415,49 @@ fun ScheduleDetailScreen(
                             contentAlignment = Alignment.Center,
                         ) {
                             if (temporaryMember.value.type == 0) {
-                                Box(
-                                    modifier = Modifier
-                                        .width(220.dp)
-                                        .height(130.dp)
-                                        .border(width = 2.dp,
-                                            color = memberIconsColor[temporaryMember.value.memberIcon!!]),
-                                    contentAlignment = Alignment.Center,
-                                ) {
-                                    Column() {
-                                        temporaryMember.value.name?.let {
-                                            Text(it, color = PrimaryDark, style = Typography.h6)
-                                        }
-                                        Spacer(modifier = Modifier.height(8.dp))
-                                        temporaryMember.value.phoneNum?.let {
-                                            Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                                horizontalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                Text("전화번호", color = NeutralGray, style = Typography.body2)
-                                                Text(it, color = PrimaryDark, style = Typography.body2)
-                                            }
-                                        }
-                                        Spacer(modifier = Modifier.height(4.dp))
-                                        temporaryMember.value.email?.let {
-                                            Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                                horizontalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                Text("이메일", color = NeutralGray, style = Typography.body2)
-                                                Text(it, color = PrimaryDark, style = Typography.body2)
-                                            }
-                                            Spacer(modifier = Modifier.height(4.dp))
-                                        }
-                                        temporaryMember.value.etcInfo?.let {
-                                            Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                                horizontalArrangement = Arrangement.SpaceBetween
-                                            ) {
-                                                Text("추가 정보", color = NeutralGray, style = Typography.body2)
-                                                Text(it, color = PrimaryDark, style = Typography.body2)
-                                            }
+                            Box(
+                                modifier = Modifier
+                                    .width(220.dp)
+                                    .height(130.dp)
+                                    .border(width = 2.dp,
+                                        color = memberIconsColor[temporaryMember.value.memberIcon!!]),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Column() {
+                                    temporaryMember.value.name?.let {
+                                        Text(it, color = PrimaryDark, style = Typography.h6)
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    temporaryMember.value.phoneNum?.let {
+                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                            Text("전화번호", color = NeutralGray, style = Typography.body2)
+                                            Text(it, color = PrimaryDark, style = Typography.body2)
                                         }
                                     }
-
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    temporaryMember.value.email?.let {
+                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                            Text("이메일", color = NeutralGray, style = Typography.body2)
+                                            Text(it, color = PrimaryDark, style = Typography.body2)
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    }
+                                    temporaryMember.value.etcInfo?.let {
+                                        Row(modifier = Modifier.fillMaxWidth(0.8f),
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text("추가 정보", color = NeutralGray, style = Typography.body2)
+                                            Text(it, color = PrimaryDark, style = Typography.body2)
+                                        }
+                                    }
                                 }
+
+
+                            }
                             }
                             else {
                                 if (temporaryMember.value.nuyaType == 0) {
@@ -475,8 +476,8 @@ fun ScheduleDetailScreen(
 
                             }
                         }
+                        }
                     }
-                }
             }
 
 

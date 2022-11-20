@@ -152,13 +152,13 @@ fun ScheduleCreateScreen(
                                                 .padding(vertical = 4.dp)
                                                 .fillMaxWidth()
                                                 .height(48.dp),
-                                                contentAlignment = Alignment.Center) {
-                                                Text(
-                                                    text = "Nuya 보관함에서 가져오기",
-                                                    color = PrimaryBlue,
-                                                    style = Typography.body1,
-                                                )
-                                            }
+                                                    contentAlignment = Alignment.Center) {
+                                                    Text(
+                                                        text = "Nuya 보관함에서 가져오기",
+                                                        color = PrimaryBlue,
+                                                        style = Typography.body1,
+                                                    )
+                                                }
                                             Box(modifier = Modifier
                                                 .clickable(
                                                     onClick = {

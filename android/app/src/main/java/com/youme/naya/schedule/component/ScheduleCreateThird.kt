@@ -131,7 +131,7 @@ fun ScheduleCreateThird(
                 }),
                 trailingIcon = {
                     Image(
-                        painter = painterResource(id = com.youme.naya.R.drawable.home_icon_search),
+                    painter = painterResource(id = com.youme.naya.R.drawable.home_icon_search),
                         "setting",
                         colorFilter = ColorFilter.tint(PrimaryBlue)
                     )}
@@ -142,22 +142,22 @@ fun ScheduleCreateThird(
                 .height(200.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (mapShow.value) {
-                    Column() {
-                        Spacer(modifier = Modifier.height(20.dp))
-                        GoogleMap(
-                            modifier = Modifier.fillMaxHeight().fillMaxWidth(),
-                            cameraPositionState = cameraPositionState
-                        ) {
-                            Marker(
-                                state = MarkerState(position = place.value),
-                                title = "place",
-                                snippet = "Marker in place"
-                            )
-                        }
+            if (mapShow.value) {
+                Column() {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    GoogleMap(
+                        modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                        cameraPositionState = cameraPositionState
+                    ) {
+                        Marker(
+                            state = MarkerState(position = place.value),
+                            title = "place",
+                            snippet = "Marker in place"
+                        )
                     }
+                }
 
-                } else {
+            } else {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
