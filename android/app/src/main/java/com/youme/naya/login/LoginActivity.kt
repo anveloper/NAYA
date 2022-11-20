@@ -147,4 +147,3 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
         }
     }
 }
-

@@ -3,6 +3,7 @@ package com.youme.naya.card
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,17 +41,14 @@ fun BusinessCardCreateDialog(
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
             // OCR 문자열 인식 결과
-            var ocrResult = it.data?.getStringExtra("ocrResult")
+            val ocrResult = it.data?.getStringExtra("ocrResult")
             val imgPath = it.data?.getStringExtra("croppedImage")
-            val imgPath2 = it.data?.getStringExtra("secondImage")
-            val isSameImage = it.data?.getBooleanExtra("isSameImage", false)
 
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
+            } else {
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&isNuya=${isNuya}")
             }
-            navController.navigate(
-                "bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&path2=${imgPath2}&isNuya=${isNuya}&isSameImage=${isSameImage}"
-            )
             onDismissRequest()
         }
     }
@@ -62,12 +60,8 @@ fun BusinessCardCreateDialog(
             if (it.resultCode == Activity.RESULT_OK) {
                 // 임시 이미지 저장 경로
                 val imgPath = it.data?.getStringExtra("savedImgAbsolutePath")
-                val imgPath2 = it.data?.getStringExtra("savedImgAbsolutePath2")
-                val isSameImage = it.data?.getBooleanExtra("isSameImage", false)
                 val ocrIntent = Intent(activity, StillImageActivity::class.java)
                 ocrIntent.putExtra("savedImgAbsolutePath", imgPath)
-                ocrIntent.putExtra("savedImgAbsolutePath2", imgPath2)
-                ocrIntent.putExtra("isSameImage", isSameImage)
                 ocrLauncher.launch(ocrIntent)
             }
         }

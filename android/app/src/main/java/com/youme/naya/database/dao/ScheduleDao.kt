@@ -1,7 +1,6 @@
 package com.youme.naya.database.dao
 
 import androidx.room.*
-import com.youme.naya.database.entity.Alarm
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.relations.ScheduleWithMembers
@@ -81,19 +80,4 @@ interface ScheduleDao {
     @Transaction
     @Delete
     suspend fun deleteScheduleWithMembers(schedule: Schedule, members: List<Member>)
-
-
-    /**
-     * Alarm
-     */
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAlarm(alarm: Alarm)
-
-    @Query("SELECT * FROM alarm")
-    fun getAlarms(): Flow<List<Alarm>>
-
-    @Query("SELECT * FROM alarm WHERE date = :date")
-    fun getAlarmsByDate(date: String): Flow<List<Alarm>>
-
 }

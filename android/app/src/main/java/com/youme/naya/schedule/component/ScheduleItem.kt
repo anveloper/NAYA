@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.youme.naya.database.entity.Member
+import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.entity.relations.ScheduleWithMembers
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
@@ -50,7 +52,7 @@ fun ScheduleItem(
         Card(
             modifier = modifier
                 .fillMaxWidth()
-                .height(if (schedule.members.isNotEmpty()) 132.dp else 80.dp),
+                .height(if (schedule.members.isNotEmpty()) 120.dp else 80.dp),
             elevation = 3.dp,
             shape = RoundedCornerShape(corner = CornerSize(8.dp)),
             onClick = {navController.navigate("scheduleDetail/${schedule.schedule.scheduleId}")},

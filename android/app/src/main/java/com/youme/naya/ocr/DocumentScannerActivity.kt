@@ -19,17 +19,12 @@ import java.io.FileOutputStream
 
 class DocumentScannerActivity : AppCompatActivity() {
     private lateinit var croppedImageView: ImageView
-    private lateinit var croppedImageView2: ImageView
-    private var isSameImage = false
 
     private val documentScanner = DocumentScanner(
         this,
         { croppedImageResults ->
             // display the first cropped image
             croppedImageView.setImageBitmap(BitmapFactory.decodeFile(croppedImageResults.first()))
-            croppedImageView2.setImageBitmap(BitmapFactory.decodeFile(croppedImageResults.last()))
-            isSameImage = croppedImageResults.first() == croppedImageResults.last()
-            Log.i("IS_SAME_OBJECT", isSameImage.toString())
         },
         {
             // an error happened
@@ -42,7 +37,7 @@ class DocumentScannerActivity : AppCompatActivity() {
         },
         ResponseType.IMAGE_FILE_PATH,
         true,
-        2
+        1
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +46,7 @@ class DocumentScannerActivity : AppCompatActivity() {
 
         // cropped image
         croppedImageView = findViewById(R.id.cropped_image_view)
-        croppedImageView2 = findViewById(R.id.cropped_image_view2)
+
         // ocr button
         val go_ocr = findViewById<Button>(R.id.ocr_btn)
 
@@ -70,20 +65,14 @@ class DocumentScannerActivity : AppCompatActivity() {
 
             // 1. R.id.cropped_image_view에 들어있는 이미지를 저장한다.
             val bitmap: Bitmap? = getBitmapFromView(croppedImageView)
-            val bitmap2: Bitmap? = getBitmapFromView(croppedImageView2)
             var savedImgAbsolutePath: String? = null
-            var savedImgAbsolutePath2: String? = null
+
             if (bitmap != null) {
                 savedImgAbsolutePath = saveBitmapToPng(bitmap, "nayatempfile", this.baseContext)
-            }
-            if (bitmap2 != null) {
-                savedImgAbsolutePath2 = saveBitmapToPng(bitmap2, "nayatempfile2", this.baseContext)
             }
 
             // 2. 저장된 이미지의 경로를 인텐트에 저장한다.
             newIntent.putExtra("savedImgAbsolutePath", savedImgAbsolutePath)
-            newIntent.putExtra("savedImgAbsolutePath2", savedImgAbsolutePath2)
-            newIntent.putExtra("isSameImage", isSameImage)
 
             // 3. 정상적으로 처리했음을 이전 액티비티에 알리고 종료한다.
             setResult(RESULT_OK, newIntent)

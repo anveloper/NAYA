@@ -1,6 +1,9 @@
 package com.youme.naya.network
 
-import com.youme.naya.vo.*
+import com.youme.naya.vo.LoginInfoVO
+import com.youme.naya.vo.LoginRequestVO
+import com.youme.naya.vo.SendCardRequestVO
+import com.youme.naya.vo.SendCardResponseVO
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -16,8 +19,4 @@ interface RetrofitService {
         @Body payload: SendCardRequestVO
     ): Call<SendCardResponseVO>
 
-    @GET("map")
-    fun map(
-        @Query("address") address: String
-    ): Call<MapResponseVO>
 }

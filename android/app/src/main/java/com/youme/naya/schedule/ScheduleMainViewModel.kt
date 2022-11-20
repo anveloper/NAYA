@@ -14,7 +14,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
-import com.youme.naya.database.entity.Alarm
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.entity.relations.ScheduleWithMembers
@@ -26,11 +25,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -164,8 +161,8 @@ class ScheduleMainViewModel @Inject constructor(
                         _color.value = schedule.schedule.color
                         _isDone.value = schedule.schedule.isDone
                         _isOnAlarm.value = schedule.schedule.isOnAlarm
-                        _startTime.value = schedule.schedule.startTime
-                        _endTime.value = schedule.schedule.endTime
+                        _startTime.value = schedule.schedule.startTime.toString()
+                        _endTime.value = schedule.schedule.endTime.toString()
                         _alarmTime.value = schedule.schedule.alarmTime
                         _selectedDate.value = schedule.schedule.scheduleDate
                         _memberList.value = schedule.members
@@ -173,6 +170,7 @@ class ScheduleMainViewModel @Inject constructor(
                 }
             }
         }
+
     }
 
     fun getSelectedDate(
@@ -298,6 +296,8 @@ class ScheduleMainViewModel @Inject constructor(
         }
     }
 
+
+
     // 스케줄 추가/수정
 
     // Day2 받은 날짜 (알람을 위한 변환)
@@ -347,11 +347,8 @@ class ScheduleMainViewModel @Inject constructor(
             if (isOnAlarm.value) {
                 if (alarmTime.value == "종료 시간") {
                     val reservationHour =
-                        if (endTime.value.substring(8,10) == "PM" && endTime.value.substring(0,2).toInt() != 12) {
+                        if (endTime.value.substring(8,10) == "PM") {
                             (endTime.value.substring(0,2).toInt() + 12).toString()
-                        }
-                        else if (endTime.value.substring(8,10) == "AM" && endTime.value.substring(0,2).toInt() == 12) {
-                            "00"
                         } else {
                             endTime.value.substring(0,2).toInt().toString()
                         }
@@ -361,28 +358,12 @@ class ScheduleMainViewModel @Inject constructor(
                     if (compareTimeResult < 0) {
                         createEndErrorMadeNotification(selectedDate, compareTimeResult.toString(),title.value.text)
                     } else {
-                        if (scheduleId == null) {
-                            currentScheduleId?.let {
-                                setOneTimeNotification(
-                                    it,
-                                    compareTimeResult,selectedDate,
-                                    compareTimeResult.toString(),title.value.text,
-                                    0,  alarmTime.value, color.value)
-                            }
-                        }  else {
-                            setOneTimeNotification(scheduleId,
-                                compareTimeResult,selectedDate,
-                                compareTimeResult.toString(),title.value.text, 0,
-                                alarmTime.value, color.value)
-                        }
-
+                        setOneTimeNotification(compareTimeResult,selectedDate, compareTimeResult.toString(),title.value.text, 0)
                     }
                 } else {
                     val reservationHour =
-                        if (startTime.value.substring(8,10) == "PM" && startTime.value.substring(0,2).toInt() != 12) {
+                        if (startTime.value.substring(8,10) == "PM") {
                             (startTime.value.substring(0,2).toInt() + 12).toString()
-                        } else if (startTime.value.substring(8,10) == "AM" && startTime.value.substring(0,2).toInt() == 12) {
-                            "00"
                         } else {
                             startTime.value.substring(0,2).toInt().toString()
                         }
@@ -396,26 +377,7 @@ class ScheduleMainViewModel @Inject constructor(
                     if (compareTimeResult < 0) {
                         createStartErrorMadeNotification(selectedDate, compareTimeResult.toString(),title.value.text)
                     } else {
-                        if (scheduleId == null) {
-                            currentScheduleId?.let {
-                                setOneTimeNotification(
-                                    it,
-                                    compareTimeResult,
-                                    selectedDate,
-                                    compareTimeResult.toString(),title.value.text, 1,
-                                    alarmTime.value,
-                                    color.value
-                                )
-                            }
-                        } else {
-                            setOneTimeNotification(scheduleId,
-                                compareTimeResult,selectedDate, compareTimeResult.toString(),
-                                title.value.text,
-                                1,
-                                alarmTime.value,
-                                color.value
-                            )
-                        }
+                        setOneTimeNotification(compareTimeResult, selectedDate, compareTimeResult.toString(),title.value.text, 1)
                     }
                 }
 
@@ -423,6 +385,8 @@ class ScheduleMainViewModel @Inject constructor(
         }
 
     }
+
+
 
     fun insertTemporaryMember(memberType: Int, memberNum: Int, scheduleId: Int) {
         viewModelScope.launch {
@@ -452,24 +416,6 @@ class ScheduleMainViewModel @Inject constructor(
         )
     }
 
-    fun insertAlarm(title: String, content: String, date: String, color: Int) {
-        val current = java.time.LocalDateTime.now()
-        val formatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초")
-        val formatted = current.format(formatter)
-        viewModelScope.launch {
-            repository.insertAlarm(Alarm(
-                alarmId = null,
-                title = title,
-                content = content,
-                date = date,
-                color = color,
-                alarmTime = formatted
-            )
-            )
-        }
-
-        }
-
     fun deleteTemporaryMember(memberId: Int) {
         viewModelScope.launch {
             var list = emptyList<Member>()
@@ -480,11 +426,25 @@ class ScheduleMainViewModel @Inject constructor(
         }
     }
 
+    fun deleteMember(memberId: Int) {
+        viewModelScope.launch {
+            val member = repository.getMemberById(memberId)
+            if (member != null) {
+                repository.deleteMember(member)
+            }
+        }
+        var list = emptyList<Member>()
+        for (index in memberList.value.indices) {
+            if (index != memberId) list += memberList.value[index]
+        }
+        _memberList.value = list
+    }
+
     private fun createScheduleMadeNotification(selectedDate: String, startTime: String, title: String) {
         val notificationId = 2
         val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
             .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
-            .setContentTitle("일정 생성 완료")
+            .setContentTitle("일정 생성 완료 :)")
             .setContentText("$selectedDate  ${startTime},\n" +
                     "${title}이 시작됩니다." )
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -493,18 +453,18 @@ class ScheduleMainViewModel @Inject constructor(
         }    
     }
 
-    private fun createEndErrorMadeNotification(selectedDate: String, startTime: String, title: String) {
-        val notificationId = 2
-        val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
-            .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
-            .setContentTitle("이미 종료된 일정")
-            .setContentText("$selectedDate  ${startTime},\n" +
-                    "${title}이 이미 종료되었습니다." )
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-        with(NotificationManagerCompat.from(AppModule.appContext)) {
-            notify(notificationId, builder.build())
+        private fun createEndErrorMadeNotification(selectedDate: String, startTime: String, title: String) {
+            val notificationId = 2
+            val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
+                .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
+                .setContentTitle("이미 종료된 일정")
+                .setContentText("$selectedDate  ${startTime},\n" +
+                        "${title}이 이미 종료되었습니다." )
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+            with(NotificationManagerCompat.from(AppModule.appContext)) {
+                notify(notificationId, builder.build())
+            }
         }
-    }
 
     private fun createStartErrorMadeNotification(selectedDate: String, startTime: String, title: String) {
         val notificationId = 2
@@ -518,112 +478,72 @@ class ScheduleMainViewModel @Inject constructor(
         }
     }
 
-    private fun setOneTimeNotification(scheduleId: Int,
-                                       time: Long,
-                                       selectedDate: String,
-                                       startTime: String, title: String,
-                                       type: Int, alarmTIme: String,
-                                       color: Int
-    ) {
-        val workManager = WorkManager.getInstance(AppModule.appContext)
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-            .build()
+}
 
-        val notificationWorker = OneTimeWorkRequestBuilder<NotificationWorker>()
-            .setInitialDelay(time, TimeUnit.MINUTES)
-            .setConstraints(constraints)
-            .build()
+private fun setOneTimeNotification(time: Long, selectedDate: String, startTime: String, title: String, type: Int) {
+    val workManager = WorkManager.getInstance(AppModule.appContext)
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+        .build()
 
-        workManager.enqueue(notificationWorker)
+    val notificationWorker = OneTimeWorkRequestBuilder<NotificationWorker>()
+        .setInitialDelay(time, TimeUnit.MINUTES)
+        .setConstraints(constraints)
+        .build()
 
-        //Monitoring for state of work
-        workManager.getWorkInfoByIdLiveData(notificationWorker.id)
-            .observeForever { workInfo ->
-                if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-                    when {
-                        (type == 0) ->  createEndNotification(scheduleId, selectedDate, startTime, title, color)
-                        (type == 1 && alarmTIme == "시작 시간") ->
-                            createStartNotification(scheduleId, selectedDate, startTime, title, alarmTIme, color)
-                        (type == 1 && alarmTIme == "1시간 전") ->
-                            createStartNotification(scheduleId, selectedDate, startTime, title, alarmTIme, color)
-                        (type == 1 && alarmTIme == "3시간 전") ->
-                            createStartNotification(scheduleId, selectedDate, startTime, title, alarmTIme, color)
-                    }
+    workManager.enqueue(notificationWorker)
 
+    //Monitoring for state of work
+    workManager.getWorkInfoByIdLiveData(notificationWorker.id)
+        .observeForever { workInfo ->
+            if (workInfo.state == WorkInfo.State.SUCCEEDED) {
+                when {
+                    (type == 0) ->  createEndNotification(selectedDate, startTime, title)
+                    (type == 1) -> createStartNotification(selectedDate, startTime, title)
                 }
-            }
-    }
 
-    private fun createNotificationChannel(context: Context) {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "일정 알림"
-            val descriptionText = "일정에 대한 정보를 제공합니다."
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel("CHANNEL_ID", name, importance).apply {
-                description = descriptionText
-            }
-            // register the channel with the system
-            val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
         }
-    }
+}
+}
 
-    private fun createStartNotification(scheduleId: Int,
-                                        selectedDate: String,
-                                        startTime: String,
-                                        title: String,
-                                        alarmTime: String,
-                                        color : Int
-    ) {
-
-        val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
-            .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
-            .setContentTitle("일정 알림")
-            .setContentText( when (alarmTime) {
-                "시작 시간" -> "${title}이 곧 시작됩니다."
-                "1시간 전" -> "1시간 후 ${title}이 시작됩니다."
-                "3시간 전" -> "3시간 후 ${title}이 시작됩니다."
-                else -> ""
-            })
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-        with(NotificationManagerCompat.from(AppModule.appContext)) {
-            //notificationId is unique for each notification that you define
-            notify(scheduleId, builder.build())
+private fun createNotificationChannel(context: Context) {
+    // Create the NotificationChannel, but only on API 26+ because
+    // the NotificationChannel class is new and not in the support library
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val name = "일정 알림"
+        val descriptionText = "일정에 대한 정보를 제공합니다."
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val channel = NotificationChannel("CHANNEL_ID", name, importance).apply {
+            description = descriptionText
         }
-        insertAlarm(
-            title = "일정 알림",
-            content =  when (alarmTime) {
-                "시작 시간" -> "${title}이 곧 시작됩니다."
-                "1시간 전" -> "1시간 후 ${title}이 시작됩니다."
-                "3시간 전" -> "3시간 후 ${title}이 시작됩니다."
-                else -> ""
-            },
-            date = selectedDate,
-            color = color
-        )
-
-    }
-
-    private fun createEndNotification(scheduleId: Int, selectedDate: String,
-                                      startTime: String, title: String, color : Int) {
-        val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
-            .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
-            .setContentTitle("일정 알림")
-            .setContentText("${title}이 종료되었습니다." )
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-        with(NotificationManagerCompat.from(AppModule.appContext)) {
-            //notificationId is unique for each notification that you define
-            notify(scheduleId, builder.build())
-        }
-        insertAlarm(
-            title = "일정 알림",
-            content = "${title}이 종료되었습니다.",
-            date = selectedDate,
-            color = color
-        )
+        // register the channel with the system
+        val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
     }
 }
 
+private fun createStartNotification(selectedDate: String, startTime: String, title: String) {
+    val notificationId = 1
+    val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
+        .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
+        .setContentTitle("일정 알림 :)")
+        .setContentText("${title}이 곧 시작됩니다." )
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+    with(NotificationManagerCompat.from(AppModule.appContext)) {
+        //notificationId is unique for each notification that you define
+        notify(notificationId, builder.build())
+    }
+}
+
+private fun createEndNotification(selectedDate: String, startTime: String, title: String) {
+    val notificationId = 1
+    val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
+        .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
+        .setContentTitle("일정 알림 :)")
+        .setContentText("${title}이 종료되었습니다." )
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+    with(NotificationManagerCompat.from(AppModule.appContext)) {
+        //notificationId is unique for each notification that you define
+        notify(notificationId, builder.build())
+    }
+}

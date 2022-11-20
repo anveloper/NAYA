@@ -23,10 +23,4 @@ class SharedPrefDataSource @Inject constructor(context: Context) {
             putBoolean(IS_FIRST_KEY, false)
         }
     }
-    fun resetIsFirst(){
-        sharedPref.edit{
-            remove(IS_FIRST_KEY)
-            putBoolean(IS_FIRST_KEY, true)
-        }
-    }
 }

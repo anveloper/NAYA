@@ -17,10 +17,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -28,7 +30,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,8 +40,10 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.youme.naya.R
 import com.youme.naya.components.OutlinedBigButton
 import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.database.entity.Card
@@ -121,8 +127,7 @@ fun CardDetailsDialog(
                         cardFace = flipState,
                         onClick = { flipState = it.next },
                         axis = RotationAxis.AxisY,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    ) {
+                        modifier = Modifier.padding(bottom = 16.dp)) {
                         Image(
                             painter = rememberAsyncImagePainter(nayaCard.uri),
                             contentDescription = null,
@@ -136,18 +141,7 @@ fun CardDetailsDialog(
                         onClick = { flipState = it.next },
                         axis = RotationAxis.AxisY,
                         isHorizontalCard = true,
-                        modifier = Modifier.padding(bottom = 16.dp),
-                        back = if (bCard.background != null) ({
-                            Image(
-                                painter = rememberAsyncImagePainter(
-                                    BitmapFactory.decodeFile(bCard.background)
-                                ),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }) else null
-                    ) {
+                        modifier = Modifier.padding(bottom = 16.dp)) {
                         Image(
                             painter = rememberAsyncImagePainter(BitmapFactory.decodeFile(bCard.path)),
                             contentDescription = null,

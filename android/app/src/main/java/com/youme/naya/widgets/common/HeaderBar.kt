@@ -1,15 +1,16 @@
 package com.youme.naya.widgets.common
 
 import android.app.Activity
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -22,20 +23,24 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.youme.naya.R
 import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.fonts
+import com.youme.naya.widgets.calendar.SearchHeaderBar
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HeaderBar(
     navController: NavController,
     title: String = ""
 ) {
     var title = title
-    var logo = false
+    var logo: Boolean = false
+    var main: Boolean = true
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val activity = LocalContext.current as? Activity
@@ -45,18 +50,21 @@ fun HeaderBar(
     when (navBackStackEntry?.destination?.route) {
         "home" -> {
             logo = true
+            main = true
         }
         "naya" -> {
             logo = true
+            main = true
         }
         "nuya" -> {
             logo = true
+            main = true
         }
         "bCardCreate" -> {
             logo = false
             title = "명함 직접 입력"
         }
-        "bCardCreateByCamera?result={result}&path={path}&path2={path2}&isNuya={isNuya}&isSameImage={isSameImage}" -> {
+        "bCardCreateByCamera?result={result}&path={path}&isNuya={isNuya}" -> {
             logo = false
             title = "카메라로 명함 등록"
         }
@@ -66,57 +74,64 @@ fun HeaderBar(
         }
         "details" -> {
             logo = false
+            main = true
             title = "카드 상세 보기"
             closeActivityButton = true
         }
         "schedule" -> {
             logo = true
+            main = true
         }
     }
 
-    TopAppBar(
-        modifier = Modifier.height(64.dp),
-        backgroundColor = NeutralWhite,
-        elevation = 0.dp,
-        contentPadding = PaddingValues(horizontal = 8.dp),
-    ) {
+    if (main) {
+        TopAppBar(
+            modifier = Modifier.height(64.dp),
+            backgroundColor = NeutralWhite,
+            elevation = 0.dp,
+            contentPadding = PaddingValues(horizontal = 8.dp),
+        ) {
 
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            if (logo) {
-                Row(
-                    Modifier
-                        .height(24.dp)
-                        .padding(start = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.home_logo_image),
-                        contentDescription = "logo",
-                        modifier = Modifier
-                            .fillMaxHeight(0.9f)
-                            .padding(end = 4.dp)
-                    )
-                    Image(
-                        painter = painterResource(R.drawable.home_logo_text),
-                        contentDescription = "logo text",
-                        modifier = Modifier.fillMaxHeight()
-                    )
-                }
-                Row(
-                    Modifier.height(24.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { navController.navigate("alarm") }) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                if (logo) {
+                    Row(
+                        Modifier
+                            .height(24.dp)
+                            .padding(start = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Image(
-                            painter = painterResource(R.drawable.home_icon_alarm),
-                            contentDescription = "Alarm button"
+                            painter = painterResource(R.drawable.home_logo_image),
+                            contentDescription = "logo",
+                            modifier = Modifier
+                                .fillMaxHeight(0.9f)
+                                .padding(end = 4.dp)
+                        )
+                        Image(
+                            painter = painterResource(R.drawable.home_logo_text),
+                            contentDescription = "logo text",
+                            modifier = Modifier.fillMaxHeight()
                         )
                     }
-                    IconButton(onClick = { navController.navigate("settings") }) {
-                        Icon(Icons.Filled.Info, null, Modifier.size(24.dp), NeutralLight)
-                    }
+                     Row(
+                         Modifier.height(24.dp),
+                         verticalAlignment = Alignment.CenterVertically
+                     ) {
+                         IconButton(onClick = { navController.navigate("settings") }) {
+                             Image(
+                                 painter = painterResource(R.drawable.home_icon_alarm),
+                                 contentDescription = "Alarm button"
+                             )
+                         }
+                         IconButton(onClick = { navController.navigate("settings")  }) {
+                             Image(
+                                 painter = painterResource(R.drawable.home_icon_setting),
+                                 contentDescription = "Settings button"
+                             )
+                         }
+                     }
                 }
-            } else {
+                else {
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -150,6 +165,13 @@ fun HeaderBar(
                         }
                     }
                 }
+            }
+            }
+        }
+    } else {
+        LazyColumn {
+            stickyHeader {
+                SearchHeaderBar(navController)
             }
         }
     }

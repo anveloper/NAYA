@@ -1,9 +1,5 @@
 package com.youme.naya.database.repository
 
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
-import com.youme.naya.database.entity.Alarm
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.entity.relations.ScheduleWithMembers
@@ -57,15 +53,5 @@ interface ScheduleRepository {
     suspend fun insertScheduleWithMembers(schedule: Schedule, members: List<Member>)
 
     suspend fun deleteScheduleWithMembers(schedule: Schedule, members: List<Member>)
-
-    /**
-     * Alarm
-     */
-
-    suspend fun insertAlarm(alarm: Alarm)
-
-    fun getAlarms(): Flow<List<Alarm>>
-
-    fun getAlarmsByDate(date: String): Flow<List<Alarm>>
 
 }

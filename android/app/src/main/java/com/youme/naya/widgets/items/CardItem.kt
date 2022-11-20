@@ -114,20 +114,7 @@ fun CardItem(nayaCard: ViewCard? = null, bCard: Card? = null, flipState: CardFac
                     else -> false
                 }
                 true
-            },
-        back = if (nayaCard == null && bCard != null && bCard.background != null) ({
-            Image(
-                painter = rememberAsyncImagePainter(
-                    rotateBitmap(
-                        BitmapFactory.decodeFile(bCard.background),
-                        90f
-                    )
-                ),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }) else null) {
+            }) {
         if (nayaCard != null && bCard == null) {
             Image(rememberAsyncImagePainter(nayaCard.uri), null, Modifier.fillMaxSize())
         } else if (nayaCard == null && bCard != null) {

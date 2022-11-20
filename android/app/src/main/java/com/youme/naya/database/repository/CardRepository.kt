@@ -1,6 +1,5 @@
 package com.youme.naya.database.repository
 
-import androidx.lifecycle.asLiveData
 import com.youme.naya.database.dao.CardDao
 import com.youme.naya.database.entity.Card
 import kotlinx.coroutines.Dispatchers

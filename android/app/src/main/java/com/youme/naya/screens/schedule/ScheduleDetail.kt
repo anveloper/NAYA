@@ -2,18 +2,18 @@ package com.youme.naya.screens.schedule
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -25,7 +25,6 @@ import androidx.navigation.NavController
 import com.youme.naya.R
 import com.youme.naya.components.PrimaryTinySmallButton
 import com.youme.naya.database.entity.Member
-import com.youme.naya.database.entity.Member.Companion.memberIconsColor
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
 
@@ -47,12 +46,7 @@ fun ScheduleDetailScreen(
         remember { mutableStateOf(false) }
     }
 
-    var detailOpen = remember { mutableStateOf(false) }
-
-
-    Column (horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.verticalScroll(rememberScrollState())
-    ) {
+    Column (horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
             CalendarHeaderBtnGroupModifier,
             verticalAlignment = Alignment.CenterVertically,
@@ -100,12 +94,10 @@ fun ScheduleDetailScreen(
             }
         }
         Column(
-            modifier = Modifier.fillMaxWidth(0.88f)) {
+            modifier = Modifier.width(300.dp)) {
             // title, 날짜, Done
             Row (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(72.dp),
+                modifier = Modifier.fillMaxWidth().fillMaxHeight(0.1f),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -218,152 +210,47 @@ fun ScheduleDetailScreen(
             }
 
             if (viewModel.memberList.value.isNotEmpty()) {
-                var temporaryMember:
-                        MutableState<Member> = remember { mutableStateOf(viewModel.memberList.value[0]) }
-
-                Text(
-                    "함께 하는 멤버",
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = PrimaryDark,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                LazyVerticalGrid(
-                    modifier = Modifier
-                        .height(80.dp)
-                        .fillMaxWidth(0.88f),
-                    columns = GridCells.Fixed(5),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                )
-                {
-                    items(viewModel.memberList.value.size) { index ->
-                        Row() {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                if (detailOpen.value && viewModel.memberList.value[index] == temporaryMember.value) {
-                                    Image(
-                                        painter = painterResource(Member.memberIconsFocus[viewModel.memberList.value[index].memberIcon!!]),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .width(60.dp)
-                                            .height(60.dp)
-                                            .clickable(onClick = {
-                                                detailOpen.value = !detailOpen.value
-                                                temporaryMember.value =
-                                                    viewModel.memberList.value[index]
-                                            })
-                                        ,
-                                    )
-                                }
-                                else if (detailOpen.value && viewModel.memberList.value[index] != temporaryMember.value) {
-                                    Image(
-                                        painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .width(60.dp)
-                                            .height(60.dp)
-                                            .clickable(onClick = {
-                                                detailOpen.value = detailOpen.value
-                                                temporaryMember.value =
-                                                    viewModel.memberList.value[index]
-                                            })
-                                        ,
-                                    )
-                                }
-                                else {
-                                    Image(
-                                        painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
-                                        contentDescription = "",
-                                        modifier = Modifier
-                                            .width(60.dp)
-                                            .height(60.dp)
-                                            .clickable(onClick = {
-                                                detailOpen.value = !detailOpen.value
-                                                temporaryMember.value =
-                                                    viewModel.memberList.value[index]
-                                            }),
-                                    )
-                                }
-
-                                viewModel.memberList.value[index].name?.let {
-                                    Text(
-                                        it,
-                                        color = NeutralGray,
-                                        style = Typography.overline
-                                    )
-
-                                }
-                            }
-                            Box(
-                                Modifier
-                                    .width(16.dp)
-                                    .height(20.dp))
-                        }
-
-                    }
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-                Column(modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                    if (detailOpen.value) {
-                        Box(modifier = Modifier
-                            .width(240.dp)
-                            .height(150.dp)
-                            .background(PrimaryLight)
-                            .shadow(elevation = 1.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Box(modifier = Modifier
-                                .width(220.dp)
-                                .height(130.dp)
-                                .border(width = 2.dp,
-                                    color = memberIconsColor[temporaryMember.value.memberIcon!!]),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Column() {
-                                    temporaryMember.value.name?.let {
-                                        Text(it, color = PrimaryDark, style = Typography.h6)
-                                    }
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    temporaryMember.value.phoneNum?.let {
-                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                            Text("전화번호", color = NeutralGray, style = Typography.body2)
-                                            Text(it, color = PrimaryDark, style = Typography.body2)
-                                        }
-                                    }
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    temporaryMember.value.email?.let {
-                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                            Text("이메일", color = NeutralGray, style = Typography.body2)
-                                            Text(it, color = PrimaryDark, style = Typography.body2)
-                                    }
-                                    }
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    temporaryMember.value.etcInfo?.let {
-                                        Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                            horizontalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            Text("추가 정보", color = NeutralGray, style = Typography.body2)
-                                            Text(it, color = PrimaryDark, style = Typography.body2)
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-
-                    }
-                }
-            }
-
-
+            Text(
+                "함께 하는 멤버",
+                modifier = Modifier.padding(vertical = 12.dp),
+                color = PrimaryDark,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp
+            )
             Spacer(modifier = Modifier.height(12.dp))
+            LazyVerticalGrid(
+                modifier = Modifier.height(80.dp).width(300.dp),
+                columns = GridCells.Fixed(5),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            )
+            {
+                items(viewModel.memberList.value.size) { index ->
+                    Row() {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Image(
+                                painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .width(60.dp)
+                                    .height(60.dp)
+                            )
+                            viewModel.memberList.value[index].name?.let {
+                                Text(
+                                    it,
+                                    color = NeutralGray,
+                                    style = Typography.overline
+                                )
+
+                            }
+                        }
+                        Box(Modifier.width(16.dp).height(20.dp))
+                    }
+                }
+            }}
+            Spacer(modifier = Modifier.height(12.dp))
+            
             // 추가 기록 사항
             if (viewModel.description.value.text.isNotEmpty()) {
                 Text(
@@ -379,7 +266,6 @@ fun ScheduleDetailScreen(
                     style= Typography.body1,
                     color = NeutralGray)
             }
-            Spacer(modifier = Modifier.height(40.dp))
-    }
-}}
 
+
+    }}}

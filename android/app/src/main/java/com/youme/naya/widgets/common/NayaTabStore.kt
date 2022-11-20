@@ -7,6 +7,9 @@ class NayaTabStore {
         fun isNayaCard(): Boolean {
             return currTabState == "naya"
         }
+        fun isNuyaCard(): Boolean {
+            return currTabState == "nuya"
+        }
         fun setCurrTabState(state: String) {
             currTabState = state
         }
