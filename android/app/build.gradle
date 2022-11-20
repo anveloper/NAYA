@@ -14,8 +14,8 @@ android {
         applicationId "com.youme.naya"
         minSdk 21
         targetSdk 33
-        versionCode 24
-        versionName "1.6.2"
+        versionCode 25
+        versionName "1.7.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -87,6 +87,7 @@ dependencies {
     // text recognition
     implementation 'com.google.mlkit:text-recognition-korean:16.0.0-beta6'
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.2'
+
     // OCR
     implementation 'com.rmtheis:tess-two:9.1.0'
 
