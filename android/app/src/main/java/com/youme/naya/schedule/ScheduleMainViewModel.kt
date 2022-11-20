@@ -3,8 +3,10 @@ package com.youme.naya.schedule
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
@@ -21,6 +23,7 @@ import com.youme.naya.database.repository.ScheduleRepository
 import com.youme.naya.ui.theme.SecondarySystemBlue
 import com.youme.naya.utils.AppModule
 import com.youme.naya.utils.NotificationWorker
+import com.youme.naya.widgets.home.ViewCard
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -29,6 +32,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.Optional.empty
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -55,7 +59,7 @@ class ScheduleMainViewModel @Inject constructor(
         Clock.System.todayIn(TimeZone.currentSystemDefault()).toString())
     val selectedDate: State<String> = _selectedDate
 
-    private var currentScheduleId: Int? = null
+    var currentScheduleId: Int? = null
 
     private var recentlyDeletedSchedule: Schedule? = null
 
@@ -109,6 +113,12 @@ class ScheduleMainViewModel @Inject constructor(
 
     private val _membersForDelete = mutableStateOf(emptyList<Member>())
     val membersForDelete : State<List<Member>> = _membersForDelete
+
+    private val _cardUri = mutableStateOf("")
+    var cardUri: MutableState<String> = _cardUri
+
+    private val _nuyaType = mutableStateOf(-1)
+    var nuyaType: MutableState<Int> = _nuyaType
 
 
     init {
@@ -273,6 +283,14 @@ class ScheduleMainViewModel @Inject constructor(
         _endTime.value = time
     }
 
+    fun onUriChange(uri: String) {
+        cardUri.value = uri
+    }
+
+    fun onNuyaTypeChange(type: Int) {
+        nuyaType.value = type
+    }
+
     // 스케줄 삭제
 
     // 복구
@@ -386,9 +404,11 @@ class ScheduleMainViewModel @Inject constructor(
 
     }
 
-
-
-    fun insertTemporaryMember(memberType: Int, memberNum: Int, scheduleId: Int) {
+    fun insertTemporaryMember(
+        memberType: Int,
+        memberNum: Int,
+        scheduleId: Int,
+    ) {
         viewModelScope.launch {
             _memberList.value +=
                 Member(
@@ -399,7 +419,9 @@ class ScheduleMainViewModel @Inject constructor(
                     phoneNum = memberPhone.value.text,
                     email = memberEmail.value.text,
                     etcInfo = memberEtcInfo.value.text,
-                    memberIcon = memberNum
+                    memberIcon = memberNum,
+                    cardUri = cardUri?.value,
+                    nuyaType = nuyaType.value
                 )
             }
         _memberName.value = memberName.value.copy(
@@ -414,6 +436,8 @@ class ScheduleMainViewModel @Inject constructor(
         _memberEtcInfo.value = memberEtcInfo.value.copy(
             text = ""
         )
+        _cardUri.value = ""
+        _nuyaType.value = -1
     }
 
     fun deleteTemporaryMember(memberId: Int) {

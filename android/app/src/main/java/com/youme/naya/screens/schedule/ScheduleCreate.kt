@@ -1,5 +1,6 @@
 package com.youme.naya.screens.schedule
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -29,20 +31,25 @@ import com.youme.naya.widgets.common.HeaderBar
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.youme.naya.card.BusinessCardGridListForSchedule
+import com.youme.naya.card.NayaCardGridListForSchedule
 import com.youme.naya.components.PrimaryBigButton2
 import com.youme.naya.components.RegisterButton
-import com.youme.naya.database.entity.Member.Companion.memberIcons
 import com.youme.naya.database.entity.Member.Companion.memberIconsCancel
+import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.schedule.component.*
+import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ScheduleCreateScreen(
-    navController: NavController,
+    navController: NavHostController,
     viewModel: ScheduleMainViewModel = hiltViewModel(),
+    cardViewModel: CardViewModel = hiltViewModel()
 ) {
     val componentVariable = remember {
         mutableStateOf(0)
@@ -55,6 +62,9 @@ fun ScheduleCreateScreen(
     val memberNum = remember {
         mutableStateOf(0)
     }
+
+    val cardViewModel: CardViewModel = hiltViewModel()
+    val context = LocalContext.current
 
     Column (verticalArrangement = Arrangement.SpaceBetween) {
         // 상단 바
@@ -134,38 +144,21 @@ fun ScheduleCreateScreen(
                                 ){
                                     when (memberType.value) {
                                         -1 -> item {
-                                            //                                                Box(modifier = Modifier
-                                            //                                                    .clickable {
-                                            //                                                        coroutineScope.launch {
-                                            //                                                            bottomSheetState.hide()
-                                            //                                                        }
-                                            //                                                    }
-                                            //                                                    .padding(vertical = 4.dp)
-                                            //                                                    .fillMaxWidth()
-                                            //                                                    .height(48.dp),
-                                            //                                                        contentAlignment = Alignment.Center) {
-                                            //                                                        Text(
-                                            //                                                            text = "Nuya 보관함에서 가져오기",
-                                            //                                                            color = PrimaryBlue,
-                                            //                                                            style = Typography.body1,
-                                            //                                                        )
-                                            //                                                    }
-                                            //                                                    Box(modifier = Modifier
-                                            //                                                        .clickable {
-                                            //                                                            coroutineScope.launch {
-                                            //                                                                bottomSheetState.hide()
-                                            //                                                            }
-                                            //                                                        }
-                                            //                                                        .padding(vertical = 4.dp)
-                                            //                                                        .fillMaxWidth()
-                                            //                                                        .height(48.dp),
-                                            //                                                        contentAlignment = Alignment.Center) {
-                                            //                                                        Text(
-                                            //                                                            text = "전화번호부에서 가져오기",
-                                            //                                                            color = PrimaryBlue,
-                                            //                                                            style = Typography.body1,
-                                            //                                                        )
-                                            //                                                    }
+                                            Box(modifier = Modifier
+                                                .clickable(
+                                                    onClick = {
+                                                        memberType.value = 1
+                                                    })
+                                                .padding(vertical = 4.dp)
+                                                .fillMaxWidth()
+                                                .height(48.dp),
+                                                    contentAlignment = Alignment.Center) {
+                                                    Text(
+                                                        text = "Nuya 보관함에서 가져오기",
+                                                        color = PrimaryBlue,
+                                                        style = Typography.body1,
+                                                    )
+                                                }
                                             Box(modifier = Modifier
                                                 .clickable(
                                                     onClick = {
@@ -207,6 +200,54 @@ fun ScheduleCreateScreen(
                                             }
 
                                         }
+                                        1 -> item {
+                                            Spacer(Modifier.height(20.dp))
+                                            Text(
+                                                text = "함께 할 Nuya를 선택해주세요",
+                                                color = PrimaryDark,
+                                                fontSize = 16.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            Box(
+                                                Modifier
+                                                    .fillMaxSize()
+                                                    .background(Color.White)
+                                            ) {
+                                                Column(
+                                                    Modifier.height(400.dp)
+                                                ) {
+                                                    NayaBcardSwitchButtons(
+                                                        nayaTab = {
+                                                            NayaCardGridListForSchedule(context,
+                                                                navController,
+                                                                true)
+                                                        },
+                                                        bCardTab = {
+                                                            BusinessCardGridListForSchedule(context,
+                                                                navController, cardViewModel,
+                                                                true)
+                                                        }
+                                                    )
+                                                    if (viewModel.cardUri.value != "" && lastKey != null) {
+                                                        viewModel.insertTemporaryMember(memberType.value,
+                                                            memberNum.value % 6,
+                                                            lastKey + 1
+                                                        )
+
+                                                        memberNum.value += 1
+                                                        memberNum.value = 1
+
+                                                        coroutineScope.launch {
+                                                            bottomSheetState.hide()
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            PrimaryBigButton(text = "다른 방법으로 선택하기",
+                                                onClick = {
+                                                    memberType.value = -1 })
+                                            Spacer(Modifier.height(20.dp))
+                                        }
                                     }
                                 }
                             },
@@ -230,7 +271,9 @@ fun ScheduleCreateScreen(
                                         fontSize = 16.sp
                                     )
                                     Text("멤버를 클릭하면 목록에서 삭제됩니다.", style = Typography.body2, color = SystemRed)
-                                    Spacer(modifier = Modifier.height(12.dp).background(PrimaryBlue))
+                                    Spacer(modifier = Modifier
+                                        .height(12.dp)
+                                        .background(PrimaryBlue))
                                     Image(
                                         painter = painterResource(R.drawable.schedule_member_register_icon),
                                         contentDescription = "",
@@ -311,7 +354,8 @@ fun ScheduleCreateScreen(
                         },
                     )
                 }
-        })
+            }
+        )
     }
 
 }
