@@ -18,6 +18,8 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.annotation.KeepName
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.googlecode.tesseract.android.TessBaseAPI
 import com.youme.naya.R
@@ -56,32 +58,15 @@ class StillImageActivity : AppCompatActivity() {
     private var savedImgAbsolutePath2: String? = null
     private var isSameImage: Boolean = false
 
+    // ML Kit
+    private val recognizer =
+        TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_still_image)
 
         context = this
-//        findViewById<View>(R.id.select_image_button)
-//            .setOnClickListener { view: View ->
-//                // Menu for selecting either: a) take new photo b) select from existing
-//                val popup =
-//                    PopupMenu(this@StillImageActivity, view)
-//                popup.setOnMenuItemClickListener { menuItem: MenuItem ->
-//                    val itemId =
-//                        menuItem.itemId
-//                    if (itemId == R.id.select_images_from_local) {
-//                        startChooseImageIntentForResult()
-//                        return@setOnMenuItemClickListener true
-//                    } else if (itemId == R.id.take_photo_using_camera) {
-//                        startCameraIntentForResult()
-//                        return@setOnMenuItemClickListener true
-//                    }
-//                    false
-//                }
-//                val inflater = popup.menuInflater
-//                inflater.inflate(R.menu.camera_button_menu, popup.menu)
-//                popup.show()
-//            }
         preview = findViewById(R.id.preview)
 
         // 4. 전달된 savedImgAbsolutePath가 잘 뜨는지 확인하기
@@ -91,56 +76,29 @@ class StillImageActivity : AppCompatActivity() {
         if (savedImgAbsolutePath != null) {
             val bitmap = BitmapFactory.decodeFile(savedImgAbsolutePath)
             preview?.setImageBitmap(bitmap)
-//            Log.i("savedImgAbsPathOnStill", savedImgAbsolutePath)
+            Log.i("savedImgAbsPathOnStill", savedImgAbsolutePath.toString())
+
+            val image = InputImage.fromBitmap(bitmap, 0)
+            Log.i("image", "image is ok!!")
+
+            recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                    // TODO 6. OCR 결과를 정규표현식(regex) 이용해 파싱한 후 용도에 맞게 save
+                    Log.i("visionText", visionText.text)
+                    val newIntent = Intent(context, StillImageActivity::class.java)
+                    newIntent.putExtra("ocrResult", visionText.text)
+                    newIntent.putExtra("croppedImage", savedImgAbsolutePath)
+                    if (savedImgAbsolutePath2 != null) {
+                        newIntent.putExtra("secondImage", savedImgAbsolutePath2)
+                    }
+                    newIntent.putExtra("isSameImage", isSameImage)
+                    setResult(RESULT_OK, newIntent)
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Log.i("visionTextErr", e.toString())
+                }
         }
-
-        dataPath = "$filesDir/assets/"
-
-        checkFile(File(dataPath + "tessdata/"), "kor")
-        checkFile(File(dataPath + "tessdata/"), "eng")
-
-        val lang: String = "kor+eng"
-        tess = TessBaseAPI()
-        tess.init(dataPath, lang)
-        if (savedImgAbsolutePath != null) {
-            processImage(BitmapFactory.decodeFile(savedImgAbsolutePath))
-        } else {
-            finish()
-        }
-        // TODO 5. R.id.preview 이미지를 통해 OCR 돌린다.
-//        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-//        val image = InputImage.fromBitmap(BitmapFactory.decodeFile(savedImgAbsolutePath), 0)
-//        val result = recognizer.process(image)
-//            .addOnSuccessListener { visionText ->
-//                // Task completed successfully
-//            }
-//            .addOnFailureListener { e ->
-//                // Task failed with an exception
-//            }
-//        val resultText = result.text
-//        for(block in result.textBlocks) {
-//            val blockText = block.text
-//            val blockCornerPoints = block.cornerPoints
-//            val blockFrame = block.boundingBox
-//            Log.i("blockText", blockText)
-//            for(line in block.lines) {
-//                val lineText = line.text
-//                val lineCornerPoints = line.cornerPoints
-//                val lineFrame = line.boundingBox
-//                Log.i("lineText", lineText)
-//                for(element in line.elements) {
-//                    val elementText = element.text
-//                    val elementCornerPoints = element.cornerPoints
-//                    val elementFrame = element.boundingBox
-//                    Log.i("elementText", elementText)
-//                }
-//            }
-//        }
-
-        // TODO 6. OCR 결과를 정규표현식(regex) 이용해 파싱한 후 용도에 맞게 save
-
-
-//        graphicOverlay = findViewById(R.id.graphic_overlay)
 
         populateFeatureSelector()
 
