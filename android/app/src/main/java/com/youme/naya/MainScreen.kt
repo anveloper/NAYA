@@ -133,7 +133,7 @@ fun MainScreen(
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 } else {
-                                    bCardCreateDialogInNaya = true
+                                    bCardCreateDialogInNuya = true
                                 }
                             }
                             else -> {
