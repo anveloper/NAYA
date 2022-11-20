@@ -1,9 +1,10 @@
 package com.youme.naya.schedule.component
 
-
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -13,13 +14,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -33,12 +38,12 @@ import com.youme.naya.components.BasicTextField
 import com.youme.naya.network.RetrofitClient
 import com.youme.naya.network.RetrofitService
 import com.youme.naya.schedule.ScheduleMainViewModel
-import com.youme.naya.ui.theme.PrimaryDark
-import com.youme.naya.ui.theme.fonts
+import com.youme.naya.ui.theme.*
 import com.youme.naya.vo.MapResponseVO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 
 // 장소 등록
 @RequiresApi(Build.VERSION_CODES.O)
@@ -59,8 +64,13 @@ fun ScheduleCreateThird(
     LaunchedEffect(key1 = place.value) {
         cameraPositionState.position = CameraPosition.fromLatLngZoom(place.value, 15f)
     }
+
+    var mapShow = remember {
+        mutableStateOf(false)
+    }
+
     Column(
-        modifier = Modifier.fillMaxWidth(0.96f)
+        modifier = Modifier
             .fillMaxHeight(0.8f)
             .verticalScroll(rememberScrollState()),
         content = {
@@ -70,13 +80,14 @@ fun ScheduleCreateThird(
 
             Text(
                 "장소 검색",
-                modifier = Modifier.padding(vertical = 12.dp),
+                modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
                 color = PrimaryDark,
                 fontFamily = fonts,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Text("도로명 주소를 입력하면, 해당 위치 정보와 지도가 연동됩니다.", style = Typography.body2, color = SystemRed)
+            Spacer(modifier = Modifier.height(12.dp))
             BasicTextField(
                 modifier = Modifier
                     .focusRequester(focusRequester),
@@ -102,38 +113,71 @@ fun ScheduleCreateThird(
                                 Log.i("y", response.body()?.y.toString())
                                 Log.i("jibun", response.body()?.jibunAddress.toString())
                                 Log.i("road", response.body()?.roadAddress.toString())
-
-                                if (response.body() != null) {
+                                if (response.body()?.x.toString() != "" && response.body() != null) {
                                     var x = response.body()!!.x
                                     var y = response.body()!!.y
                                     if (x != null && y != null)
                                         place.value = LatLng(y.toDouble(), x.toDouble())
 //                                    cameraPositionState.position =
 //                                        CameraPosition.fromLatLngZoom(place.value, 12f)
+                                    mapShow.value = true
+                                } else {
+                                    mapShow.value = false
                                 }
                             }
 
                         })
                     keyboardController?.hide()
                 }),
-//        trailingIcon = {
-//            Image(
-//            painter = painterResource(R.drawable.home_icon_search),
-//                "setting",
-//                colorFilter = ColorFilter.tint(PrimaryBlue)
-//        )}
+                trailingIcon = {
+                    Image(
+                        painter = painterResource(id = com.youme.naya.R.drawable.home_icon_search),
+                        "setting",
+                        colorFilter = ColorFilter.tint(PrimaryBlue)
+                    )}
             )
-            GoogleMap(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(300.dp),
-                cameraPositionState = cameraPositionState
+
+            Box(modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .height(200.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Marker(
-                    state = MarkerState(position = place.value),
-                    title = "place",
-                    snippet = "Marker in place"
-                )
+                if (mapShow.value) {
+                    Column() {
+                        Spacer(modifier = Modifier.height(20.dp))
+                        GoogleMap(
+                            modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                            cameraPositionState = cameraPositionState
+                        ) {
+                            Marker(
+                                state = MarkerState(position = place.value),
+                                title = "place",
+                                snippet = "Marker in place"
+                            )
+                        }
+                    }
+
+                } else {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painter = painterResource(id = com.youme.naya.R.drawable.icon_map),
+                            "map",
+                            modifier = Modifier.width(50.dp).height(50.dp)
+                        )
+                        Text(text = "도로명 주소를 입력해보세요. \n " +
+                                "해당 주소의 위치를 지도로 만나볼 수 있어요!", color = NeutralGray, style = Typography.h6,
+                            textAlign = TextAlign.Center
+                        )
+
+                    }
+
+                }
+
             }
-        })
+
+        }
+    )
+
 }
