@@ -21,7 +21,4 @@ class IntroViewModel @Inject constructor(private val sharedPrefDataSource: Share
     fun saveIsFirst() {
         sharedPrefDataSource.setIsFirst()
     }
-    fun resetIsFirst() {
-        sharedPrefDataSource.resetIsFirst()
-    }
 }

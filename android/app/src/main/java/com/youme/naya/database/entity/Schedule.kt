@@ -16,8 +16,8 @@ data class Schedule(
     val color: Int = SecondarySystemBlue.toArgb(),
     val isOnAlarm: Boolean = false,
     val alarmTime: String = "시작 시간",
-    val startTime: String = "01 : 00 PM",
-    val endTime: String = "12 : 00 PM",
+    val startTime: String ?= "01 : 00 PM",
+    val endTime: String ?= "12 : 00 PM",
     val address: String ?= "",
     val description: String = "",
     val isDone: Boolean = false,
@@ -28,6 +28,3 @@ data class Schedule(
         val scheduleColors = listOf(SystemPink, SystemOrange, SystemYellow, SystemGreen, SecondarySystemBlue, SystemPurple)
     }
 }
-
-
-

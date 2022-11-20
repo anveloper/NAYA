@@ -1,7 +1,6 @@
 package com.youme.naya.ocr
 
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Intent
 import android.content.res.AssetManager
 import android.content.res.Configuration
@@ -9,22 +8,21 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.util.Pair
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.annotation.KeepName
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.korean.KoreanTextRecognizerOptions
 import com.googlecode.tesseract.android.TessBaseAPI
 import com.youme.naya.R
 import org.sdase.submission.documentscanner.BitmapUtils
 import org.sdase.submission.documentscanner.GraphicOverlay
 import org.sdase.submission.documentscanner.VisionImageProcessor
-import org.sdase.submission.documentscanner.textdetector.TextRecognitionProcessor
 import java.io.*
 
 @KeepName
@@ -33,10 +31,8 @@ class StillImageActivity : AppCompatActivity() {
 
     private var preview: ImageView? = null
     private var graphicOverlay: GraphicOverlay? = null
-    private var selectedMode =
-        TEXT_RECOGNITION_KOREAN
-    private var selectedSize: String? =
-        SIZE_SCREEN
+    private var selectedMode = TEXT_RECOGNITION_KOREAN
+    private var selectedSize: String? = SIZE_SCREEN
     private var isLandScape = false
     private var imageUri: Uri? = null
 
@@ -53,96 +49,59 @@ class StillImageActivity : AppCompatActivity() {
 
     // 이미지 경로
     private var savedImgAbsolutePath: String? = null
-    private var savedImgAbsolutePath2: String? = null
-    private var isSameImage: Boolean = false
+
+    // ML Kit
+    private val recognizer = TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_still_image)
 
         context = this
-//        findViewById<View>(R.id.select_image_button)
-//            .setOnClickListener { view: View ->
-//                // Menu for selecting either: a) take new photo b) select from existing
-//                val popup =
-//                    PopupMenu(this@StillImageActivity, view)
-//                popup.setOnMenuItemClickListener { menuItem: MenuItem ->
-//                    val itemId =
-//                        menuItem.itemId
-//                    if (itemId == R.id.select_images_from_local) {
-//                        startChooseImageIntentForResult()
-//                        return@setOnMenuItemClickListener true
-//                    } else if (itemId == R.id.take_photo_using_camera) {
-//                        startCameraIntentForResult()
-//                        return@setOnMenuItemClickListener true
-//                    }
-//                    false
-//                }
-//                val inflater = popup.menuInflater
-//                inflater.inflate(R.menu.camera_button_menu, popup.menu)
-//                popup.show()
-//            }
         preview = findViewById(R.id.preview)
 
         // 4. 전달된 savedImgAbsolutePath가 잘 뜨는지 확인하기
         savedImgAbsolutePath = intent.getStringExtra("savedImgAbsolutePath")
-        savedImgAbsolutePath2 = intent.getStringExtra("savedImgAbsolutePath2")
-        isSameImage = intent.getBooleanExtra("isSameImage", false)
         if (savedImgAbsolutePath != null) {
             val bitmap = BitmapFactory.decodeFile(savedImgAbsolutePath)
             preview?.setImageBitmap(bitmap)
-//            Log.i("savedImgAbsPathOnStill", savedImgAbsolutePath)
-        }
+            Log.i("savedImgAbsPathOnStill", savedImgAbsolutePath+"")
 
-        dataPath = "$filesDir/assets/"
+            // 5. R.id.preview 이미지를 통해 OCR 돌린다.
+            // TextRecognize start
+            val image = InputImage.fromBitmap(bitmap, 0)
+            Log.i("image", "image is ok!!")
 
-        checkFile(File(dataPath + "tessdata/"), "kor")
-        checkFile(File(dataPath + "tessdata/"), "eng")
-
-        val lang: String = "kor+eng"
-        tess = TessBaseAPI()
-        tess.init(dataPath, lang)
-        if (savedImgAbsolutePath != null) {
-            processImage(BitmapFactory.decodeFile(savedImgAbsolutePath))
+            recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                // TODO 6. OCR 결과를 정규표현식(regex) 이용해 파싱한 후 용도에 맞게 save
+                    Log.i("visionText", visionText.text)
+                    val newIntent = Intent(context, StillImageActivity::class.java)
+                    newIntent.putExtra("ocrResult", visionText.text)
+                    newIntent.putExtra("croppedImage", savedImgAbsolutePath)
+                    setResult(RESULT_OK, newIntent)
+                    finish()
+                }
+                .addOnFailureListener { e ->
+                    Log.i("visionTextErr", e.toString())
+                }
         } else {
             finish()
         }
-        // TODO 5. R.id.preview 이미지를 통해 OCR 돌린다.
-//        val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-//        val image = InputImage.fromBitmap(BitmapFactory.decodeFile(savedImgAbsolutePath), 0)
-//        val result = recognizer.process(image)
-//            .addOnSuccessListener { visionText ->
-//                // Task completed successfully
-//            }
-//            .addOnFailureListener { e ->
-//                // Task failed with an exception
-//            }
-//        val resultText = result.text
-//        for(block in result.textBlocks) {
-//            val blockText = block.text
-//            val blockCornerPoints = block.cornerPoints
-//            val blockFrame = block.boundingBox
-//            Log.i("blockText", blockText)
-//            for(line in block.lines) {
-//                val lineText = line.text
-//                val lineCornerPoints = line.cornerPoints
-//                val lineFrame = line.boundingBox
-//                Log.i("lineText", lineText)
-//                for(element in line.elements) {
-//                    val elementText = element.text
-//                    val elementCornerPoints = element.cornerPoints
-//                    val elementFrame = element.boundingBox
-//                    Log.i("elementText", elementText)
-//                }
-//            }
+
+//        dataPath = "$filesDir/assets/"
+//
+//        checkFile(File(dataPath + "tessdata/"), "kor")
+//        checkFile(File(dataPath + "tessdata/"), "eng")
+//
+//        val lang: String = "kor+eng"
+//        tess = TessBaseAPI()
+//        tess.init(dataPath, lang)
+//        if (savedImgAbsolutePath != null) {
+//            processImage(BitmapFactory.decodeFile(savedImgAbsolutePath))
+//        } else {
+//            finish()
 //        }
-
-        // TODO 6. OCR 결과를 정규표현식(regex) 이용해 파싱한 후 용도에 맞게 save
-
-
-//        graphicOverlay = findViewById(R.id.graphic_overlay)
-
-        populateFeatureSelector()
 
         isLandScape =
             resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -229,10 +188,6 @@ class StillImageActivity : AppCompatActivity() {
         val newIntent = Intent(context, StillImageActivity::class.java)
         newIntent.putExtra("ocrResult", ocrResult)
         newIntent.putExtra("croppedImage", savedImgAbsolutePath)
-        if (savedImgAbsolutePath2 != null) {
-            newIntent.putExtra("secondImage", savedImgAbsolutePath2)
-        }
-        newIntent.putExtra("isSameImage", isSameImage)
         setResult(RESULT_OK, newIntent)
         finish()
     }
@@ -240,7 +195,6 @@ class StillImageActivity : AppCompatActivity() {
     public override fun onResume() {
         super.onResume()
         Log.d(TAG, "onResume")
-        createImageProcessor()
         tryReloadAndDetectInImage()
     }
 
@@ -257,37 +211,6 @@ class StillImageActivity : AppCompatActivity() {
             this.stop()
         }
     }
-
-    private fun populateFeatureSelector() {
-        val featureSpinner = findViewById<Spinner>(R.id.feature_selector)
-        val options: MutableList<String> = ArrayList()
-        options.add(TEXT_RECOGNITION_KOREAN)
-
-        // Creating adapter for featureSpinner
-        val dataAdapter =
-            ArrayAdapter(this, R.layout.spinner_style, options)
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        // attaching data adapter to spinner
-        featureSpinner.adapter = dataAdapter
-        featureSpinner.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>,
-                selectedItemView: View?,
-                pos: Int,
-                id: Long
-            ) {
-                if (pos >= 0) {
-                    selectedMode = parentView.getItemAtPosition(pos).toString()
-                    createImageProcessor()
-                    tryReloadAndDetectInImage()
-                }
-            }
-
-            override fun onNothingSelected(arg0: AdapterView<*>?) {}
-        }
-    }
-
 
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -306,33 +229,6 @@ class StillImageActivity : AppCompatActivity() {
         outState.putString(
             KEY_SELECTED_SIZE,
             selectedSize
-        )
-    }
-
-    private fun startCameraIntentForResult() { // Clean up last time's image
-        imageUri = null
-        preview!!.setImageBitmap(null)
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (takePictureIntent.resolveActivity(packageManager) != null) {
-            val values = ContentValues()
-            values.put(MediaStore.Images.Media.TITLE, "New Picture")
-            values.put(MediaStore.Images.Media.DESCRIPTION, "From Camera")
-            imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-            startActivityForResult(
-                takePictureIntent,
-                REQUEST_IMAGE_CAPTURE
-            )
-        }
-    }
-
-    private fun startChooseImageIntentForResult() {
-        val intent = Intent()
-        intent.type = "image/*"
-        intent.action = Intent.ACTION_GET_CONTENT
-        startActivityForResult(
-            Intent.createChooser(intent, "Select Picture"),
-            REQUEST_CHOOSE_IMAGE
         )
     }
 
@@ -426,37 +322,6 @@ class StillImageActivity : AppCompatActivity() {
             }
             return Pair(targetWidth, targetHeight)
         }
-
-    private fun createImageProcessor() {
-        try {
-            when (selectedMode) {
-                TEXT_RECOGNITION_KOREAN ->
-                    imageProcessor =
-                        TextRecognitionProcessor(
-                            this,
-                            KoreanTextRecognizerOptions.Builder().build()
-                        )
-
-
-                else -> Log.e(
-                    TAG,
-                    "Unknown selectedMode: $selectedMode"
-                )
-            }
-        } catch (e: Exception) {
-            Log.e(
-                TAG,
-                "Can not create image processor: $selectedMode",
-                e
-            )
-            Toast.makeText(
-                applicationContext,
-                "Can not create image processor: " + e.message,
-                Toast.LENGTH_LONG
-            )
-                .show()
-        }
-    }
 
     companion object {
         private const val TAG = "StillImageActivity"

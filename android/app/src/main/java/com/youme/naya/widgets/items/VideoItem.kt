@@ -1,11 +1,16 @@
 package com.youme.naya.widgets.items
 
 import android.app.Activity
+import android.content.Intent
 import android.util.Log
+import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
@@ -13,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -25,6 +31,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.ui.AspectRatioFrameLayout
 import androidx.media3.ui.PlayerView
+import com.youme.naya.share.ShareActivity
 import com.youme.naya.widgets.home.VideoCard
 
 private val CardModifier = Modifier
@@ -38,6 +45,7 @@ private val CardModifier = Modifier
 fun VideoItem(videoCard: VideoCard) {
     val context = LocalContext.current
     val activity = context as? Activity
+
 
     var isShareOpened by remember { mutableStateOf(false) }
 
@@ -55,7 +63,37 @@ fun VideoItem(videoCard: VideoCard) {
         }
     }
 
-    Card(CardModifier) {
+    Card(
+        CardModifier
+            .draggable(
+                orientation = Orientation.Vertical,
+                state = rememberDraggableState { delta ->
+                    if (delta < 0 && !isShareOpened) {
+                        if (videoCard != null) {
+                            val intent = Intent(activity, ShareActivity::class.java)
+                            intent.putExtra("cardUri", videoCard.uri.toString())
+                            intent.putExtra("filename", videoCard.filename)
+                            launcher.launch(intent)
+                        }
+                        isShareOpened = true
+                    }
+                }
+            )
+            .pointerInteropFilter {
+                when (it.action) {
+                    MotionEvent.ACTION_DOWN -> {
+//                        Log.i("Card", "Down ${nayaCard.uri}")
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+//                        Log.i("Card", "Move ${nayaCard.uri}")
+                    }
+                    MotionEvent.ACTION_UP -> {
+//                        Log.i("Card", "Up ${nayaCard.uri}")
+                    }
+                    else -> false
+                }
+                true
+            }) {
         val boxContext = LocalContext.current
 
         val exoPlayer = remember {

@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import com.youme.naya.BaseActivity
 import com.youme.naya.ui.theme.*
 import com.youme.naya.utils.saveCardImage
-import com.youme.naya.utils.saveSharedCardImage
 import dev.shreyaspatil.capturable.Capturable
 import dev.shreyaspatil.capturable.controller.rememberCaptureController
 import java.util.concurrent.ExecutorService

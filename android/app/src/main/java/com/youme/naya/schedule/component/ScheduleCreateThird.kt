@@ -4,7 +4,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -68,15 +67,14 @@ fun ScheduleCreateThird(
     var mapShow = remember {
         mutableStateOf(false)
     }
-
     Column(
         modifier = Modifier
             .fillMaxHeight(0.8f)
             .verticalScroll(rememberScrollState()),
         content = {
-            val keyboardController = LocalSoftwareKeyboardController.current
-            // focus
-            val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    // focus
+    val focusRequester = remember { FocusRequester() }
 
             Text(
                 "장소 검색",

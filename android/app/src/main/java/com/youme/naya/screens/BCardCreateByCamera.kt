@@ -2,14 +2,19 @@ package com.youme.naya.screens
 
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Card
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,10 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberAsyncImagePainter
-import com.youme.naya.card.CardFace
-import com.youme.naya.card.FlippableCard
-import com.youme.naya.card.RotationAxis
+import coil.compose.rememberImagePainter
 import com.youme.naya.components.BasicTextField
 import com.youme.naya.components.OutlinedSmallButton
 import com.youme.naya.components.PrimaryBigButton
@@ -67,21 +69,16 @@ fun removeBlankLines(ocrResult: String): MutableList<String> {
     return result
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BCardCreateByCameraScreen(
     navController: NavHostController,
     result: String,
     path: String,
-    path2: String,
-    isNuya: Boolean,
-    isSameImage: Boolean,
+    isNuya: Boolean
 ) {
     val cardViewModel: CardViewModel = hiltViewModel()
     val ctx = LocalContext.current
     val resultLines = removeBlankLines(Uri.decode(result))
-
-    var flipState by remember { mutableStateOf(CardFace.Front) }
 
     // 필드 입력 값 리스트 (입력 창 생성순)
     val fieldsValueState = remember(resultLines) {
@@ -90,11 +87,7 @@ fun BCardCreateByCameraScreen(
 
     // 각 드롭다운 메뉴의 오픈 상태 리스트 (입력 창 생성순)
     val dropdownMenuState = remember(resultLines) {
-        if (resultLines.isNullOrEmpty()) {
-            mutableStateListOf(*(1..5).map { _ -> false }.toTypedArray())
-        } else {
-            mutableStateListOf(*resultLines.map { _ -> false }.toTypedArray())
-        }
+        mutableStateListOf(*resultLines.map { _ -> false }.toTypedArray())
     }
 
     // 각 입력 창과 매핑되는 필드 이름 맵
@@ -116,11 +109,6 @@ fun BCardCreateByCameraScreen(
     // 추출된 명함 이미지 비트맵
     val cardImageBitmap = BitmapFactory.decodeFile(path)
 
-    // 뒷면이 있는 경우의 뒷면 이미지 비트맵
-    val backgroundImageBitmap = if (!isSameImage) {
-        BitmapFactory.decodeFile(path2)
-    } else null
-
     Column(
         Modifier
             .fillMaxSize()
@@ -128,23 +116,27 @@ fun BCardCreateByCameraScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        FlippableCard(
-            cardFace = flipState,
-            onClick = { flipState = it.next },
-            axis = RotationAxis.AxisY,
-            isHorizontalCard = true,
-            modifier = Modifier.padding(bottom = 16.dp),
-            back = if (!isSameImage) ({
-                Image(
-                    painter = rememberAsyncImagePainter(backgroundImageBitmap),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }) else null
+//        BusinessCardTemplate(
+//            name = mappedValueMap["name"],
+//            engName = mappedValueMap["engName"],
+//            email = mappedValueMap["email"],
+//            mobile = mappedValueMap["mobile"],
+//            address = mappedValueMap["address"],
+//            company = mappedValueMap["company"],
+//            team = mappedValueMap["team"],
+//            role = mappedValueMap["role"],
+//            logo = mappedValueMap["logo"]
+//        )
+        Card(
+            Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .aspectRatio(9 / 5f),
+            shape = RectangleShape,
+            elevation = 4.dp
         ) {
             Image(
-                painter = rememberAsyncImagePainter(cardImageBitmap),
+                painter = rememberImagePainter(cardImageBitmap),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
@@ -202,14 +194,11 @@ fun BCardCreateByCameraScreen(
                                             mappedValueMap[fieldName] = fieldsValueState[idx]
                                         } else {
                                             // 이미 해당 필드가 선택된 입력창이 있다면
-                                            mappedFieldNameMap[prevSelected.key] =
-                                                mappedFieldNameMap[idx]
+                                            mappedFieldNameMap[prevSelected.key] = mappedFieldNameMap[idx]
                                             mappedFieldNameMap[idx] = fieldName
-                                            mappedFieldLabelMap[prevSelected.key] =
-                                                mappedFieldLabelMap[idx]
+                                            mappedFieldLabelMap[prevSelected.key] = mappedFieldLabelMap[idx]
                                             mappedFieldLabelMap[idx] = fieldsLabelList[fieldIdx]
-                                            mappedValueMap[prevSelected.value!!] =
-                                                mappedValueMap[fieldName]!!
+                                            mappedValueMap[prevSelected.value!!] = mappedValueMap[fieldName]!!
                                             mappedValueMap[fieldName] = fieldsValueState[idx]
                                         }
                                     }
@@ -239,13 +228,6 @@ fun BCardCreateByCameraScreen(
                         } else {
                             saveCardImage(ctx, cardImageBitmap, true)
                         }
-                        val backgroundPath = if (!isSameImage && backgroundImageBitmap != null) {
-                            if (isNuya) {
-                                saveSharedCardImage(ctx, backgroundImageBitmap, true)
-                            } else {
-                                saveCardImage(ctx, backgroundImageBitmap, true)
-                            }
-                        } else null
 
                         val card = Card(
                             0,
@@ -261,7 +243,7 @@ fun BCardCreateByCameraScreen(
                             tel = mappedValueMap["tel"],
                             memoContent = mappedValueMap["memoContent"],
 //                            fax = mappedValueMap["fax"],
-                            background = backgroundPath,
+//                            background = mappedValueMap["background"],
 //                            logo = mappedValueMap["logo"],
 //                            memo1 = mappedValueMap["memo1"],
 //                            memo2 = mappedValueMap["memo2"],

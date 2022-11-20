@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,7 +58,7 @@ private val CalendarHeaderBtnGroupModifier = Modifier
 @Composable
 fun ScheduleDetailScreen(
     navController: NavController,
-    scheduleId : Int,
+    scheduleId: Int,
     viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
     val done = if (viewModel.isDone.value) {
@@ -84,7 +87,8 @@ fun ScheduleDetailScreen(
     }
 
 
-    Column (horizontalAlignment = Alignment.CenterHorizontally,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         Row(
@@ -98,7 +102,8 @@ fun ScheduleDetailScreen(
                 elevation = 0.dp,
                 contentPadding = PaddingValues(horizontal = 8.dp),
             ) {
-                Row(Modifier.fillMaxWidth(),
+                Row(
+                    Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -128,34 +133,41 @@ fun ScheduleDetailScreen(
                                     navController.navigate("scheduleEdit/${scheduleId}")
                                 }),
 
-                        )
+                            )
                     }
                 }
             }
         }
         Column(
-            modifier = Modifier.fillMaxWidth(0.88f)) {
+            modifier = Modifier.width(300.dp)
+        ) {
             // title, 날짜, Done
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(72.dp),
+                    .fillMaxHeight(0.1f),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box( modifier = Modifier
-                        .fillMaxWidth(0.05f)
-                        .fillMaxHeight()
-                        .background(color = Color(viewModel.color.value)))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(0.05f)
+                            .fillMaxHeight()
+                            .background(color = Color(viewModel.color.value))
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Column() {
-                        Text(viewModel.title.value.text.ifEmpty { "제목 없음" },
-                            style=Typography.h4,
-                            color = PrimaryDark)
-                        Text(viewModel.selectedDate.value,
-                            style= Typography.body1,
-                            color = NeutralGray)
+                        Text(
+                            viewModel.title.value.text.ifEmpty { "제목 없음" },
+                            style = Typography.h4,
+                            color = PrimaryDark
+                        )
+                        Text(
+                            viewModel.selectedDate.value,
+                            style = Typography.body1,
+                            color = NeutralGray
+                        )
                     }
                 }
 
@@ -165,7 +177,8 @@ fun ScheduleDetailScreen(
                     else "Done",
                     onClick = {
                         viewModel.onDoneChange(
-                            scheduleId, !viewModel.isDone.value)
+                            scheduleId, !viewModel.isDone.value
+                        )
                         done.value = !done.value
                     },
                     backgroundColor =
@@ -177,9 +190,9 @@ fun ScheduleDetailScreen(
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // 시작시간
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -192,14 +205,16 @@ fun ScheduleDetailScreen(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                 )
-                Text(viewModel.startTime.value,
-                    style= Typography.body1,
-                    color = NeutralGray)
-                }
+                Text(
+                    viewModel.startTime.value,
+                    style = Typography.body1,
+                    color = NeutralGray
+                )
+            }
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             // 종료 시간
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -212,16 +227,18 @@ fun ScheduleDetailScreen(
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
                 )
-                Text(viewModel.endTime.value,
-                    style= Typography.body1,
-                    color = NeutralGray)
+                Text(
+                    viewModel.endTime.value,
+                    style = Typography.body1,
+                    color = NeutralGray
+                )
             }
             // 알람 설정했으면, 표시
             if (viewModel.isOnAlarm.value) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Divider(color = NeutralLightness)
                 Spacer(modifier = Modifier.height(4.dp))
-                Row (
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -234,13 +251,15 @@ fun ScheduleDetailScreen(
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
                     )
-                    Text(viewModel.alarmTime.value,
-                        style= Typography.body1,
-                        color = NeutralGray)
+                    Text(
+                        viewModel.alarmTime.value,
+                        style = Typography.body1,
+                        color = NeutralGray
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // 주소
             if (viewModel.address.value.text.isNotEmpty()) {
                 Text(
@@ -252,9 +271,11 @@ fun ScheduleDetailScreen(
                     fontSize = 16.sp,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(viewModel.address.value.text,
-                    style= Typography.body1,
-                    color = NeutralGray)
+                Text(
+                    viewModel.address.value.text,
+                    style = Typography.body1,
+                    color = NeutralGray
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 supplementService.map(viewModel.address.value.text)
                     .enqueue(object : Callback<MapResponseVO> {
@@ -289,15 +310,18 @@ fun ScheduleDetailScreen(
                     })
 
                 if (mapShow.value) {
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(300.dp),
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Column() {
                             Spacer(modifier = Modifier.height(20.dp))
                             GoogleMap(
-                                modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .fillMaxWidth(),
                                 cameraPositionState = cameraPositionState
                             ) {
                                 Marker(
@@ -315,7 +339,8 @@ fun ScheduleDetailScreen(
 
             if (viewModel.memberList.value.isNotEmpty()) {
                 var temporaryMember:
-                        MutableState<Member> = remember { mutableStateOf(viewModel.memberList.value[0]) }
+                        MutableState<Member> =
+                    remember { mutableStateOf(viewModel.memberList.value[0]) }
 
                 Text(
                     "함께 하는 멤버",
@@ -351,8 +376,7 @@ fun ScheduleDetailScreen(
                                                     viewModel.memberList.value[index]
                                             }),
                                     )
-                                }
-                                else if (detailOpen.value && viewModel.memberList.value[index] != temporaryMember.value) {
+                                } else if (detailOpen.value && viewModel.memberList.value[index] != temporaryMember.value) {
                                     Image(
                                         painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
                                         contentDescription = "",
@@ -365,8 +389,7 @@ fun ScheduleDetailScreen(
                                                     viewModel.memberList.value[index]
                                             }),
                                     )
-                                }
-                                else {
+                                } else {
                                     Image(
                                         painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
                                         contentDescription = "",
@@ -393,78 +416,113 @@ fun ScheduleDetailScreen(
                             Box(
                                 Modifier
                                     .width(16.dp)
-                                    .height(20.dp))
+                                    .height(20.dp)
+                            )
                         }
 
                     }
                 }
                 Spacer(modifier = Modifier.height(12.dp))
-                Column(modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     if (detailOpen.value) {
 
                         Box(
                             modifier = Modifier
-                                .width(if (temporaryMember.value.type == 0 ||
-                                    (temporaryMember.value.type == 1 && temporaryMember.value.nuyaType == 1)) 240.dp else 150.dp
+                                .width(
+                                    if (temporaryMember.value.type == 0 ||
+                                        (temporaryMember.value.type == 1 && temporaryMember.value.nuyaType == 1)
+                                    ) 240.dp else 150.dp
                                 )
-                                .height(if (temporaryMember.value.type == 0 ||
-                                    (temporaryMember.value.type == 1 && temporaryMember.value.nuyaType == 1)) 150.dp else 240.dp)
+                                .height(
+                                    if (temporaryMember.value.type == 0 ||
+                                        (temporaryMember.value.type == 1 && temporaryMember.value.nuyaType == 1)
+                                    ) 150.dp else 240.dp
+                                )
                                 .background(PrimaryLight)
                                 .shadow(elevation = 1.dp),
                             contentAlignment = Alignment.Center,
                         ) {
                             if (temporaryMember.value.type == 0) {
-                            Box(
-                                modifier = Modifier
-                                    .width(220.dp)
-                                    .height(130.dp)
-                                    .border(width = 2.dp,
-                                        color = memberIconsColor[temporaryMember.value.memberIcon!!]),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Column() {
-                                    temporaryMember.value.name?.let {
-                                        Text(it, color = PrimaryDark, style = Typography.h6)
-                                    }
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    temporaryMember.value.phoneNum?.let {
-                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                            Text("전화번호", color = NeutralGray, style = Typography.body2)
-                                            Text(it, color = PrimaryDark, style = Typography.body2)
+                                Box(
+                                    modifier = Modifier
+                                        .width(220.dp)
+                                        .height(130.dp)
+                                        .border(
+                                            width = 2.dp,
+                                            color = memberIconsColor[temporaryMember.value.memberIcon!!]
+                                        ),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    Column() {
+                                        temporaryMember.value.name?.let {
+                                            Text(it, color = PrimaryDark, style = Typography.h6)
+                                        }
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        temporaryMember.value.phoneNum?.let {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(0.8f),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "전화번호",
+                                                    color = NeutralGray,
+                                                    style = Typography.body2
+                                                )
+                                                Text(
+                                                    it,
+                                                    color = PrimaryDark,
+                                                    style = Typography.body2
+                                                )
+                                            }
+                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        temporaryMember.value.email?.let {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(0.8f),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "이메일",
+                                                    color = NeutralGray,
+                                                    style = Typography.body2
+                                                )
+                                                Text(
+                                                    it,
+                                                    color = PrimaryDark,
+                                                    style = Typography.body2
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                        }
+                                        temporaryMember.value.etcInfo?.let {
+                                            Row(
+                                                modifier = Modifier.fillMaxWidth(0.8f),
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(
+                                                    "추가 정보",
+                                                    color = NeutralGray,
+                                                    style = Typography.body2
+                                                )
+                                                Text(
+                                                    it,
+                                                    color = PrimaryDark,
+                                                    style = Typography.body2
+                                                )
+                                            }
                                         }
                                     }
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    temporaryMember.value.email?.let {
-                                    Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                            Text("이메일", color = NeutralGray, style = Typography.body2)
-                                            Text(it, color = PrimaryDark, style = Typography.body2)
-                                    }
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    }
-                                    temporaryMember.value.etcInfo?.let {
-                                        Row(modifier = Modifier.fillMaxWidth(0.8f),
-                                            horizontalArrangement = Arrangement.SpaceBetween
-                                        ) {
-                                            Text("추가 정보", color = NeutralGray, style = Typography.body2)
-                                            Text(it, color = PrimaryDark, style = Typography.body2)
-                                        }
-                                    }
-                                }
 
-                            }
-                            }
-                            else {
+                                }
+                            } else {
                                 if (temporaryMember.value.nuyaType == 0) {
                                     ImageContainer(
                                         Uri.parse(temporaryMember.value.cardUri)
                                     )
-                                }
-                                else {
+                                } else {
                                     stringToBitmap(temporaryMember.value.cardUri)?.let {
                                         ImageContainer(
                                             it
@@ -475,31 +533,69 @@ fun ScheduleDetailScreen(
 
                             }
                         }
-                        }
                     }
+                }
             }
-
-
             Spacer(modifier = Modifier.height(12.dp))
-            // 추가 기록 사항
-            if (viewModel.description.value.text.isNotEmpty()) {
-                Text(
-                    "추가 기록 사항",
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = PrimaryDark,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(viewModel.description.value.text,
-                    style= Typography.body1,
-                    color = NeutralGray)
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .height(80.dp)
+                    .width(300.dp),
+                columns = GridCells.Fixed(5),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            )
+            {
+                items(viewModel.memberList.value.size) { index ->
+                    Row() {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Image(
+                                painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .width(60.dp)
+                                    .height(60.dp)
+                            )
+                            viewModel.memberList.value[index].name?.let {
+                                Text(
+                                    it,
+                                    color = NeutralGray,
+                                    style = Typography.overline
+                                )
+
+                            }
+                        }
+                        Box(
+                            Modifier
+                                .width(16.dp)
+                                .height(20.dp))
+                    }
+                }
             }
-            Spacer(modifier = Modifier.height(40.dp))
         }
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 추가 기록 사항
+        if (viewModel.description.value.text.isNotEmpty()) {
+            Text(
+                "추가 기록 사항",
+                modifier = Modifier.padding(vertical = 12.dp),
+                color = PrimaryDark,
+                fontFamily = fonts,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                viewModel.description.value.text,
+                style = Typography.body1,
+                color = NeutralGray
+            )
+        }
+        Spacer(modifier = Modifier.height(40.dp))
     }
 }
+
 
 /*
      * String형을 BitMap으로 변환시켜주는 함수
@@ -513,4 +609,3 @@ fun stringToBitmap(encodedString: String?): Bitmap? {
         null
     }
 }
-

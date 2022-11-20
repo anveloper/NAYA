@@ -1,22 +1,22 @@
 package com.youme.naya.database.entity
 
- import android.net.Uri
- import androidx.room.ColumnInfo
- import androidx.room.Entity
- import androidx.room.ForeignKey
- import androidx.room.PrimaryKey
- import com.youme.naya.R
- import com.youme.naya.ui.theme.*
+import android.net.Uri
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import com.youme.naya.R
+import com.youme.naya.ui.theme.*
 
 @Entity(tableName = "member",
-foreignKeys = [
-    ForeignKey(
-        entity = Schedule::class,
-        parentColumns = ["scheduleId"],
-        childColumns =  ["scheduleId"],
-        onDelete = ForeignKey.CASCADE
-    )
-]
+    foreignKeys = [
+        ForeignKey(
+            entity = Schedule::class,
+            parentColumns = ["scheduleId"],
+            childColumns =  ["scheduleId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class Member(
     @PrimaryKey(autoGenerate = true) val memberId: Int?,

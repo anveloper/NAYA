@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.chargemap.compose.numberpicker.AMPMHours
+import com.chargemap.compose.numberpicker.Hours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
 import com.chargemap.compose.numberpicker.ListItemPicker
 import com.google.android.gms.maps.model.CameraPosition
@@ -289,7 +290,7 @@ fun ScheduleUpdateScreen(
             horizontalAlignment = Alignment.CenterHorizontally) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .width(300.dp)
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
 
@@ -335,39 +336,16 @@ fun ScheduleUpdateScreen(
 
 
             Spacer(modifier = Modifier.height(16.dp))
-
             // 시간 설정
-            val startHour = viewModel.startTime.value.substring(0,2).toInt()
-            val startMinute = viewModel.startTime.value.substring(5,7).toInt()
-            val startAMPM = if (viewModel.startTime.value.substring(8, 10) == "AM") {
-                AMPMHours.DayTime.AM
-            } else {
-                AMPMHours.DayTime.PM
-            }
-
-            val endHour = viewModel.endTime.value.substring(0,2).toInt()
-            val endMinute = viewModel.endTime.value.substring(5,7).toInt()
-            val endAMPM = if (viewModel.endTime.value.substring(8, 10) == "AM") {
-                AMPMHours.DayTime.AM
-            } else {
-                AMPMHours.DayTime.PM
-            }
-
             // 시작 시간 선택
-            var pickerStartValue = AMPMHours(
-                    hours = startHour,
-                    minutes = startMinute,
-                    dayTime = startAMPM)
-
-
-            // 끝나는 시간
-            var pickerEndValue = AMPMHours(hours = endHour,
-                    minutes = endMinute,
-                dayTime = endAMPM)
-
+            var pickerStartValue by remember {
+                mutableStateOf<Hours>(AMPMHours(0,
+                    0,
+                    AMPMHours.DayTime.PM))
+            }
             var pickerStartString = pickerStartValue.toString().reversed()
 
-            fun stringConverter(start: String, end: String, AMPM: String): String {
+            fun StringConverter(start: String, end: String, AMPM: String): String {
                 var start = start
                 var end = end
                 if (start.length == 1) {
@@ -388,18 +366,19 @@ fun ScheduleUpdateScreen(
             }
 
 
+            // 끝나는 시간
+            var pickerEndValue by remember {
+                mutableStateOf<Hours>(AMPMHours(12,
+                    0,
+                    AMPMHours.DayTime.PM))
+            }
             var pickerEndString = pickerEndValue.toString().reversed()
 
             var showPickerEndDate by remember {
                 mutableStateOf(false)
             }
 
-            var showErrors by remember {
-                mutableStateOf(false)
-            }
-
-
-            Column(modifier = Modifier.fillMaxWidth(0.8f)) {
+            Column(modifier = Modifier.width(300.dp)) {
                 Text("시간 설정",
                     modifier = Modifier.padding(vertical = 12.dp),
                     color = PrimaryDark,
@@ -408,7 +387,7 @@ fun ScheduleUpdateScreen(
                     fontSize = 16.sp
                 )
                 Row(modifier = Modifier
-                    .fillMaxWidth()
+                    .width(300.dp)
                     .clickable(onClick = { showPickerStartDate = !showPickerStartDate }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("시작 시간",
@@ -431,15 +410,15 @@ fun ScheduleUpdateScreen(
             }
             if (showPickerStartDate) {
                 Column(modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .width(300.dp)
                     .padding(horizontal = 8.dp, vertical = 10.dp)) {
                     HoursNumberPicker(
                         dividersColor = SecondaryLightBlue,
                         value = pickerStartValue,
                         onValueChange = {
-                            pickerStartValue = it as AMPMHours
+                            pickerStartValue = it
                             pickerStartString = it.toString().reversed()
-                            viewModel.onStartTimeChange(stringConverter(it.hours.toString(),
+                            viewModel.onStartTimeChange(StringConverter(it.hours.toString(),
                                 it.minutes.toString(),
                                 pickerStartString.substring(1, 3).reversed()))
                         },
@@ -462,7 +441,7 @@ fun ScheduleUpdateScreen(
                 }
             }
             Row(modifier = Modifier
-                .fillMaxWidth(0.8f)
+                .width(300.dp)
                 .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("종료 시간",
@@ -482,46 +461,19 @@ fun ScheduleUpdateScreen(
                 )
 
             }
-            if (showErrors) {
-                Text("종료 시간을 제대로 설정해주세요", style = Typography.body2, color = SystemRed,
-                    modifier = Modifier.fillMaxWidth(0.8f),
-                    textAlign = TextAlign.Center)
-            }
             if (showPickerEndDate) {
                 Column(modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .width(300.dp)
                     .padding(horizontal = 8.dp, vertical = 10.dp)) {
                     HoursNumberPicker(
                         dividersColor = SecondaryLightBlue,
                         value = pickerEndValue,
                         onValueChange = {
-                            var AMPM = pickerEndString.substring(1,3).reversed()
-                            var hour = it.hours.toString()
-                            var minute = it.minutes.toString()
-                            if (AMPM > viewModel.startTime.value.substring(8, 10)) {
-                                viewModel.onEndTimeChange(stringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
-                                showErrors = false
-                            } else if (AMPM == viewModel.startTime.value.substring(8, 10)) {
-                                if (hour.toInt() > viewModel.startTime.value.substring(0,2).toInt()) {
-                                    viewModel.onEndTimeChange(stringConverter(it.hours.toString(),
-                                        it.minutes.toString(),
-                                        pickerEndString.substring(1, 3).reversed()))
-                                    showErrors = false
-                                } else if (hour.toInt()  == viewModel.startTime.value.substring(0,2).toInt() ) {
-                                    if (minute.toInt()  >= viewModel.startTime.value.substring(5,7).toInt() ) {
-                                        viewModel.onEndTimeChange(stringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
-                                        showErrors = false
-                                    } else {
-                                        showErrors = true
-                                    }
-
-                                } else {
-                                    showErrors = true
-                                }
-                            }
-                            else {
-                                showErrors = true
-                            }
+                            pickerEndValue = it
+                            pickerEndString = it.toString().reversed()
+                            viewModel.onEndTimeChange(StringConverter(it.hours.toString(),
+                                it.minutes.toString(),
+                                pickerEndString.substring(1, 3).reversed()))
                         },
                         hoursDivider = {
                             Text(
@@ -542,10 +494,10 @@ fun ScheduleUpdateScreen(
                 }
             }
             Divider(modifier = Modifier
-                .fillMaxWidth(0.8f)
+                .width(300.dp)
                 .padding(vertical = 20.dp), color = PrimaryLight)
             Row(modifier = Modifier
-                .fillMaxWidth(0.8f)
+                .width(300.dp)
                 .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("일정 알람",
@@ -572,7 +524,7 @@ fun ScheduleUpdateScreen(
                 val possibleValues = listOf("시작 시간", "1시간 전", "3시간 전", "종료 시간")
                 var state by remember { mutableStateOf(possibleValues[0]) }
                 Row(modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .width(300.dp)
                     .clickable(onClick = { showAlarmSetting = !showAlarmSetting }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("알람 시간 설정",
@@ -594,7 +546,7 @@ fun ScheduleUpdateScreen(
                 }
                 if (showAlarmSetting) {
                     Column(modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                        .width(300.dp)
                         .padding(vertical = 6.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -789,17 +741,21 @@ fun ScheduleUpdateScreen(
                         Row() {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Image(
-                                    painter = painterResource(Member.memberIconsCancel[viewModel.memberList.value[index].memberIcon!!]),
+                                    painter = painterResource(Member.memberIcons[viewModel.memberList.value[index].memberIcon!!]),
                                     contentDescription = "",
                                     modifier = Modifier
                                         .width(60.dp)
                                         .height(60.dp)
-                                        .clickable(
-                                            enabled = true,
-                                            onClick = {
-                                                viewModel.deleteTemporaryMember(index)
-                                            }
-                                        )
+//                                        .clickable(
+//                                            enabled = true,
+//                                            onClick = {
+//                                                viewModel.memberList.value[index].memberId?.let {
+//                                                    viewModel.deleteMember(
+//                                                        it
+//                                                    )
+//                                                }
+//                                            }
+//                                        )
                                 )
                                 viewModel.memberList.value[index].name?.let {
                                     Text(

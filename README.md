@@ -31,29 +31,64 @@
 
   ### **👨‍💻 Back-end**
     
-    - 
-      
-    - 
+    server.servlet.context-path= /naya
+    server.port=8080
 
-    - 
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+    spring.datasource.url=jdbc:mysql://172.17.0.2:3306/naya?serverTimezone=UTC&characterEncoding=UTF-8
+    spring.datasource.username=root
+    spring.datasource.password=eowjswkdbfb104
 
-    - 
+    #spring
+    #spring.jpa.show-sql=true.jpa.database-platform=org.hibernate.dialect.MySql8Dialect
+    spring.jpa.hibernate.ddl-auto=update
+
+    #spring.mvc.pathmatch.matching-strategy=ant_path_matcher
+
     
   ### **👩‍💻 CI/CD**  
     
-    - 
+    # backend
+    FROM openjdk:8
+    WORKDIR /var/jenkins_home/workspace/NAYA/backend/naya
+    ENV TZ Asia/Seoul
+    COPY build/libs/NAYA-0.0.1-SNAPSHOT.jar app.jar
+    ENTRYPOINT ["java","-jar","app.jar"]
       
-    - 
-      
-    - 
-      
-    - 
+
+    # frontend
+    FROM node:16 as build-stage
+
+    # 앱 디렉터리 생성
+    WORKDIR /jenkins/workspace/NAYA/frontend
+    ENV TZ Asia/Seoul
+
+    # 앱 의존성 설치
+    # 가능한 경우(npm@5+) package.json과 package-lock.json을 모두 복사하기 위해
+    # 와일드카드를 사용
+    COPY package*.json ./
+
+    RUN npm install --save --legacy-peer-deps
+    # 프로덕션을 위한 코드를 빌드하는 경우
+    # RUN npm ci --only=production
+
+    # 앱 소스 추가
+    COPY . .
+
+    RUN npm run build
+
+    FROM nginx:stable-alpine as production-stage
+    COPY --from=build-stage /jenkins/workspace/NAYA/frontend/build /usr/share/nginx/html
+    COPY --from=build-stage /jenkins/workspace/NAYA/frontend/deploy_conf/nginx.conf /etc/nginx/conf.d/default.conf
+
+    EXPOSE 3000
+    CMD ["nginx", "-g", "daemon off;"]
       
   
 
 ## 2-2. 서비스 아키텍처
   
-![PT_35](./images/README/)
+
   
 ------------------------------------------------------
   
@@ -355,15 +390,8 @@
 
 # 6. 🛡 배포
 ------------------------------------------------------
-  - 
-    - 
-    - 
-    - 
-  - 
-    - 
-    - 
-  
-  
+  - https://play.google.com/store/apps/details?id=com.youme.naya&pli=1
+  - https://k7b104.p.ssafy.io/
 --------------------------
   
   
@@ -373,19 +401,13 @@
     
   ## 6-1. ERD
 
-  ![ERD](./images/README/)
+  ![자율프로젝트](/uploads/8531fe82e018687735a6057553d96f2b/자율프로젝트.png)
 
 
   ## 6-2. Design System
 
-  ![DesignSystem](./images/README/)
-
-  ![DESIGN_COMPONENT](./images/README/)
-
 
   ## 6-3. Design
-
-  ![DesignConcept](./images/README/)
 
     - 브랜딩 컨셉
       - 
@@ -412,17 +434,12 @@
     - Mattermost
 
     - Webex
-      
-      
-  ![PT_17](./images/README/)
     
 --------------------------
 
 
 
-# 8. 👨‍👩‍👧‍👦 ![logo_dark](./images/README/logo_dark.png) 팀원 소개
+# 8. ![Group_237632](/uploads/52a59d87dd297e72d341009deeb0e64b/Group_237632.png) 팀원 소개
 ------------------------------------------------------
   
-  ![PT_37](./images/README/)
-
-![Footer](./images/README/)
+  
