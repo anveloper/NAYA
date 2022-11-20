@@ -18,9 +18,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.youme.naya.card.CardDetailsDialog
+import com.youme.naya.card.CardImagePlaceholder
 import com.youme.naya.database.entity.Card
 import com.youme.naya.utils.rotateBitmap
 import com.youme.naya.widgets.home.ViewCard
+import java.io.File
 
 
 private val GalleryModifier = Modifier
@@ -38,7 +40,8 @@ fun GalleryItem(
     bCard: Card? = null
 ) {
     var isDetailsDialogOpened by remember { mutableStateOf(false) }
-    val bCardBitmap = if (bCard?.path != null) BitmapFactory.decodeFile(bCard.path) else null
+    val bCardBitmap =
+        if (bCard?.path != null && File(bCard.path).exists()) BitmapFactory.decodeFile(bCard.path) else null
 
     if (nayaCard != null && bCard == null) {
         Card(
@@ -73,16 +76,13 @@ fun GalleryItem(
             }
         }
     } else if (nayaCard == null && bCard != null) {
-//        val bCardUri = convertPath2Uri(activity, bCard.path!!)
         Card(
             GalleryModifier
                 .pointerInteropFilter {
                     when (it.action) {
                         MotionEvent.ACTION_DOWN -> {
-//                            Log.i("Card", "Down ${bCardUri}")
                         }
                         MotionEvent.ACTION_MOVE -> {
-//                            Log.i("Card", "Move ${bCardUri}")
                         }
                         MotionEvent.ACTION_UP -> {
                             isDetailsDialogOpened = true
@@ -95,6 +95,8 @@ fun GalleryItem(
         ) {
             if (bCardBitmap != null) {
                 ImageContainer(rotateBitmap(bCardBitmap, 90f))
+            } else {
+                CardImagePlaceholder()
             }
         }
         if (isDetailsDialogOpened) {

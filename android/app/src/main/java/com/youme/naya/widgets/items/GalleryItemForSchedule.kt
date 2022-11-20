@@ -18,12 +18,14 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.youme.naya.card.CardImagePlaceholder
 import com.youme.naya.database.entity.Card
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.utils.convertPath2Uri
 import com.youme.naya.utils.rotateBitmap
 import com.youme.naya.widgets.home.ViewCard
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
 
 
@@ -43,6 +45,8 @@ fun GalleryItemForSchedule(
     bCard: Card? = null,
     viewModel: ScheduleMainViewModel = hiltViewModel(),
 ) {
+    val bCardBitmap =
+        if (bCard?.path != null && File(bCard.path).exists()) BitmapFactory.decodeFile(bCard.path) else null
 
     if (nayaCard != null && bCard == null) {
         Card(
@@ -63,18 +67,19 @@ fun GalleryItemForSchedule(
         }
 
     } else if (nayaCard == null && bCard != null) {
-        val bCardUri = convertPath2Uri(activity, bCard.path!!)
+//        val bCardUri = convertPath2Uri(activity, bCard.path!!)
         Card(
             GalleryModifier
                 .pointerInteropFilter {
                     when (it.action) {
                         MotionEvent.ACTION_UP -> {
-                            BitmapToString(
-                                BitmapFactory.decodeFile(bCard.path))?.let { it1 ->
-                                viewModel.onUriChange(
-                                    it1)
+                            if (bCardBitmap != null) {
+                                BitmapToString(bCardBitmap)?.let { it1 ->
+                                    viewModel.onUriChange(
+                                        it1)
+                                }
+                                viewModel.onNuyaTypeChange(1)
                             }
-                            viewModel.onNuyaTypeChange(1)
                         }
                         else -> false
                     }
@@ -82,12 +87,11 @@ fun GalleryItemForSchedule(
                 },
             shape = RectangleShape
         ) {
-            ImageContainer(
-                rotateBitmap(
-                    BitmapFactory.decodeFile(bCard.path),
-                    90f
-                )
-            )
+            if (bCardBitmap != null) {
+                ImageContainer(rotateBitmap(bCardBitmap, 90f))
+            } else {
+                CardImagePlaceholder()
+            }
         }
     }
 }
