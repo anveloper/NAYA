@@ -20,9 +20,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.youme.naya.R
+import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.ui.theme.*
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import com.youme.naya.widgets.home.MyBCardList
@@ -44,9 +46,7 @@ fun HomeScreen(
     navController: NavHostController,
 ) {
     val context = LocalContext.current
-    var (currentCardId, setCurrentCardId) = rememberSaveable {
-        mutableStateOf(1)
-    }
+    val cardViewModel: CardViewModel = hiltViewModel()
 
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = BottomSheetState(BottomSheetValue.Collapsed)
@@ -66,8 +66,8 @@ fun HomeScreen(
             Column(modifier = Modifier.fillMaxHeight(0.78f)) {
                 NayaBcardSwitchButtons(
                     nayaTab = { MyNayaCardList(context, navController) },
-                    bCardTab = { MyBCardList(context, navController) },
-                    videoTab = { MyVideoCardList(context, navController) }, false
+                    bCardTab = { MyBCardList(context, navController, cardViewModel) },
+                    videoTab = { MyVideoCardList(context, navController) }, true
                 )
             }
             Column(modifier = Modifier

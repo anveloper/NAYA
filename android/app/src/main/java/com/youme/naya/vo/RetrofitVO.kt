@@ -16,3 +16,12 @@ data class SendCardResponseVO(
     val sendDatetime: String,
     val expiredDatetime: String
 )
+@Keep
+data class MapRequestVO(val address: String?)
+@Keep
+data class MapResponseVO(
+    val x:String?,
+    val y:String?,
+    val roadAddress:String?,
+    val jibunAddress:String?
+)

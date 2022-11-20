@@ -21,14 +21,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -36,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.youme.naya.components.OutlinedBigButton
@@ -55,6 +54,7 @@ import java.io.File
 
 lateinit var intentSenderLauncher: ActivityResultLauncher<IntentSenderRequest>
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CardDetailsDialog(
     activity: Activity,
@@ -68,6 +68,7 @@ fun CardDetailsDialog(
 
     var isShareOpened by remember { mutableStateOf(false) }
     var isDeleteDialogOpened by remember { mutableStateOf(false) }
+    var flipState by remember { mutableStateOf(CardFace.Front) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -116,31 +117,39 @@ fun CardDetailsDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (nayaCard != null && bCard == null) {
-                    Card(
-                        Modifier
-                            .padding(bottom = 16.dp)
-                            .aspectRatio(5 / 9f),
-                        shape = RectangleShape,
-                        elevation = 4.dp
+                    FlippableCard(
+                        cardFace = flipState,
+                        onClick = { flipState = it.next },
+                        axis = RotationAxis.AxisY,
+                        modifier = Modifier.padding(bottom = 16.dp)
                     ) {
                         Image(
-                            painter = rememberImagePainter(data = nayaCard.uri),
+                            painter = rememberAsyncImagePainter(nayaCard.uri),
                             contentDescription = null,
                             contentScale = ContentScale.Fit,
                             modifier = Modifier.fillMaxSize()
                         )
                     }
                 } else if (nayaCard == null && bCard != null) {
-                    Card(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 16.dp)
-                            .aspectRatio(9 / 5f),
-                        shape = RectangleShape,
-                        elevation = 4.dp
+                    FlippableCard(
+                        cardFace = flipState,
+                        onClick = { flipState = it.next },
+                        axis = RotationAxis.AxisY,
+                        isHorizontalCard = true,
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        back = if (bCard.background != null) ({
+                            Image(
+                                painter = rememberAsyncImagePainter(
+                                    BitmapFactory.decodeFile(bCard.background)
+                                ),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }) else null
                     ) {
                         Image(
-                            painter = rememberImagePainter(BitmapFactory.decodeFile(bCard.path)),
+                            painter = rememberAsyncImagePainter(BitmapFactory.decodeFile(bCard.path)),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.fillMaxSize()

@@ -2,10 +2,10 @@ package com.youme.naya.widgets.home
 
 import android.content.Context
 import android.util.DisplayMetrics
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -14,32 +14,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.outlined.Flip
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidViewBinding
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.youme.naya.card.CardFace
 import com.youme.naya.database.viewModel.CardViewModel
-import com.youme.naya.databinding.BusinessCardBinding
 import com.youme.naya.widgets.items.CardItem
 import com.youme.naya.widgets.items.CardItemPlus
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun MyBCardList(context: Context, navController: NavHostController) {
-    val cardViewModel: CardViewModel = hiltViewModel()
+fun MyBCardList(context: Context, navController: NavHostController, cardViewModel: CardViewModel) {
     val businessCards = cardViewModel.businessCardListInNaya.collectAsState().value
 
     // page를 이동하기 위한 상태 값
-    val currentCardId = rememberLazyListState()
+    val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     // 처음 아이템의 padding을 정해주기 위한 식
@@ -53,6 +47,10 @@ fun MyBCardList(context: Context, navController: NavHostController) {
     val listVerticalPadding = (px2dp(deviceWidth!!) - 200) / 2
     val listSize = businessCards.size
 
+    val flipStates = remember(businessCards) {
+        mutableStateListOf(*businessCards.map { _ -> CardFace.Front }.toTypedArray())
+    }
+
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,10 +61,13 @@ fun MyBCardList(context: Context, navController: NavHostController) {
             verticalAlignment = Alignment.CenterVertically,
             contentPadding = PaddingValues(horizontal = listVerticalPadding.dp),
             horizontalArrangement = Arrangement.spacedBy(32.dp),
-            state = currentCardId
+            state = listState
         ) {
-            items(businessCards) { value ->
-                CardItem(bCard = value)
+            itemsIndexed(businessCards) { index, value ->
+                CardItem(
+                    bCard = value,
+                    flipState = flipStates[index]
+                )
             }
             item() {
                 CardItemPlus(navController = navController, isBCard = true)
@@ -79,7 +80,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
             } else {
                 if (listSize > 2) {
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(0) }
+                        coroutineScope.launch { listState.animateScrollToItem(0) }
                     }) {
                         Icon(
                             Icons.Filled.ArrowLeft,
@@ -88,7 +89,7 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                     }
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize) }
+                        coroutineScope.launch { listState.animateScrollToItem(listSize) }
                     }) {
                         Icon(
                             Icons.Outlined.Add,
@@ -97,7 +98,17 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                     }
                     Spacer(Modifier.width(8.dp))
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize - 1) }
+                        flipStates[listState.firstVisibleItemIndex] =
+                            flipStates[listState.firstVisibleItemIndex].next
+                    }) {
+                        Icon(
+                            Icons.Outlined.Flip,
+                            "flip"
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = {
+                        coroutineScope.launch { listState.animateScrollToItem(listSize - 1) }
                     }) {
                         Icon(
                             Icons.Filled.ArrowRight,
@@ -107,11 +118,21 @@ fun MyBCardList(context: Context, navController: NavHostController) {
                     Spacer(Modifier.width(8.dp))
                 } else {
                     IconButton(onClick = {
-                        coroutineScope.launch { currentCardId.animateScrollToItem(listSize) }
+                        coroutineScope.launch { listState.animateScrollToItem(listSize) }
                     }) {
                         Icon(
                             Icons.Outlined.Add,
                             "plus"
+                        )
+                    }
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = {
+                        flipStates[listState.firstVisibleItemIndex] =
+                            flipStates[listState.firstVisibleItemIndex].next
+                    }) {
+                        Icon(
+                            Icons.Outlined.Flip,
+                            "flip"
                         )
                     }
                 }
