@@ -1,9 +1,11 @@
 package com.youme.naya.screens.schedule
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
@@ -17,8 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -28,31 +32,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.chargemap.compose.numberpicker.AMPMHours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
 import com.chargemap.compose.numberpicker.ListItemPicker
 import com.youme.naya.R
-import com.youme.naya.components.BasicTextField
-import com.youme.naya.components.OutlinedSmallButton
-import com.youme.naya.components.PrimaryBigButton
-import com.youme.naya.components.PrimarySmallButton
+import com.youme.naya.card.BusinessCardGridListForSchedule
+import com.youme.naya.card.NayaCardGridListForSchedule
+import com.youme.naya.components.*
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
+import com.youme.naya.database.viewModel.CardViewModel
 import com.youme.naya.schedule.CustomAlertDialog
 import com.youme.naya.schedule.ScheduleMainViewModel
+import com.youme.naya.schedule.component.MemberInput
 import com.youme.naya.ui.theme.*
+import com.youme.naya.widgets.common.NayaBcardSwitchButtons
+import kotlinx.coroutines.launch
 
 private val CalendarHeaderBtnGroupModifier = Modifier
     .fillMaxWidth()
     .height(64.dp)
     .padding(start = 8.dp, end = 8.dp)
 
-
+@SuppressLint("CoroutineCreationDuringComposition")
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun ScheduleUpdateScreen(
-    navController: NavController,
+    navController: NavHostController,
     viewModel: ScheduleMainViewModel = hiltViewModel(),
     scheduleId: Int,
 ) {
@@ -62,7 +70,139 @@ fun ScheduleUpdateScreen(
     val openDialog = remember { mutableStateOf(false)  }
     var memberList = remember { mutableStateOf(viewModel.memberList) }
 
+    val bottomSheetState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
 
+    val memberType = remember {
+        mutableStateOf(-1)
+    }
+
+    val memberNum = remember {
+        mutableStateOf(viewModel.memberList.value.size)
+    }
+
+    val cardViewModel: CardViewModel = hiltViewModel()
+    val context = LocalContext.current
+
+    ModalBottomSheetLayout(
+        sheetContent = {
+            LazyColumn (
+                horizontalAlignment=Alignment.CenterHorizontally
+            ){
+                when (memberType.value) {
+                    -1 -> item {
+                        Box(modifier = Modifier
+                            .clickable(
+                                onClick = {
+                                    memberType.value = 1
+                                })
+                            .padding(vertical = 4.dp)
+                            .fillMaxWidth()
+                            .height(48.dp),
+                            contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "Nuya 보관함에서 가져오기",
+                                color = PrimaryBlue,
+                                style = Typography.body1,
+                            )
+                        }
+                        Box(modifier = Modifier
+                            .clickable(
+                                onClick = {
+                                    memberType.value = 0
+                                })
+                            .padding(vertical = 4.dp)
+                            .fillMaxWidth()
+                            .height(48.dp),
+                            contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "직접 입력",
+                                color = PrimaryBlue,
+                                style = Typography.body1,
+                            )
+                        }
+                    }
+                    0 -> item {
+                        Column(modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally) {
+                            MemberInput()
+                            RegisterButton(
+                                text = "등록",
+                                onClick = {
+                                    viewModel.currentScheduleId?.let {
+                                        viewModel.insertTemporaryMember(
+                                            memberType.value,
+                                            memberNum.value % 6,
+                                            it)
+                                    }
+
+                                    memberNum.value += 1
+                                    memberType.value = -1
+
+                                    coroutineScope.launch {
+                                        bottomSheetState.hide()
+                                    }
+                                },
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
+
+                    }
+                    1 -> item {
+                        Spacer(Modifier.height(20.dp))
+                        Text(
+                            text = "함께 할 Nuya를 선택해주세요",
+                            color = PrimaryDark,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Box(
+                            Modifier
+                                .fillMaxSize()
+                                .background(Color.White)
+                        ) {
+                            Column(
+                                Modifier.height(400.dp)
+                            ) {
+//            SearchInput()
+                                NayaBcardSwitchButtons(
+                                    nayaTab = {
+                                        NayaCardGridListForSchedule(context,
+                                            navController,
+                                            true)
+                                    },
+                                    bCardTab = {
+                                        BusinessCardGridListForSchedule(context,
+                                            navController, cardViewModel,
+                                            true)
+                                    }
+                                )
+                                if (viewModel.cardUri.value != "") {
+                                    viewModel.currentScheduleId?.let {
+                                        viewModel.insertTemporaryMember(memberType.value,
+                                            memberNum.value % 6,
+                                            it
+                                        )
+                                    }
+
+                                    memberNum.value += 1
+                                    memberType.value = -1
+
+                                    coroutineScope.launch {
+                                        bottomSheetState.hide()
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        sheetState = bottomSheetState,
+        scrimColor = Color(0XCCFFFFFF),
+    ) {
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Row(
@@ -487,8 +627,23 @@ fun ScheduleUpdateScreen(
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
                 )
-                Spacer(modifier = Modifier.height(4.dp))
                 Text("멤버 클릭시 삭제가 가능합니다.", style = Typography.body2, color = SystemRed)
+                Spacer(modifier = Modifier.height(4.dp))
+                Image(
+                    painter = painterResource(R.drawable.schedule_member_register_icon),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(64.dp)
+                        .height(64.dp)
+                        .clickable(
+                            enabled = true,
+                            onClick = {
+                                coroutineScope.launch {
+                                    bottomSheetState.show()
+                                }
+                            }
+                        )
+                )
                 Spacer(modifier = Modifier.height(12.dp))
                 LazyVerticalGrid(
                     modifier = Modifier.height(80.dp).width(300.dp),
@@ -562,6 +717,7 @@ fun ScheduleUpdateScreen(
                 Spacer(modifier = Modifier.height(40.dp))
             }
         }
+    }
 }
 
 @Composable

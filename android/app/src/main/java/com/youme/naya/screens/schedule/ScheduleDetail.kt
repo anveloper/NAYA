@@ -1,6 +1,10 @@
 package com.youme.naya.screens.schedule
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Build
+import android.util.Base64
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -28,6 +32,8 @@ import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Member.Companion.memberIconsColor
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.ui.theme.*
+import com.youme.naya.widgets.items.ImageContainer
+
 
 private val CalendarHeaderBtnGroupModifier = Modifier
     .fillMaxWidth()
@@ -125,7 +131,8 @@ fun ScheduleDetailScreen(
                     }
                 }
 
-                PrimaryTinySmallButton(text =
+                PrimaryTinySmallButton(
+                    text =
                     if (done.value) "UnDone"
                     else "Done",
                     onClick = {
@@ -149,12 +156,14 @@ fun ScheduleDetailScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("시작 시간",
+                Text(
+                    "시작 시간",
                     modifier = Modifier.padding(vertical = 12.dp),
                     color = PrimaryDark,
                     fontFamily = fonts,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,)
+                    fontSize = 16.sp,
+                )
                 Text(viewModel.startTime.value,
                     style= Typography.body1,
                     color = NeutralGray)
@@ -167,12 +176,14 @@ fun ScheduleDetailScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("종료 시간",
+                Text(
+                    "종료 시간",
                     modifier = Modifier.padding(vertical = 12.dp),
                     color = PrimaryDark,
                     fontFamily = fonts,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,)
+                    fontSize = 16.sp,
+                )
                 Text(viewModel.endTime.value,
                     style= Typography.body1,
                     color = NeutralGray)
@@ -187,12 +198,14 @@ fun ScheduleDetailScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("알람 설정 시간",
+                    Text(
+                        "알람 설정 시간",
                         modifier = Modifier.padding(vertical = 12.dp),
                         color = PrimaryDark,
                         fontFamily = fonts,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 16.sp,)
+                        fontSize = 16.sp,
+                    )
                     Text(viewModel.alarmTime.value,
                         style= Typography.body1,
                         color = NeutralGray)
@@ -253,8 +266,7 @@ fun ScheduleDetailScreen(
                                                 detailOpen.value = !detailOpen.value
                                                 temporaryMember.value =
                                                     viewModel.memberList.value[index]
-                                            })
-                                        ,
+                                            }),
                                     )
                                 }
                                 else if (detailOpen.value && viewModel.memberList.value[index] != temporaryMember.value) {
@@ -268,8 +280,7 @@ fun ScheduleDetailScreen(
                                                 detailOpen.value = detailOpen.value
                                                 temporaryMember.value =
                                                     viewModel.memberList.value[index]
-                                            })
-                                        ,
+                                            }),
                                     )
                                 }
                                 else {
@@ -308,18 +319,25 @@ fun ScheduleDetailScreen(
                 Column(modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     if (detailOpen.value) {
-                        Box(modifier = Modifier
-                            .width(240.dp)
-                            .height(150.dp)
-                            .background(PrimaryLight)
-                            .shadow(elevation = 1.dp),
+
+                        Box(
+                            modifier = Modifier
+                                .width(if (temporaryMember.value.type == 0 ||
+                                    (temporaryMember.value.type == 1 && temporaryMember.value.nuyaType == 1)) 240.dp else 150.dp
+                                )
+                                .height(if (temporaryMember.value.type == 0 ||
+                                    (temporaryMember.value.type == 1 && temporaryMember.value.nuyaType == 1)) 150.dp else 240.dp)
+                                .background(PrimaryLight)
+                                .shadow(elevation = 1.dp),
                             contentAlignment = Alignment.Center,
                         ) {
-                            Box(modifier = Modifier
-                                .width(220.dp)
-                                .height(130.dp)
-                                .border(width = 2.dp,
-                                    color = memberIconsColor[temporaryMember.value.memberIcon!!]),
+                            if (temporaryMember.value.type == 0) {
+                            Box(
+                                modifier = Modifier
+                                    .width(220.dp)
+                                    .height(130.dp)
+                                    .border(width = 2.dp,
+                                        color = memberIconsColor[temporaryMember.value.memberIcon!!]),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Column() {
@@ -343,8 +361,8 @@ fun ScheduleDetailScreen(
                                             Text("이메일", color = NeutralGray, style = Typography.body2)
                                             Text(it, color = PrimaryDark, style = Typography.body2)
                                     }
-                                    }
                                     Spacer(modifier = Modifier.height(4.dp))
+                                    }
                                     temporaryMember.value.etcInfo?.let {
                                         Row(modifier = Modifier.fillMaxWidth(0.8f),
                                             horizontalArrangement = Arrangement.SpaceBetween
@@ -356,10 +374,26 @@ fun ScheduleDetailScreen(
                                 }
 
                             }
-                        }
+                            }
+                            else {
+                                if (temporaryMember.value.nuyaType == 0) {
+                                    ImageContainer(
+                                        Uri.parse(temporaryMember.value.cardUri)
+                                    )
+                                }
+                                else {
+                                    stringToBitmap(temporaryMember.value.cardUri)?.let {
+                                        ImageContainer(
+                                            it
+                                        )
+                                    }
+                                }
 
+
+                            }
+                        }
+                        }
                     }
-                }
             }
 
 
@@ -380,6 +414,20 @@ fun ScheduleDetailScreen(
                     color = NeutralGray)
             }
             Spacer(modifier = Modifier.height(40.dp))
+        }
     }
-}}
+}
+
+/*
+     * String형을 BitMap으로 변환시켜주는 함수
+     * */
+fun stringToBitmap(encodedString: String?): Bitmap? {
+    return try {
+        val encodeByte: ByteArray = Base64.decode(encodedString, Base64.DEFAULT)
+        BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.size)
+    } catch (e: Exception) {
+        e.message
+        null
+    }
+}
 
