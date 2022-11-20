@@ -16,6 +16,7 @@ const router = createBrowserRouter([
   { path: "/:userId/:sendCardId", element: <Card /> },
 ]);
 
+
 root.render(
   <HelmetProvider>
     <Provider store={store}>
