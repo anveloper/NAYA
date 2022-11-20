@@ -11,7 +11,7 @@ import com.youme.naya.database.entity.Schedule
 
 @Database(
     entities = [Card::class, Schedule::class, Member::class, Alarm::class],
-    version = 4
+    version = 5
 )
 abstract class CardDatabase: RoomDatabase() {
     abstract fun cardDao(): CardDao
