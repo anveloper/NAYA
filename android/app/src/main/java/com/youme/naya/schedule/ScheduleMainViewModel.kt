@@ -126,10 +126,10 @@ class ScheduleMainViewModel @Inject constructor(
     init {
         createNotificationChannel(context = AppModule.appContext)
         viewModelScope.launch {
-        repository.getSchedulesByDate(selectedDate.value)
-            .collect { schedules ->
-                _schedules.value = schedules
-            }
+            repository.getSchedulesByDate(selectedDate.value)
+                .collect { schedules ->
+                    _schedules.value = schedules
+                }
             _schedules.value = schedules.value.sortedBy { it.startTime }
         }
 
@@ -215,10 +215,10 @@ class ScheduleMainViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getScheduleWithMembersById(scheduleId)?.also {
                 repository.insertScheduleWithMembers(
-                it.schedule.copy(
-                    isDone = isDone
-                ),
-                it.members
+                    it.schedule.copy(
+                        isDone = isDone
+                    ),
+                    it.members
                 )
             }
         }
@@ -460,7 +460,7 @@ class ScheduleMainViewModel @Inject constructor(
                     cardUri = cardUri?.value,
                     nuyaType = nuyaType.value
                 )
-            }
+        }
         _memberName.value = memberName.value.copy(
             text = ""
         )
@@ -493,7 +493,7 @@ class ScheduleMainViewModel @Inject constructor(
             )
         }
 
-        }
+    }
 
     fun deleteTemporaryMember(memberId: Int) {
         viewModelScope.launch {
@@ -516,7 +516,7 @@ class ScheduleMainViewModel @Inject constructor(
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
         with(NotificationManagerCompat.from(AppModule.appContext)) {
             notify(notificationId, builder.build())
-        }    
+        }
     }
 
     private fun createEndErrorMadeNotification(selectedDate: String, startTime: String, title: String) {

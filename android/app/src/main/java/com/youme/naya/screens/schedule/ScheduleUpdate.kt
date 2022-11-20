@@ -220,198 +220,252 @@ fun ScheduleUpdateScreen(
         scrimColor = Color(0XCCFFFFFF),
     ) {
 
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(
-            CalendarHeaderBtnGroupModifier,
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.End
-        ) {
-            TopAppBar(
-                modifier = Modifier.height(64.dp),
-                backgroundColor = NeutralWhite,
-                elevation = 0.dp,
-                contentPadding = PaddingValues(horizontal = 8.dp),
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Row(
+                CalendarHeaderBtnGroupModifier,
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
             ) {
-                Row(Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                TopAppBar(
+                    modifier = Modifier.height(64.dp),
+                    backgroundColor = NeutralWhite,
+                    elevation = 0.dp,
+                    contentPadding = PaddingValues(horizontal = 8.dp),
                 ) {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(24.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    Row(Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Image(
-                                painter = painterResource(R.drawable.ic_baseline_arrow_back_ios_24),
-                                contentDescription = "Prev page button",
-                                colorFilter = ColorFilter.tint(NeutralLight)
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(24.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Image(
+                                    painter = painterResource(R.drawable.ic_baseline_arrow_back_ios_24),
+                                    contentDescription = "Prev page button",
+                                    colorFilter = ColorFilter.tint(NeutralLight)
+                                )
+                            }
+                            Text(
+                                "일정 수정",
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = PrimaryDark,
+                            )
+                            Text(
+                                "  삭제",
+                                fontFamily = fonts,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = PrimaryBlue,
+                                modifier = Modifier
+                                    .padding(horizontal = 8.dp)
+                                    .clickable(onClick = {
+                                        openDialog.value = true
+                                    })
                             )
                         }
-                        Text(
-                            "일정 수정",
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            color = PrimaryDark,
-                        )
-                        Text(
-                            "  삭제",
-                            fontFamily = fonts,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            color = PrimaryBlue,
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .clickable(onClick = {
-                                    openDialog.value = true
-                                })
-                        )
                     }
                 }
             }
-        }
-        // 삭제 시 모달
-        DeleteModal(visible = openDialog.value,
-            onDismissRequest = { openDialog.value = false },
-            scheduleId = scheduleId,
-            onDelete = {
-                viewModel.deleteSchedule(scheduleId)
-                navController.navigate("schedule")
-            })
+            // 삭제 시 모달
+            DeleteModal(visible = openDialog.value,
+                onDismissRequest = { openDialog.value = false },
+                scheduleId = scheduleId,
+                onDelete = {
+                    viewModel.deleteSchedule(scheduleId)
+                    navController.navigate("schedule")
+                })
 
-        Spacer(modifier = Modifier.height(20.dp))
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-
-                ) {
-                Schedule.scheduleColors.forEach { color ->
-                    val colorInt = color.toArgb()
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(color.copy(alpha = if (viewModel.color.value == colorInt) 1f else 0.3f))
-                            .clickable(onClick = { viewModel.onColorChange(colorInt) }),
-                    )
-
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Column {
-                Text(
-                    "일정명",
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = PrimaryDark,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                BasicTextField(
+            Spacer(modifier = Modifier.height(20.dp))
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                Row(
                     modifier = Modifier
-                        .focusRequester(focusRequester),
-                    text = viewModel.title.value.text,
-                    onChange = { viewModel.onTitleChange(it) },
-                    placeholder = "일정명 입력",
-                    imeAction = ImeAction.Done,
-                    keyBoardActions = KeyboardActions(
-                        onDone = {
-                            keyboardController?.hide()
-                        },
-                    ),
-                )
-            }
+                        .fillMaxWidth(0.8f)
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+
+                    ) {
+                    Schedule.scheduleColors.forEach { color ->
+                        val colorInt = color.toArgb()
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(color.copy(alpha = if (viewModel.color.value == colorInt) 1f else 0.3f))
+                                .clickable(onClick = { viewModel.onColorChange(colorInt) }),
+                        )
+
+                    }
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Column {
+                    Text(
+                        "일정명",
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        color = PrimaryDark,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    BasicTextField(
+                        modifier = Modifier
+                            .focusRequester(focusRequester),
+                        text = viewModel.title.value.text,
+                        onChange = { viewModel.onTitleChange(it) },
+                        placeholder = "일정명 입력",
+                        imeAction = ImeAction.Done,
+                        keyBoardActions = KeyboardActions(
+                            onDone = {
+                                keyboardController?.hide()
+                            },
+                        ),
+                    )
+                }
 
 
-            Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // 시간 설정
-            val startHour = viewModel.startTime.value.substring(0,2).toInt()
-            val startMinute = viewModel.startTime.value.substring(5,7).toInt()
-            val startAMPM = if (viewModel.startTime.value.substring(8, 10) == "AM") {
-                AMPMHours.DayTime.AM
-            } else {
-                AMPMHours.DayTime.PM
-            }
+                // 시간 설정
+                val startHour = viewModel.startTime.value.substring(0,2).toInt()
+                val startMinute = viewModel.startTime.value.substring(5,7).toInt()
+                val startAMPM = if (viewModel.startTime.value.substring(8, 10) == "AM") {
+                    AMPMHours.DayTime.AM
+                } else {
+                    AMPMHours.DayTime.PM
+                }
 
-            val endHour = viewModel.endTime.value.substring(0,2).toInt()
-            val endMinute = viewModel.endTime.value.substring(5,7).toInt()
-            val endAMPM = if (viewModel.endTime.value.substring(8, 10) == "AM") {
-                AMPMHours.DayTime.AM
-            } else {
-                AMPMHours.DayTime.PM
-            }
+                val endHour = viewModel.endTime.value.substring(0,2).toInt()
+                val endMinute = viewModel.endTime.value.substring(5,7).toInt()
+                val endAMPM = if (viewModel.endTime.value.substring(8, 10) == "AM") {
+                    AMPMHours.DayTime.AM
+                } else {
+                    AMPMHours.DayTime.PM
+                }
 
-            // 시작 시간 선택
-            var pickerStartValue = AMPMHours(
+                // 시작 시간 선택
+                var pickerStartValue = AMPMHours(
                     hours = startHour,
                     minutes = startMinute,
                     dayTime = startAMPM)
 
 
-            // 끝나는 시간
-            var pickerEndValue = AMPMHours(hours = endHour,
+                // 끝나는 시간
+                var pickerEndValue = AMPMHours(hours = endHour,
                     minutes = endMinute,
-                dayTime = endAMPM)
+                    dayTime = endAMPM)
 
-            var pickerStartString = pickerStartValue.toString().reversed()
+                var pickerStartString = pickerStartValue.toString().reversed()
 
-            fun stringConverter(start: String, end: String, AMPM: String): String {
-                var start = start
-                var end = end
-                if (start.length == 1) {
-                    start = "0$start"
+                fun stringConverter(start: String, end: String, AMPM: String): String {
+                    var start = start
+                    var end = end
+                    if (start.length == 1) {
+                        start = "0$start"
+                    }
+                    if (end.length == 1) {
+                        end = "0$end"
+                    }
+                    return "$start : $end $AMPM"
                 }
-                if (end.length == 1) {
-                    end = "0$end"
+
+                var showPickerStartDate by remember {
+                    mutableStateOf(false)
                 }
-                return "$start : $end $AMPM"
-            }
 
-            var showPickerStartDate by remember {
-                mutableStateOf(false)
-            }
-
-            var showAlarmSetting by remember {
-                mutableStateOf(false)
-            }
+                var showAlarmSetting by remember {
+                    mutableStateOf(false)
+                }
 
 
-            var pickerEndString = pickerEndValue.toString().reversed()
+                var pickerEndString = pickerEndValue.toString().reversed()
 
-            var showPickerEndDate by remember {
-                mutableStateOf(false)
-            }
+                var showPickerEndDate by remember {
+                    mutableStateOf(false)
+                }
 
-            var showErrors by remember {
-                mutableStateOf(false)
-            }
+                var showErrors by remember {
+                    mutableStateOf(false)
+                }
 
 
-            Column(modifier = Modifier.fillMaxWidth(0.8f)) {
-                Text("시간 설정",
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = PrimaryDark,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
+                Column(modifier = Modifier.fillMaxWidth(0.8f)) {
+                    Text("시간 설정",
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        color = PrimaryDark,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(onClick = { showPickerStartDate = !showPickerStartDate }),
+                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("시작 시간",
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            color = NeutralGray,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp
+                        )
+                        Text(
+                            viewModel.startTime.value,
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            color = PrimaryDark,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp,
+                        )
+
+                    }
+                }
+                if (showPickerStartDate) {
+                    Column(modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(horizontal = 8.dp, vertical = 10.dp)) {
+                        HoursNumberPicker(
+                            dividersColor = SecondaryLightBlue,
+                            value = pickerStartValue,
+                            onValueChange = {
+                                pickerStartValue = it as AMPMHours
+                                pickerStartString = it.toString().reversed()
+                                viewModel.onStartTimeChange(stringConverter(it.hours.toString(),
+                                    it.minutes.toString(),
+                                    pickerStartString.substring(1, 3).reversed()))
+                            },
+                            hoursDivider = {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp),
+                                    textAlign = TextAlign.Center,
+                                    text = ":"
+                                )
+                            },
+                            minutesDivider = {
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 8.dp),
+                                    textAlign = TextAlign.Center,
+                                    text = " "
+                                )
+                            })
+
+                    }
+                }
                 Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = { showPickerStartDate = !showPickerStartDate }),
+                    .fillMaxWidth(0.8f)
+                    .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("시작 시간",
+                    Text("종료 시간",
                         modifier = Modifier.padding(vertical = 12.dp),
                         color = NeutralGray,
                         fontFamily = fonts,
@@ -419,7 +473,7 @@ fun ScheduleUpdateScreen(
                         fontSize = 15.sp
                     )
                     Text(
-                        viewModel.startTime.value,
+                        viewModel.endTime.value,
                         modifier = Modifier.padding(vertical = 12.dp),
                         color = PrimaryDark,
                         fontFamily = fonts,
@@ -428,417 +482,363 @@ fun ScheduleUpdateScreen(
                     )
 
                 }
-            }
-            if (showPickerStartDate) {
-                Column(modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(horizontal = 8.dp, vertical = 10.dp)) {
-                    HoursNumberPicker(
-                        dividersColor = SecondaryLightBlue,
-                        value = pickerStartValue,
-                        onValueChange = {
-                            pickerStartValue = it as AMPMHours
-                            pickerStartString = it.toString().reversed()
-                            viewModel.onStartTimeChange(stringConverter(it.hours.toString(),
-                                it.minutes.toString(),
-                                pickerStartString.substring(1, 3).reversed()))
-                        },
-                        hoursDivider = {
-                            Text(
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp),
-                                textAlign = TextAlign.Center,
-                                text = ":"
-                            )
-                        },
-                        minutesDivider = {
-                            Text(
-                                modifier = Modifier.padding(horizontal = 8.dp),
-                                textAlign = TextAlign.Center,
-                                text = " "
-                            )
-                        })
-
+                if (showErrors) {
+                    Text("종료 시간을 제대로 설정해주세요", style = Typography.body2, color = SystemRed,
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        textAlign = TextAlign.Center)
                 }
-            }
-            Row(modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
-                horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("종료 시간",
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = NeutralGray,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 15.sp
-                )
-                Text(
-                    viewModel.endTime.value,
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = PrimaryDark,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 15.sp,
-                )
-
-            }
-            if (showErrors) {
-                Text("종료 시간을 제대로 설정해주세요", style = Typography.body2, color = SystemRed,
-                    modifier = Modifier.fillMaxWidth(0.8f),
-                    textAlign = TextAlign.Center)
-            }
-            if (showPickerEndDate) {
-                Column(modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(horizontal = 8.dp, vertical = 10.dp)) {
-                    HoursNumberPicker(
-                        dividersColor = SecondaryLightBlue,
-                        value = pickerEndValue,
-                        onValueChange = {
-                            var AMPM = pickerEndString.substring(1,3).reversed()
-                            var hour = it.hours.toString()
-                            var minute = it.minutes.toString()
-                            if (AMPM > viewModel.startTime.value.substring(8, 10)) {
-                                viewModel.onEndTimeChange(stringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
-                                showErrors = false
-                            } else if (AMPM == viewModel.startTime.value.substring(8, 10)) {
-                                if (hour.toInt() > viewModel.startTime.value.substring(0,2).toInt()) {
-                                    viewModel.onEndTimeChange(stringConverter(it.hours.toString(),
-                                        it.minutes.toString(),
-                                        pickerEndString.substring(1, 3).reversed()))
+                if (showPickerEndDate) {
+                    Column(modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(horizontal = 8.dp, vertical = 10.dp)) {
+                        HoursNumberPicker(
+                            dividersColor = SecondaryLightBlue,
+                            value = pickerEndValue,
+                            onValueChange = {
+                                var AMPM = pickerEndString.substring(1,3).reversed()
+                                var hour = it.hours.toString()
+                                var minute = it.minutes.toString()
+                                if (AMPM > viewModel.startTime.value.substring(8, 10)) {
+                                    viewModel.onEndTimeChange(stringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
                                     showErrors = false
-                                } else if (hour.toInt()  == viewModel.startTime.value.substring(0,2).toInt() ) {
-                                    if (minute.toInt()  >= viewModel.startTime.value.substring(5,7).toInt() ) {
-                                        viewModel.onEndTimeChange(stringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
+                                } else if (AMPM == viewModel.startTime.value.substring(8, 10)) {
+                                    if (hour.toInt() > viewModel.startTime.value.substring(0,2).toInt()) {
+                                        viewModel.onEndTimeChange(stringConverter(it.hours.toString(),
+                                            it.minutes.toString(),
+                                            pickerEndString.substring(1, 3).reversed()))
                                         showErrors = false
+                                    } else if (hour.toInt()  == viewModel.startTime.value.substring(0,2).toInt() ) {
+                                        if (minute.toInt()  >= viewModel.startTime.value.substring(5,7).toInt() ) {
+                                            viewModel.onEndTimeChange(stringConverter(it.hours.toString(), it.minutes.toString(), pickerEndString.substring(1,3).reversed()))
+                                            showErrors = false
+                                        } else {
+                                            showErrors = true
+                                        }
+
                                     } else {
                                         showErrors = true
                                     }
-
-                                } else {
+                                }
+                                else {
                                     showErrors = true
                                 }
-                            }
-                            else {
-                                showErrors = true
-                            }
-                        },
-                        hoursDivider = {
-                            Text(
-                                modifier = Modifier
-                                    .padding(horizontal = 8.dp),
-                                textAlign = TextAlign.Center,
-                                text = ":"
-                            )
-                        },
-                        minutesDivider = {
-                            Text(
-                                modifier = Modifier.padding(horizontal = 8.dp),
-                                textAlign = TextAlign.Center,
-                                text = " "
-                            )
-                        })
+                            },
+                            hoursDivider = {
+                                Text(
+                                    modifier = Modifier
+                                        .padding(horizontal = 8.dp),
+                                    textAlign = TextAlign.Center,
+                                    text = ":"
+                                )
+                            },
+                            minutesDivider = {
+                                Text(
+                                    modifier = Modifier.padding(horizontal = 8.dp),
+                                    textAlign = TextAlign.Center,
+                                    text = " "
+                                )
+                            })
 
+                    }
                 }
-            }
-            Divider(modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .padding(vertical = 20.dp), color = PrimaryLight)
-            Row(modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
-                horizontalArrangement = Arrangement.SpaceBetween) {
-                Text("일정 알람",
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = NeutralGray,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 15.sp
-                )
-                Switch(
-                    checked = viewModel.isOnAlarm.value,
-                    onCheckedChange = { viewModel.onAlarmChange() },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = NeutralWhite,
-                        checkedTrackColor = PrimaryBlue,
-                        uncheckedThumbColor = NeutralWhite,
-                        uncheckedTrackColor = NeutralLightness
-                    )
-                )
-
-            }
-
-            if (viewModel.isOnAlarm.value) {
-                val possibleValues = listOf("시작 시간", "1시간 전", "3시간 전", "종료 시간")
-                var state by remember { mutableStateOf(possibleValues[0]) }
+                Divider(modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .padding(vertical = 20.dp), color = PrimaryLight)
                 Row(modifier = Modifier
                     .fillMaxWidth(0.8f)
-                    .clickable(onClick = { showAlarmSetting = !showAlarmSetting }),
+                    .clickable(onClick = { showPickerEndDate = !showPickerEndDate }),
                     horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("알람 시간 설정",
+                    Text("일정 알람",
                         modifier = Modifier.padding(vertical = 12.dp),
                         color = NeutralGray,
                         fontFamily = fonts,
                         fontWeight = FontWeight.Medium,
                         fontSize = 15.sp
                     )
-                    Text(
-                        viewModel.alarmTime.value,
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = PrimaryDark,
-                        fontFamily = fonts,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 15.sp,
+                    Switch(
+                        checked = viewModel.isOnAlarm.value,
+                        onCheckedChange = { viewModel.onAlarmChange() },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = NeutralWhite,
+                            checkedTrackColor = PrimaryBlue,
+                            uncheckedThumbColor = NeutralWhite,
+                            uncheckedTrackColor = NeutralLightness
+                        )
                     )
 
                 }
-                if (showAlarmSetting) {
-                    Column(modifier = Modifier
+
+                if (viewModel.isOnAlarm.value) {
+                    val possibleValues = listOf("시작 시간", "1시간 전", "3시간 전", "종료 시간")
+                    var state by remember { mutableStateOf(possibleValues[0]) }
+                    Row(modifier = Modifier
                         .fillMaxWidth(0.8f)
-                        .padding(vertical = 6.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        ListItemPicker(
-                            dividersColor = SecondaryLightBlue,
-                            label = { it },
-                            value = viewModel.alarmTime.value,
-                            onValueChange = { viewModel.alarmTimeChange(it) },
-                            list = possibleValues
+                        .clickable(onClick = { showAlarmSetting = !showAlarmSetting }),
+                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        Text("알람 시간 설정",
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            color = NeutralGray,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp
+                        )
+                        Text(
+                            viewModel.alarmTime.value,
+                            modifier = Modifier.padding(vertical = 12.dp),
+                            color = PrimaryDark,
+                            fontFamily = fonts,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 15.sp,
                         )
 
                     }
-                }
-            }
-
-            var retrofit = RetrofitClient.getInstance()
-            var supplementService = retrofit.create(RetrofitService::class.java)
-            var place = remember {
-                mutableStateOf(LatLng(37.5666805, 126.9784147))
-            }
-            var cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(place.value, 15f)
-            }
-            var address = "";
-            LaunchedEffect(key1 = place.value) {
-                cameraPositionState.position = CameraPosition.fromLatLngZoom(place.value, 15f)
-            }
-
-            var mapShow = remember {
-                mutableStateOf(false)
-            }
-
-            supplementService.map(viewModel.address.value.text)
-                .enqueue(object : retrofit2.Callback<com.youme.naya.vo.MapResponseVO> {
-                    override fun onFailure(
-                        call: retrofit2.Call<com.youme.naya.vo.MapResponseVO>,
-                        t: kotlin.Throwable
-                    ) {
-                        android.util.Log.d("TAG", "실패 : {$t}")
-                    }
-
-                    override fun onResponse(
-                        call: retrofit2.Call<com.youme.naya.vo.MapResponseVO>,
-                        response: retrofit2.Response<com.youme.naya.vo.MapResponseVO>
-                    ) {
-                        if (response.body()?.x.toString() != "" && response.body() != null) {
-                            var x = response.body()!!.x
-                            var y = response.body()!!.y
-                            if (x != null && y != null)
-                                place.value =
-                                    com.google.android.gms.maps.model.LatLng(y.toDouble(),
-                                        x.toDouble())
-                            mapShow.value = true
-                        } else {
-                            mapShow.value = false
-                        }
-                    }
-
-                })
-
-            Spacer(modifier = Modifier.height(16.dp))
-            // 주소 등록
-            Column {
-                Text(
-                    "주소 등록",
-                    modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
-                    color = PrimaryDark,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                Text("도로명 주소를 입력하면, 해당 위치 정보와 지도가 연동됩니다.", style = Typography.body2, color = SystemRed)
-                Spacer(modifier = Modifier.height(12.dp))
-                BasicTextField(
-                    modifier = Modifier
-                        .focusRequester(focusRequester),
-                    text = viewModel.address.value.text,
-                    onChange = { viewModel.onAddressChange(it) },
-                    placeholder = "주소 입력",
-                    imeAction = ImeAction.Done,
-                    keyBoardActions = KeyboardActions(onDone = {
-                        supplementService.map(viewModel.address.value.text)
-                            .enqueue(object : Callback<MapResponseVO> {
-                                override fun onFailure(
-                                    call: Call<MapResponseVO>,
-                                    t: Throwable
-                                ) {
-                                    Log.d("TAG", "실패 : {$t}")
-                                }
-
-                                override fun onResponse(
-                                    call: Call<MapResponseVO>,
-                                    response: Response<MapResponseVO>
-                                ) {
-                                    Log.i("x", response.body()?.x.toString())
-                                    Log.i("y", response.body()?.y.toString())
-                                    Log.i("jibun", response.body()?.jibunAddress.toString())
-                                    Log.i("road", response.body()?.roadAddress.toString())
-                                    if (response.body()?.x.toString() != "" && response.body() != null) {
-                                        var x = response.body()!!.x
-                                        var y = response.body()!!.y
-                                        if (x != null && y != null)
-                                            place.value = LatLng(y.toDouble(), x.toDouble())
-//                                    cameraPositionState.position =
-//                                        CameraPosition.fromLatLngZoom(place.value, 12f)
-                                        mapShow.value = true
-                                    } else {
-                                        mapShow.value = false
-                                    }
-                                }
-
-                            })
-                        keyboardController?.hide()
-                    }),
-                )
-                Box(modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .height(200.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (mapShow.value) {
-                        Column() {
-                            Spacer(modifier = Modifier.height(20.dp))
-                            GoogleMap(
-                                modifier = Modifier.fillMaxHeight().fillMaxWidth(),
-                                cameraPositionState = cameraPositionState
-                            ) {
-                                Marker(
-                                    state = MarkerState(position = place.value),
-                                    title = "place",
-                                    snippet = "Marker in place"
-                                )
-                            }
-                        }
-
-                    } else {
-                        Column(
+                    if (showAlarmSetting) {
+                        Column(modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .padding(vertical = 6.dp),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Image(
-                                painter = painterResource(id = com.youme.naya.R.drawable.icon_map),
-                                "map",
-                                modifier = Modifier.width(50.dp).height(50.dp)
-                            )
-                            Text(text = "도로명 주소를 입력해보세요. \n " +
-                                    "해당 주소의 위치를 지도로 만나볼 수 있어요!", color = NeutralGray, style = Typography.h6,
-                                textAlign = TextAlign.Center
+                            ListItemPicker(
+                                dividersColor = SecondaryLightBlue,
+                                label = { it },
+                                value = viewModel.alarmTime.value,
+                                onValueChange = { viewModel.alarmTimeChange(it) },
+                                list = possibleValues
                             )
 
                         }
-
                     }
-
                 }
-            }
-                Spacer(modifier = Modifier.height(16.dp))
-            Column {
-                Text(
-                "함께 하는 멤버",
-                modifier = Modifier.padding(vertical = 12.dp),
-                color = PrimaryDark,
-                fontFamily = fonts,
-                fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
-                )
-                Text("멤버 클릭시 삭제가 가능합니다.", style = Typography.body2, color = SystemRed)
-                Spacer(modifier = Modifier.height(4.dp))
-                Image(
-                    painter = painterResource(R.drawable.schedule_member_register_icon),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .width(64.dp)
-                        .height(64.dp)
-                        .clickable(
-                            enabled = true,
-                            onClick = {
-                                coroutineScope.launch {
-                                    bottomSheetState.show()
-                                }
-                            }
-                        )
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                LazyVerticalGrid(
-                    modifier = Modifier.height(80.dp).width(300.dp),
-                    columns = GridCells.Fixed(5),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                )
-                {
-                    items(memberList.value.value.size) { index ->
-                        Row() {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Image(
-                                    painter = painterResource(Member.memberIconsCancel[viewModel.memberList.value[index].memberIcon!!]),
-                                    contentDescription = "",
-                                    modifier = Modifier
-                                        .width(60.dp)
-                                        .height(60.dp)
-                                        .clickable(
-                                            enabled = true,
-                                            onClick = {
-                                                viewModel.deleteTemporaryMember(index)
-                                            }
-                                        )
-                                )
-                                viewModel.memberList.value[index].name?.let {
-                                    Text(
-                                        it,
-                                        color = NeutralGray,
-                                        style = Typography.overline
-                                    )
 
-                                }
-                            }
-                            Box(Modifier.width(16.dp).height(20.dp))
+                var retrofit = RetrofitClient.getInstance()
+                var supplementService = retrofit.create(RetrofitService::class.java)
+                var place = remember {
+                    mutableStateOf(LatLng(37.5666805, 126.9784147))
+                }
+                var cameraPositionState = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(place.value, 15f)
+                }
+                var address = "";
+                LaunchedEffect(key1 = place.value) {
+                    cameraPositionState.position = CameraPosition.fromLatLngZoom(place.value, 15f)
+                }
+
+                var mapShow = remember {
+                    mutableStateOf(false)
+                }
+
+                supplementService.map(viewModel.address.value.text)
+                    .enqueue(object : retrofit2.Callback<com.youme.naya.vo.MapResponseVO> {
+                        override fun onFailure(
+                            call: retrofit2.Call<com.youme.naya.vo.MapResponseVO>,
+                            t: kotlin.Throwable
+                        ) {
+                            android.util.Log.d("TAG", "실패 : {$t}")
                         }
+
+                        override fun onResponse(
+                            call: retrofit2.Call<com.youme.naya.vo.MapResponseVO>,
+                            response: retrofit2.Response<com.youme.naya.vo.MapResponseVO>
+                        ) {
+                            if (response.body()?.x.toString() != "" && response.body() != null) {
+                                var x = response.body()!!.x
+                                var y = response.body()!!.y
+                                if (x != null && y != null)
+                                    place.value =
+                                        com.google.android.gms.maps.model.LatLng(y.toDouble(),
+                                            x.toDouble())
+                                mapShow.value = true
+                            } else {
+                                mapShow.value = false
+                            }
+                        }
+
+                    })
+
+                Spacer(modifier = Modifier.height(16.dp))
+                // 주소 등록
+                Column {
+                    Text(
+                        "주소 등록",
+                        modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
+                        color = PrimaryDark,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Text("도로명 주소를 입력하면, 해당 위치 정보와 지도가 연동됩니다.", style = Typography.body2, color = SystemRed)
+                    Spacer(modifier = Modifier.height(12.dp))
+                    BasicTextField(
+                        modifier = Modifier
+                            .focusRequester(focusRequester),
+                        text = viewModel.address.value.text,
+                        onChange = { viewModel.onAddressChange(it) },
+                        placeholder = "주소 입력",
+                        imeAction = ImeAction.Done,
+                        keyBoardActions = KeyboardActions(onDone = {
+                            supplementService.map(viewModel.address.value.text)
+                                .enqueue(object : Callback<MapResponseVO> {
+                                    override fun onFailure(
+                                        call: Call<MapResponseVO>,
+                                        t: Throwable
+                                    ) {
+                                        Log.d("TAG", "실패 : {$t}")
+                                    }
+
+                                    override fun onResponse(
+                                        call: Call<MapResponseVO>,
+                                        response: Response<MapResponseVO>
+                                    ) {
+                                        Log.i("x", response.body()?.x.toString())
+                                        Log.i("y", response.body()?.y.toString())
+                                        Log.i("jibun", response.body()?.jibunAddress.toString())
+                                        Log.i("road", response.body()?.roadAddress.toString())
+                                        if (response.body()?.x.toString() != "" && response.body() != null) {
+                                            var x = response.body()!!.x
+                                            var y = response.body()!!.y
+                                            if (x != null && y != null)
+                                                place.value = LatLng(y.toDouble(), x.toDouble())
+//                                    cameraPositionState.position =
+//                                        CameraPosition.fromLatLngZoom(place.value, 12f)
+                                            mapShow.value = true
+                                        } else {
+                                            mapShow.value = false
+                                        }
+                                    }
+
+                                })
+                            keyboardController?.hide()
+                        }),
+                    )
+                    Box(modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(200.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (mapShow.value) {
+                            Column() {
+                                Spacer(modifier = Modifier.height(20.dp))
+                                GoogleMap(
+                                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                                    cameraPositionState = cameraPositionState
+                                ) {
+                                    Marker(
+                                        state = MarkerState(position = place.value),
+                                        title = "place",
+                                        snippet = "Marker in place"
+                                    )
+                                }
+                            }
+
+                        } else {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Image(
+                                    painter = painterResource(id = com.youme.naya.R.drawable.icon_map),
+                                    "map",
+                                    modifier = Modifier.width(50.dp).height(50.dp)
+                                )
+                                Text(text = "도로명 주소를 입력해보세요. \n " +
+                                        "해당 주소의 위치를 지도로 만나볼 수 있어요!", color = NeutralGray, style = Typography.h6,
+                                    textAlign = TextAlign.Center
+                                )
+
+                            }
+
+                        }
+
                     }
-                }}
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Column {
+                    Text(
+                        "함께 하는 멤버",
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        color = PrimaryDark,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Text("멤버 클릭시 삭제가 가능합니다.", style = Typography.body2, color = SystemRed)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Image(
+                        painter = painterResource(R.drawable.schedule_member_register_icon),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .width(64.dp)
+                            .height(64.dp)
+                            .clickable(
+                                enabled = true,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        bottomSheetState.show()
+                                    }
+                                }
+                            )
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    LazyVerticalGrid(
+                        modifier = Modifier.height(80.dp).width(300.dp),
+                        columns = GridCells.Fixed(5),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    )
+                    {
+                        items(memberList.value.value.size) { index ->
+                            Row() {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Image(
+                                        painter = painterResource(Member.memberIconsCancel[viewModel.memberList.value[index].memberIcon!!]),
+                                        contentDescription = "",
+                                        modifier = Modifier
+                                            .width(60.dp)
+                                            .height(60.dp)
+                                            .clickable(
+                                                enabled = true,
+                                                onClick = {
+                                                    viewModel.deleteTemporaryMember(index)
+                                                }
+                                            )
+                                    )
+                                    viewModel.memberList.value[index].name?.let {
+                                        Text(
+                                            it,
+                                            color = NeutralGray,
+                                            style = Typography.overline
+                                        )
+
+                                    }
+                                }
+                                Box(Modifier.width(16.dp).height(20.dp))
+                            }
+                        }
+                    }}
 
 
                 Spacer(modifier = Modifier.height(16.dp))
-            Column() {
-                // 추가 기록 사항
-                Text(
-                    "추가 기록 사항",
-                    modifier = Modifier.padding(vertical = 12.dp),
-                    color = PrimaryDark,
-                    fontFamily = fonts,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                BasicTextField(
-                    modifier = Modifier
-                        .focusRequester(focusRequester),
-                    text = viewModel.description.value.text,
-                    onChange = { viewModel.onDescriptionChange(it) },
-                    placeholder = "추가 기록 사항 입력",
-                    imeAction = ImeAction.Done,
-                    keyBoardActions = KeyboardActions(onDone = {
-                        keyboardController?.hide()
-                    })
-                )}
+                Column() {
+                    // 추가 기록 사항
+                    Text(
+                        "추가 기록 사항",
+                        modifier = Modifier.padding(vertical = 12.dp),
+                        color = PrimaryDark,
+                        fontFamily = fonts,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    BasicTextField(
+                        modifier = Modifier
+                            .focusRequester(focusRequester),
+                        text = viewModel.description.value.text,
+                        onChange = { viewModel.onDescriptionChange(it) },
+                        placeholder = "추가 기록 사항 입력",
+                        imeAction = ImeAction.Done,
+                        keyBoardActions = KeyboardActions(onDone = {
+                            keyboardController?.hide()
+                        })
+                    )}
                 Spacer(modifier = Modifier.height(80.dp))
                 PrimaryBigButton(text = "수정하기",
                     onClick = {

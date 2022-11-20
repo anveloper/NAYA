@@ -128,7 +128,7 @@ fun ScheduleDetailScreen(
                                     navController.navigate("scheduleEdit/${scheduleId}")
                                 }),
 
-                        )
+                            )
                     }
                 }
             }
@@ -177,7 +177,7 @@ fun ScheduleDetailScreen(
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // 시작시간
             Row (
                 modifier = Modifier.fillMaxWidth(),
@@ -195,9 +195,9 @@ fun ScheduleDetailScreen(
                 Text(viewModel.startTime.value,
                     style= Typography.body1,
                     color = NeutralGray)
-                }
+            }
             Spacer(modifier = Modifier.height(4.dp))
-            
+
             // 종료 시간
             Row (
                 modifier = Modifier.fillMaxWidth(),
@@ -240,7 +240,7 @@ fun ScheduleDetailScreen(
                 }
             }
             Spacer(modifier = Modifier.height(12.dp))
-            
+
             // 주소
             if (viewModel.address.value.text.isNotEmpty()) {
                 Text(
@@ -455,6 +455,7 @@ fun ScheduleDetailScreen(
                                         }
                                     }
                                 }
+
 
                             }
                             }

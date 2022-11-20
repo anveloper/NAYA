@@ -126,7 +126,7 @@ fun ScheduleCreateScreen(
                         0
                     } else {
                         viewModel.schedulesAll.value.last().scheduleId
-                }
+                    }
 
                 val bottomSheetState =
                     rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
