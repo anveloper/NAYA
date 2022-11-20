@@ -189,7 +189,8 @@ fun ScheduleUpdateScreen(
                                         BusinessCardGridListForSchedule(context,
                                             navController, cardViewModel,
                                             true)
-                                    }
+                                    },
+                                    isNuya = true
                                 )
                                 if (viewModel.cardUri.value != "") {
                                     viewModel.currentScheduleId?.let {

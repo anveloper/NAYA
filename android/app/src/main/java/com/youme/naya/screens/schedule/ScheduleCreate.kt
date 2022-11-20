@@ -22,25 +22,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.youme.naya.R
-import com.youme.naya.components.PrimaryBigButton
-import com.youme.naya.schedule.ScheduleMainViewModel
-import com.youme.naya.ui.theme.*
-import com.youme.naya.widgets.calendar.AnimatedCalendar
-import com.youme.naya.widgets.common.HeaderBar
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.todayIn
 import androidx.navigation.NavHostController
+import com.youme.naya.R
 import com.youme.naya.card.BusinessCardGridListForSchedule
 import com.youme.naya.card.NayaCardGridListForSchedule
+import com.youme.naya.components.PrimaryBigButton
 import com.youme.naya.components.PrimaryBigButton2
 import com.youme.naya.components.RegisterButton
 import com.youme.naya.database.entity.Member.Companion.memberIconsCancel
 import com.youme.naya.database.viewModel.CardViewModel
+import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.schedule.component.*
+import com.youme.naya.ui.theme.*
+import com.youme.naya.widgets.calendar.AnimatedCalendar
+import com.youme.naya.widgets.common.HeaderBar
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
@@ -66,7 +66,7 @@ fun ScheduleCreateScreen(
     val cardViewModel: CardViewModel = hiltViewModel()
     val context = LocalContext.current
 
-    Column (verticalArrangement = Arrangement.SpaceBetween) {
+    Column(verticalArrangement = Arrangement.SpaceBetween) {
         // 상단 바
         when (componentVariable.value) {
             0 -> HeaderBar(navController = navController, title = "일정 등록")
@@ -139,35 +139,39 @@ fun ScheduleCreateScreen(
                     3 -> {
                         ModalBottomSheetLayout(
                             sheetContent = {
-                                LazyColumn (
-                                    horizontalAlignment=Alignment.CenterHorizontally
-                                ){
+                                LazyColumn(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
                                     when (memberType.value) {
                                         -1 -> item {
-                                            Box(modifier = Modifier
-                                                .clickable(
-                                                    onClick = {
-                                                        memberType.value = 1
-                                                    })
-                                                .padding(vertical = 4.dp)
-                                                .fillMaxWidth()
-                                                .height(48.dp),
-                                                    contentAlignment = Alignment.Center) {
-                                                    Text(
-                                                        text = "Nuya 보관함에서 가져오기",
-                                                        color = PrimaryBlue,
-                                                        style = Typography.body1,
-                                                    )
-                                                }
-                                            Box(modifier = Modifier
-                                                .clickable(
-                                                    onClick = {
-                                                        memberType.value = 0
-                                                    })
-                                                .padding(vertical = 4.dp)
-                                                .fillMaxWidth()
-                                                .height(48.dp),
-                                                contentAlignment = Alignment.Center) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .clickable(
+                                                        onClick = {
+                                                            memberType.value = 1
+                                                        })
+                                                    .padding(vertical = 4.dp)
+                                                    .fillMaxWidth()
+                                                    .height(48.dp),
+                                                contentAlignment = Alignment.Center
+                                            ) {
+                                                Text(
+                                                    text = "Nuya 보관함에서 가져오기",
+                                                    color = PrimaryBlue,
+                                                    style = Typography.body1,
+                                                )
+                                            }
+                                            Box(
+                                                modifier = Modifier
+                                                    .clickable(
+                                                        onClick = {
+                                                            memberType.value = 0
+                                                        })
+                                                    .padding(vertical = 4.dp)
+                                                    .fillMaxWidth()
+                                                    .height(48.dp),
+                                                contentAlignment = Alignment.Center
+                                            ) {
                                                 Text(
                                                     text = "직접 입력",
                                                     color = PrimaryBlue,
@@ -176,16 +180,20 @@ fun ScheduleCreateScreen(
                                             }
                                         }
                                         0 -> item {
-                                            Column(modifier = Modifier.fillMaxWidth(),
-                                                horizontalAlignment = Alignment.CenterHorizontally) {
+                                            Column(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                horizontalAlignment = Alignment.CenterHorizontally
+                                            ) {
                                                 MemberInput()
                                                 RegisterButton(
                                                     text = "등록",
                                                     onClick = {
                                                         if (lastKey != null) {
-                                                            viewModel.insertTemporaryMember(memberType.value,
+                                                            viewModel.insertTemporaryMember(
+                                                                memberType.value,
                                                                 memberNum.value % 6,
-                                                                lastKey + 1)
+                                                                lastKey + 1
+                                                            )
                                                         }
 
                                                         memberNum.value += 1
@@ -218,18 +226,24 @@ fun ScheduleCreateScreen(
                                                 ) {
                                                     NayaBcardSwitchButtons(
                                                         nayaTab = {
-                                                            NayaCardGridListForSchedule(context,
+                                                            NayaCardGridListForSchedule(
+                                                                context,
                                                                 navController,
-                                                                true)
+                                                                true
+                                                            )
                                                         },
                                                         bCardTab = {
-                                                            BusinessCardGridListForSchedule(context,
+                                                            BusinessCardGridListForSchedule(
+                                                                context,
                                                                 navController, cardViewModel,
-                                                                true)
-                                                        }
+                                                                true
+                                                            )
+                                                        },
+                                                        isNuya = true
                                                     )
                                                     if (viewModel.cardUri.value != "" && lastKey != null) {
-                                                        viewModel.insertTemporaryMember(memberType.value,
+                                                        viewModel.insertTemporaryMember(
+                                                            memberType.value,
                                                             memberNum.value % 6,
                                                             lastKey + 1
                                                         )
@@ -245,7 +259,8 @@ fun ScheduleCreateScreen(
                                             }
                                             PrimaryBigButton(text = "다른 방법으로 선택하기",
                                                 onClick = {
-                                                    memberType.value = -1 })
+                                                    memberType.value = -1
+                                                })
                                             Spacer(Modifier.height(20.dp))
                                         }
                                     }
@@ -257,23 +272,31 @@ fun ScheduleCreateScreen(
                                 .fillMaxWidth(0.8f)
                                 .align(Alignment.CenterHorizontally),
                         ) {
-                            Column (
+                            Column(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Column (modifier = Modifier
-                                    .fillMaxHeight(0.8f)
-                                ){
-                                    Text("멤버 등록",
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxHeight(0.8f)
+                                ) {
+                                    Text(
+                                        "멤버 등록",
                                         modifier = Modifier.padding(vertical = 12.dp),
                                         color = PrimaryDark,
                                         fontFamily = fonts,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 16.sp
                                     )
-                                    Text("멤버를 클릭하면 목록에서 삭제됩니다.", style = Typography.body2, color = SystemRed)
-                                    Spacer(modifier = Modifier
-                                        .height(12.dp)
-                                        .background(PrimaryBlue))
+                                    Text(
+                                        "멤버를 클릭하면 목록에서 삭제됩니다.",
+                                        style = Typography.body2,
+                                        color = SystemRed
+                                    )
+                                    Spacer(
+                                        modifier = Modifier
+                                            .height(12.dp)
+                                            .background(PrimaryBlue)
+                                    )
                                     Image(
                                         painter = painterResource(R.drawable.schedule_member_register_icon),
                                         contentDescription = "",
@@ -307,7 +330,9 @@ fun ScheduleCreateScreen(
                                                             .clickable(
                                                                 enabled = true,
                                                                 onClick = {
-                                                                    viewModel.deleteTemporaryMember(index)
+                                                                    viewModel.deleteTemporaryMember(
+                                                                        index
+                                                                    )
                                                                 }
                                                             )
                                                     )
@@ -346,7 +371,10 @@ fun ScheduleCreateScreen(
                             when (componentVariable.value) {
                                 5 -> {
                                     if (lastKey != null) {
-                                        viewModel.insertSchedule(selectedDate = viewModel.selectedDate.value, scheduleId = lastKey + 1)
+                                        viewModel.insertSchedule(
+                                            selectedDate = viewModel.selectedDate.value,
+                                            scheduleId = lastKey + 1
+                                        )
                                     }
                                     navController.navigate("schedule")
                                 }
