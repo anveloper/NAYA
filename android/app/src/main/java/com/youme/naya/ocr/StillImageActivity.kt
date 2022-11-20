@@ -88,6 +88,10 @@ class StillImageActivity : AppCompatActivity() {
                     val newIntent = Intent(context, StillImageActivity::class.java)
                     newIntent.putExtra("ocrResult", visionText.text)
                     newIntent.putExtra("croppedImage", savedImgAbsolutePath)
+                    if (savedImgAbsolutePath2 != null) {
+                        newIntent.putExtra("secondImage", savedImgAbsolutePath2)
+                    }
+                    newIntent.putExtra("isSameImage", isSameImage)
                     setResult(RESULT_OK, newIntent)
                     finish()
                 }
