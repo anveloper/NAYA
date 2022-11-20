@@ -603,7 +603,7 @@ class ScheduleMainViewModel @Inject constructor(
                                         title: String,
                                         alarmTime: String,
                                         color : Int
-    ) {
+        ) {
 
         val builder = NotificationCompat.Builder(AppModule.appContext, "CHANNEL_ID")
             .setSmallIcon(com.youme.naya.R.drawable.ic_launcher_foreground)
