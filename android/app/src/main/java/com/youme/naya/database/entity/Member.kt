@@ -1,21 +1,22 @@
 package com.youme.naya.database.entity
 
- import androidx.room.ColumnInfo
- import androidx.room.Entity
- import androidx.room.ForeignKey
- import androidx.room.PrimaryKey
- import com.youme.naya.R
- import com.youme.naya.ui.theme.*
+import android.net.Uri
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+import com.youme.naya.R
+import com.youme.naya.ui.theme.*
 
 @Entity(tableName = "member",
-foreignKeys = [
-    ForeignKey(
-        entity = Schedule::class,
-        parentColumns = ["scheduleId"],
-        childColumns =  ["scheduleId"],
-        onDelete = ForeignKey.CASCADE
-    )
-]
+    foreignKeys = [
+        ForeignKey(
+            entity = Schedule::class,
+            parentColumns = ["scheduleId"],
+            childColumns =  ["scheduleId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class Member(
     @PrimaryKey(autoGenerate = true) val memberId: Int?,
@@ -28,7 +29,8 @@ data class Member(
     // 기타 기록 사항
     val etcInfo: String? = null,
     // Nuya 카드이면 너야 카드 번호
-    val cardId: Int? = null,
+    val cardUri: String? = null,
+    val nuyaType: Int? = -1,
     val memberIcon: Int? = 0,
 ) {
     companion object {

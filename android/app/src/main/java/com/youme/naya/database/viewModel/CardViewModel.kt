@@ -23,7 +23,7 @@ class CardViewModel @Inject constructor(private val repository: CardRepository) 
     val selectResult = _selectResult.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             repository.getBusinessCardsInNaya().distinctUntilChanged().collect { listOfCards ->
                 _businessCardListInNaya.value = listOfCards
             }

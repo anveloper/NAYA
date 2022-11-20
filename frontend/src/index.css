@@ -13,14 +13,14 @@
   user-select: none;
 }
 
-body {
+body { 
   width: 100vw;
   height: 100vh;
-  display: flex;
+}
+  /* display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   /* Test */
-  position: fixed;
-  overflow: hidden;
-}
+  /* position: fixed;
+  overflow: hidden;*/
