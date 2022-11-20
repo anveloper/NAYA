@@ -21,13 +21,56 @@
     
   ### **👨‍💻 Front-end**
     
-    - 
-
-    - 
-
-    - 
-
-    - 
+  ```json
+  {
+    "name": "frontend",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@reduxjs/toolkit": "^1.8.6",
+      "@types/jest": "^27.5.2",
+      "@types/node": "^17.0.45",
+      "@types/react": "^18.0.24",
+      "@types/react-dom": "^18.0.8",
+      "axios": "^1.1.3",
+      "cors": "^2.8.5",
+      "react": "^18.2.0",
+      "react-device-detect": "^2.2.2",
+      "react-dom": "^18.2.0",
+      "react-helmet-async": "^1.3.0",
+      "react-redux": "^8.0.4",
+      "react-router-dom": "^6.4.2",
+      "react-scripts": "5.0.1",
+      "typescript": "^4.8.4",
+      "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "devDependencies": {
+      "@types/react-router-dom": "^5.3.3"
+    }
+  }
+```
 
   ### **👨‍💻 Back-end**
     
@@ -87,7 +130,7 @@
   
 
 ## 2-2. 서비스 아키텍처
-  
+  ![logo_dark](./images/README/architecture.png)
 
   
 ------------------------------------------------------
@@ -316,56 +359,48 @@
 # 4. ⭐ 주요 기능
 ------------------------------------------------------
 
-  1. 
+  1. 나만의 커스텀 멀티미디어 카드(Naya) 제작
+
+    - Naya 카드는 SNS 등에서 유머있게 자신을 표현하는 수단으로 활용 가능
+
+    - 다양한 Naya 소개 카드 작성 가능
+
+    - 다양한 Naya 소개 카드를 다양한 상황에 맞게 활용 가능
 
 
-    
+  2. 연락처를 모르는 사람과도 카드 공유 가능
 
-  2. 
-    - 
+    - QR코드를 이용한 카드 공유
 
-    - 
+    - 카카오톡을 이용한 카드 공유
 
-    - 
+    - 인스타그램을 이용한 카드 공유
 
-      - 
+ 
 
+  3. 빠른 명함 등록 과정
 
+    - 명함 촬영을 통한 등록
 
-  3. 
+    - 갤러리를 통한 기존 이미지 등록
 
-    - 
-
-      - 
-
-    - 
+    - 템플릿을 이용한 명함 작성 및 등록
 
 
 
-  4. 
+  4. 비즈니스 상황 / 캐주얼 상황 모두 활용 가능
 
-    - 
+    - Naya, Nuya 소개 카드
 
-    - 
+      - Naya 소개 카드 : 나의 소개 카드
 
-    - 
+      - Nuya 소개 카드 : 상대방이 공유한 소개 카드
 
-  
+    - Business Naya, Nuya 명함 카드
 
-  5. 
+      - Business Naya 카드 : 사용자 본인 명함
 
-    - 
-
-    - 
-
-
-  6. 
-
-    - 
-
-    - 
-
-    - 
+      - Business Nuya 카드 : 상대방이 공유한 명함
 
 
 
@@ -375,15 +410,12 @@
 
 # 5. 🔍 사용 기술
 ------------------------------------------------------
-  - 
-    - 
-
-
-
-  - 
-    - 
-
-
+  - :gem: 프론트엔드: React 18.2.0
+  - :crown: 백엔드: Java 1.8, SpringBoot 2.5.5
+  - :bulb: DB : Firebase, Room (SQLite) 
+  - :deciduous_tree: 운영체제, 서버: Ubuntu 20.04
+  - :calling: 모바일 : Android, Kotlin, Jetpack Compose, Jetpack Navigation, CameraX, Retrofit2 
+  - :eye: OCR: OpenCV, Tesseract
 --------------------------
 
 
@@ -399,19 +431,20 @@
 # 7. 📁 설계 문서
 ------------------------------------------------------
     
-  ## 6-1. ERD
+  ## 7-1. ERD
 
   ![자율프로젝트](/uploads/8531fe82e018687735a6057553d96f2b/자율프로젝트.png)
 
 
-  ## 6-2. Design System
+  ## 7-2. Design System
 
+  ![logo_dark](./images/README/styleguide.png)
 
-  ## 6-3. Design
+  ![logo_dark](./images/README/component.png)
 
-    - 브랜딩 컨셉
-      - 
-      - 
+  ## 7-3. Design
+
+  ![logo_dark](./images/README/design.png)
 
     
   
@@ -423,7 +456,7 @@
 # 8. 🖊 Cooperation&Promises
 ------------------------------------------------------
   
-  ## 7-1. Tools
+  ## 8-1. Tools
 
     - Git
 
@@ -439,7 +472,7 @@
 
 
 
-# 8. ![Group_237632](/uploads/52a59d87dd297e72d341009deeb0e64b/Group_237632.png) 팀원 소개
+# 9. ![Group_237632](/uploads/52a59d87dd297e72d341009deeb0e64b/Group_237632.png) 팀원 소개
 ------------------------------------------------------
-  
+  ![logo_dark](./images/README/team.png)
   
