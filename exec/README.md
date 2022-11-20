@@ -450,3 +450,203 @@ sudo docker-compose up -d
 - 접속 확인
     
     ![Untitled](./images/003.png)
+
+
+# 시연 시나리오
+
+## 1. 권한 설정 및 로그인
+
+- 최초 앱을 다운로드 시 권한 설정 안내
+![Untitled](./images/1.jpg)
+
+
+- 기기 내 촬영 권한 설정
+![Untitled](./images/2.jpg)
+
+
+- 기기 내 갤러리 접근 권한 설정
+![Untitled](./images/3.jpg)
+
+
+- 이용약관 동의서
+![Untitled](./images/4.jpg)
+
+
+- 소셜 로그인
+![Untitled](./images/5.jpg)
+
+
+- 서비스 시작
+![Untitled](./images/6.jpg)
+
+
+- 공유하기 기능 안내
+![Untitled](./images/7.jpg)
+
+
+- 메인 페이지
+
+    - NAYA, Business 탭을 이용해 소개카드와 명함을 분류해 볼 수 있습니다.
+
+![Untitled](./images/8.jpg)
+
+
+- 카드 생성 버튼을 클릭하여 NAYA 카드 생성
+
+    - 배경으로 사용할 이미지를 3가지 방법으로 지정 가능
+    - 카메라로 촬영
+    - 갤러리에서 불러오기
+    - 동영상 불러오기
+
+![Untitled](./images/9.jpg)
+
+
+- 생성된 카드의 뒷면 확인
+
+![Untitled](./images/10.jpg)
+
+
+- 메인 화면 하위 Nuya 탭 클릭
+
+    - 다른 사용자에게 받은 소개 카드를 확인할 수 있습니다.
+
+![Untitled](./images/11.jpg)
+
+
+- Nuya 소개 카드 생성 버튼 클릭
+
+    - 다른 사용자의 소개 카드는 직접 작성할 수 없습니다.
+
+![Untitled](./images/13.jpg)
+
+
+- 메인 화면 하위 Nuya 탭 클릭 - Business 탭 이동
+
+    - 다른 사용자에게 받은 Business 카드를 확인, 생성할 수 있습니다.
+
+![Untitled](./images/14.jpg)
+
+
+- Nuya Business 카드 생성 버튼 클릭
+
+    - 3가지 방법으로 카드를 저장할 수 있습니다.
+    - 카메라로 촬영하기
+    - 갤러리에서 불러오기
+    - 템플릿에서 만들기
+
+![Untitled](./images/12.jpg)
+
+
+- 메인 화면 하위 Naya 탭 클릭
+
+    - 내가 작성한 소개 카드를 확인, 생성할 수 있습니다.
+
+![Untitled](./images/111.jpg)
+
+
+- Naya 소개 카드 생성 버튼 클릭
+
+    - 나의 소개 카드를 생성할 수 있습니다.
+
+![Untitled](./images/15.jpg)
+
+
+- Naya Business 카드 생성 버튼 클릭
+
+    - 나의 Business 카드를 생성할 수 있습니다.
+
+![Untitled](./images/16.jpg)
+
+
+- 카드 공유하기 버튼 클릭, slide up
+
+    - 나의 Naya, Business 카드를 3가지 방법으로 공유할 수 있습니다.
+    - QR코드로 공유하기
+    - 카카오톡으로 공유하기
+    - 인스타그램으로 공유하기
+
+![Untitled](./images/16-1.jpg)
+
+![Untitled](./images/16-2.jpg)
+
+
+- 메인 화면 하단 Schedule 탭 클릭
+
+    - 등록한 일정을 확인, 생성할 수 있다.
+
+![Untitled](./images/17.jpg)
+
+
+- 일정 등록 버튼 클릭
+
+    - 일정명, 캘린더 표시 컬러 지정
+
+![Untitled](./images/18.jpg)
+
+    - 개인 일정 시간 등록 및 알림 설정
+
+![Untitled](./images/19.jpg)
+
+    - 일정 장소 등록
+
+![Untitled](./images/20.jpg)
+
+    - 일정 멤버 등록 메인 화면
+
+![Untitled](./images/21.jpg)
+
+    - 일정 멤버 등록 버튼 클릭 시
+
+![Untitled](./images/22.jpg)
+
+    - 일정 멤버 등록 입력 화면
+
+![Untitled](./images/23.jpg)
+
+    - 일정 멤버 등록 성공 화면
+
+![Untitled](./images/23-1.jpg)
+
+    - 일정 추가 기록 사항 입력 화면
+
+![Untitled](./images/24.jpg)
+
+- 일정 추가된 화면1
+
+![Untitled](./images/25.jpg)
+
+- 일정 추가된 화면2
+
+![Untitled](./images/25-1.jpg)
+
+- 알람 페이지
+
+    - 등록된 알람이 없을 시
+
+![Untitled](./images/26.jpg)
+
+- 등록된 일정 상세 페이지
+
+    - 등록된 일정을 탭하여 등록된 일정의 상세 내용을 확인할 수 있다.
+
+    ![Untitled](./images/27.jpg)
+
+- 등록된 일정 수정 페이지
+
+    - 일정 상세 페이지에서 수정 버튼을 탭하여 등록된 일정을 수정할 수 있다.
+
+    ![Untitled](./images/28.jpg)
+
+    ![Untitled](./images/29.jpg)
+
+- 등록된 일정 삭제
+
+    - 일정 수정 페이지에서 삭제 버튼을 클릭하여 등록된 일정을 삭제할 수 있다.
+
+    ![Untitled](./images/30.jpg)
+
+- 앱 소개 및 약관 확인
+
+    - 메인 화면의 우측 안내 버튼을 클릭하여 앱 소개, 약관 및 개인정보 처리를 확인할 수 있다.
+
+    ![Untitled](./images/31.jpg)
