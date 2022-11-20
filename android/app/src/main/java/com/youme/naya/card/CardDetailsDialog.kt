@@ -72,6 +72,11 @@ fun CardDetailsDialog(
 
     val coroutineScope = rememberCoroutineScope()
 
+    val bCardBitmap =
+        if (bCard?.path != null && File(bCard.path).exists()) BitmapFactory.decodeFile(bCard.path) else null
+    val bCardBackgroundBitmap =
+        if (bCard?.background != null && File(bCard.background).exists()) BitmapFactory.decodeFile(bCard.background) else null
+
     intentSenderLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) {
@@ -138,22 +143,28 @@ fun CardDetailsDialog(
                         isHorizontalCard = true,
                         modifier = Modifier.padding(bottom = 16.dp),
                         back = if (bCard.background != null) ({
+                            if (bCardBackgroundBitmap != null) {
+                                Image(
+                                    painter = rememberAsyncImagePainter(bCardBackgroundBitmap),
+                                    contentDescription = null,
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier.fillMaxSize()
+                                )
+                            } else {
+                                CardImagePlaceholder()
+                            }
+                        }) else null
+                    ) {
+                        if (bCardBitmap != null) {
                             Image(
-                                painter = rememberAsyncImagePainter(
-                                    BitmapFactory.decodeFile(bCard.background)
-                                ),
+                                painter = rememberAsyncImagePainter(bCardBitmap),
                                 contentDescription = null,
                                 contentScale = ContentScale.Crop,
                                 modifier = Modifier.fillMaxSize()
                             )
-                        }) else null
-                    ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(BitmapFactory.decodeFile(bCard.path)),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                        } else {
+                            CardImagePlaceholder()
+                        }
                     }
 
                     val cardData = listOf(
