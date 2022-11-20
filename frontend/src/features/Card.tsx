@@ -136,7 +136,8 @@ const Card = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.body}>
+      <div className={styles.container}>
       <Helmet>
         <title>{"나야(Naya) - 카드공유"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -178,6 +179,8 @@ const Card = () => {
         />
       </button>
     </div>
+    </div>
+
   );
 };
 
