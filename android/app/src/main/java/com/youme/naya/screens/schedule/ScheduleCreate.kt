@@ -216,7 +216,6 @@ fun ScheduleCreateScreen(
                                                 Column(
                                                     Modifier.height(400.dp)
                                                 ) {
-//            SearchInput()
                                                     NayaBcardSwitchButtons(
                                                         nayaTab = {
                                                             NayaCardGridListForSchedule(context,
@@ -236,15 +235,18 @@ fun ScheduleCreateScreen(
                                                         )
 
                                                         memberNum.value += 1
-                                                        memberType.value = -1
+                                                        memberNum.value = 1
 
                                                         coroutineScope.launch {
                                                             bottomSheetState.hide()
                                                         }
                                                     }
-
                                                 }
                                             }
+                                            PrimaryBigButton(text = "다른 방법으로 선택하기",
+                                                onClick = {
+                                                    memberType.value = -1 })
+                                            Spacer(Modifier.height(20.dp))
                                         }
                                     }
                                 }

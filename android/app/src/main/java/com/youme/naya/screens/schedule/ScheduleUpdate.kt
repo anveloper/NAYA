@@ -2,6 +2,7 @@ package com.youme.naya.screens.schedule
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -36,6 +37,12 @@ import androidx.navigation.NavHostController
 import com.chargemap.compose.numberpicker.AMPMHours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
 import com.chargemap.compose.numberpicker.ListItemPicker
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import com.youme.naya.R
 import com.youme.naya.card.BusinessCardGridListForSchedule
 import com.youme.naya.card.NayaCardGridListForSchedule
@@ -43,12 +50,18 @@ import com.youme.naya.components.*
 import com.youme.naya.database.entity.Member
 import com.youme.naya.database.entity.Schedule
 import com.youme.naya.database.viewModel.CardViewModel
+import com.youme.naya.network.RetrofitClient
+import com.youme.naya.network.RetrofitService
 import com.youme.naya.schedule.CustomAlertDialog
 import com.youme.naya.schedule.ScheduleMainViewModel
 import com.youme.naya.schedule.component.MemberInput
 import com.youme.naya.ui.theme.*
+import com.youme.naya.vo.MapResponseVO
 import com.youme.naya.widgets.common.NayaBcardSwitchButtons
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 private val CalendarHeaderBtnGroupModifier = Modifier
     .fillMaxWidth()
@@ -187,14 +200,17 @@ fun ScheduleUpdateScreen(
                                     }
 
                                     memberNum.value += 1
-                                    memberType.value = -1
+                                    memberNum.value = 1
 
                                     coroutineScope.launch {
                                         bottomSheetState.hide()
                                     }
                                 }
-
                             }
+                            PrimaryBigButton(text = "다른 방법으로 선택하기",
+                                onClick = {
+                                    memberType.value = -1 })
+                            Spacer(Modifier.height(20.dp))
                         }
                     }
                 }
@@ -594,18 +610,64 @@ fun ScheduleUpdateScreen(
                 }
             }
 
+            var retrofit = RetrofitClient.getInstance()
+            var supplementService = retrofit.create(RetrofitService::class.java)
+            var place = remember {
+                mutableStateOf(LatLng(37.5666805, 126.9784147))
+            }
+            var cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(place.value, 15f)
+            }
+            var address = "";
+            LaunchedEffect(key1 = place.value) {
+                cameraPositionState.position = CameraPosition.fromLatLngZoom(place.value, 15f)
+            }
+
+            var mapShow = remember {
+                mutableStateOf(false)
+            }
+
+            supplementService.map(viewModel.address.value.text)
+                .enqueue(object : retrofit2.Callback<com.youme.naya.vo.MapResponseVO> {
+                    override fun onFailure(
+                        call: retrofit2.Call<com.youme.naya.vo.MapResponseVO>,
+                        t: kotlin.Throwable
+                    ) {
+                        android.util.Log.d("TAG", "실패 : {$t}")
+                    }
+
+                    override fun onResponse(
+                        call: retrofit2.Call<com.youme.naya.vo.MapResponseVO>,
+                        response: retrofit2.Response<com.youme.naya.vo.MapResponseVO>
+                    ) {
+                        if (response.body()?.x.toString() != "" && response.body() != null) {
+                            var x = response.body()!!.x
+                            var y = response.body()!!.y
+                            if (x != null && y != null)
+                                place.value =
+                                    com.google.android.gms.maps.model.LatLng(y.toDouble(),
+                                        x.toDouble())
+                            mapShow.value = true
+                        } else {
+                            mapShow.value = false
+                        }
+                    }
+
+                })
+
             Spacer(modifier = Modifier.height(16.dp))
             // 주소 등록
             Column {
                 Text(
                     "주소 등록",
-                    modifier = Modifier.padding(vertical = 12.dp),
+                    modifier = Modifier.padding(top = 12.dp, bottom = 4.dp),
                     color = PrimaryDark,
                     fontFamily = fonts,
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Text("도로명 주소를 입력하면, 해당 위치 정보와 지도가 연동됩니다.", style = Typography.body2, color = SystemRed)
+                Spacer(modifier = Modifier.height(12.dp))
                 BasicTextField(
                     modifier = Modifier
                         .focusRequester(focusRequester),
@@ -614,9 +676,80 @@ fun ScheduleUpdateScreen(
                     placeholder = "주소 입력",
                     imeAction = ImeAction.Done,
                     keyBoardActions = KeyboardActions(onDone = {
+                        supplementService.map(viewModel.address.value.text)
+                            .enqueue(object : Callback<MapResponseVO> {
+                                override fun onFailure(
+                                    call: Call<MapResponseVO>,
+                                    t: Throwable
+                                ) {
+                                    Log.d("TAG", "실패 : {$t}")
+                                }
+
+                                override fun onResponse(
+                                    call: Call<MapResponseVO>,
+                                    response: Response<MapResponseVO>
+                                ) {
+                                    Log.i("x", response.body()?.x.toString())
+                                    Log.i("y", response.body()?.y.toString())
+                                    Log.i("jibun", response.body()?.jibunAddress.toString())
+                                    Log.i("road", response.body()?.roadAddress.toString())
+                                    if (response.body()?.x.toString() != "" && response.body() != null) {
+                                        var x = response.body()!!.x
+                                        var y = response.body()!!.y
+                                        if (x != null && y != null)
+                                            place.value = LatLng(y.toDouble(), x.toDouble())
+//                                    cameraPositionState.position =
+//                                        CameraPosition.fromLatLngZoom(place.value, 12f)
+                                        mapShow.value = true
+                                    } else {
+                                        mapShow.value = false
+                                    }
+                                }
+
+                            })
                         keyboardController?.hide()
                     }),
-                )}
+                )
+                Box(modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(200.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (mapShow.value) {
+                        Column() {
+                            Spacer(modifier = Modifier.height(20.dp))
+                            GoogleMap(
+                                modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                                cameraPositionState = cameraPositionState
+                            ) {
+                                Marker(
+                                    state = MarkerState(position = place.value),
+                                    title = "place",
+                                    snippet = "Marker in place"
+                                )
+                            }
+                        }
+
+                    } else {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Image(
+                                painter = painterResource(id = com.youme.naya.R.drawable.icon_map),
+                                "map",
+                                modifier = Modifier.width(50.dp).height(50.dp)
+                            )
+                            Text(text = "도로명 주소를 입력해보세요. \n " +
+                                    "해당 주소의 위치를 지도로 만나볼 수 있어요!", color = NeutralGray, style = Typography.h6,
+                                textAlign = TextAlign.Center
+                            )
+
+                        }
+
+                    }
+
+                }
+            }
                 Spacer(modifier = Modifier.height(16.dp))
             Column {
                 Text(
