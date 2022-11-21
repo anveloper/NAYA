@@ -106,9 +106,9 @@ export const FirstTitle = styled.div`
   text-transform: uppercase;
   letter-spacing: ${pixelToRem(0)};
   @media ${device.mobile} {
-    font: var(--font-mobile-text-1);
+    font: var(--font-mobile-text-4);
     letter-spacing: ${pixelToRem(0)};
-    padding-bottom: ${pixelToRem(11)};
+    padding-bottom: ${pixelToRem(4)};
   }
 `;
 
@@ -160,7 +160,7 @@ export const GoogleDownLoadTitle = styled.p`
   font: var(--text-3);
   max-width: ${pixelToRem(728)};
   @media ${device.mobile} {
-    padding: ${pixelToRem(16, 0, 32, 0)};
+    padding: ${pixelToRem(12, 0, 0, 0)};
     text-align: center;
     max-width: ${pixelToRem(307)};
   }
@@ -227,8 +227,8 @@ export const CardsIllustration = styled.image`
     position: relative;
     order: 4;
     top: ${pixelToRem(30)};
-    width: ${pixelToRem(500)};
-    height: ${pixelToRem(400)};
+    width: ${pixelToRem(400)};
+    height: ${pixelToRem(300)};
   }
 `;
 
@@ -240,7 +240,6 @@ export const PhoneIllustration = styled.image`
   background-repeat: no-repeat;
   background-size: cover; 
   right: ${pixelToRem(80)};
-  top: ${pixelToRem(0)};
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(1000)};
     height: ${pixelToRem(850)};
@@ -286,7 +285,7 @@ export const DivButton = styled.div`
   width: ${pixelToRem(264)};
   padding-top: ${pixelToRem(16)};
   @media ${device.mobile} {
-    padding-bottom: ${pixelToRem(63)};
+    padding-bottom: ${pixelToRem(0)};
   }
 `;
 
