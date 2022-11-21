@@ -132,6 +132,11 @@ export const SecondTitle = styled.p`
   color: var(--primary-dark);
   font: var(--font-display);
   padding-left: ${pixelToRem(12)};
+  @media (max-width: ${pixelToRem(2000)}) {
+    padding-left: ${pixelToRem(4)};
+    font: var(--font-heading-1);
+    text-align: center;
+  }
   @media ${device.mobile} {
     padding-left: ${pixelToRem(4)};
     font: var(--font-mobile-heading-1);
@@ -227,6 +232,7 @@ export const CardsIllustration = styled.image`
   @media ${device.mobile} {
     position: relative;
     order: 4;
+    margin-top: ${pixelToRem(0)};
     top: ${pixelToRem(30)};
     width: ${pixelToRem(400)};
     height: ${pixelToRem(300)};
