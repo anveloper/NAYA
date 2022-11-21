@@ -32,7 +32,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.chargemap.compose.numberpicker.AMPMHours
 import com.chargemap.compose.numberpicker.HoursNumberPicker
@@ -208,11 +207,12 @@ fun ScheduleUpdateScreen(
                                     }
                                 }
                             }
-                            PrimaryBigButton(text = "다른 방법으로 선택하기",
-                                onClick = {
-                                    memberType.value = -1 })
-                            Spacer(Modifier.height(20.dp))
                         }
+                        PrimaryBigButton(text = "다른 방법으로 선택하기",
+                            onClick = {
+                                memberType.value = -1
+                            })
+                        Spacer(Modifier.height(20.dp))
                     }
                 }
             }
@@ -720,7 +720,9 @@ fun ScheduleUpdateScreen(
                             Column() {
                                 Spacer(modifier = Modifier.height(20.dp))
                                 GoogleMap(
-                                    modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .fillMaxWidth(),
                                     cameraPositionState = cameraPositionState
                                 ) {
                                     Marker(
@@ -738,7 +740,9 @@ fun ScheduleUpdateScreen(
                                 Image(
                                     painter = painterResource(id = com.youme.naya.R.drawable.icon_map),
                                     "map",
-                                    modifier = Modifier.width(50.dp).height(50.dp)
+                                    modifier = Modifier
+                                        .width(50.dp)
+                                        .height(50.dp)
                                 )
                                 Text(text = "도로명 주소를 입력해보세요. \n " +
                                         "해당 주소의 위치를 지도로 만나볼 수 있어요!", color = NeutralGray, style = Typography.h6,
@@ -780,7 +784,9 @@ fun ScheduleUpdateScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     LazyVerticalGrid(
-                        modifier = Modifier.height(80.dp).width(300.dp),
+                        modifier = Modifier
+                            .height(80.dp)
+                            .width(300.dp),
                         columns = GridCells.Fixed(5),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -811,7 +817,10 @@ fun ScheduleUpdateScreen(
 
                                     }
                                 }
-                                Box(Modifier.width(16.dp).height(20.dp))
+                                Box(
+                                    Modifier
+                                        .width(16.dp)
+                                        .height(20.dp))
                             }
                         }
                     }}
