@@ -35,15 +35,12 @@ fun BottomNavGraph(
     ) {
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(navController = navController)
-            NayaTabStore.setCurrTabState("naya")
         }
         composable(route = BottomBarScreen.NuyaCard.route) {
             NuyaCardScreen(navController = navController)
-            NayaTabStore.setCurrTabState("naya")
         }
         composable(route = BottomBarScreen.NayaCard.route) {
             NayaCardScreen(navController = navController)
-            NayaTabStore.setCurrTabState("naya")
         }
         composable(route = BottomBarScreen.Calendar.route) {
             ScheduleMainScreen(navController = navController)
