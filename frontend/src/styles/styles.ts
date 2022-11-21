@@ -211,11 +211,11 @@ export const CardsIllustration = styled.image`
   background-repeat: no-repeat;
   background-size: cover; 
   right: 0;
-  top: ${pixelToRem(400)};
+  top: ${pixelToRem(300)};
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(540)};
     height: ${pixelToRem(400)};
-    top: ${pixelToRem(450)};
+    top: ${pixelToRem(400)};
   }
   @media (max-width: ${pixelToRem(1000)}) {
     position: relative;
@@ -245,7 +245,7 @@ export const PhoneIllustration = styled.image`
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(1000)};
     height: ${pixelToRem(850)};
-    top: ${pixelToRem(80)};
+    top: ${pixelToRem(0)};
   }
   @media (max-width: ${pixelToRem(1400)}) {
     display: none;
