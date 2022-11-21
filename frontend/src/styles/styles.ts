@@ -48,7 +48,7 @@ export const Container = styled.div<GalleryFlexContainerProps>`
 export const Header = styled.div`
   display: flex;
   @media ${device.mobile} {
-    padding-bottom: ${pixelToRem(40)};
+    padding-bottom: ${pixelToRem(28)};
   }
 `;
 
