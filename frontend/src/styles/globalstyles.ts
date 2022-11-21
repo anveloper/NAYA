@@ -78,7 +78,8 @@ body{
   
   /* Fonts */
     --font-display: 800 ${pixelToRem(62)}/${pixelToRem(96)} "Pretendard-ExtraBold", sans-serif;
-    --font-heading-1: 700 ${pixelToRem(32)}/${pixelToRem(52)} "Pretendard-Bold", sans-serif;
+    --font-heading-1: 700 ${pixelToRem(52)}/${pixelToRem(52)} "Pretendard-ExtraBold", sans-serif;
+    --font-heading-1-1: 700 ${pixelToRem(30)}/${pixelToRem(52)} "Pretendard-Bold", sans-serif;
     --font-heading-2: 600 ${pixelToRem(32)}/${pixelToRem(
   52
 )} "Pretendard-Medium", sans-serif;
