@@ -85,7 +85,7 @@ body{
     --font-heading-3: 500 ${pixelToRem(28)}/${pixelToRem(
   24
 )} "Pretendard-SemiBold", sans-serif;
---font-mobile-heading-1: 800 ${pixelToRem(36)}/${pixelToRem(
+--font-mobile-heading-1: 800 ${pixelToRem(32)}/${pixelToRem(
   50
 )} "Pretendard-ExtraBold", sans-serif;
 --font-mobile-text-1: 500 ${pixelToRem(14)}/${pixelToRem(
