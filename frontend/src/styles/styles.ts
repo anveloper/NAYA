@@ -156,12 +156,14 @@ export const Subtitle = styled.p`
 
 export const GoogleDownLoadTitle = styled.p`
   padding-top: ${pixelToRem(200)};
+  margin-bottom: ${pixelToRem(20)};
   color: var(--neutral-light);
   font: var(--text-3);
   max-width: ${pixelToRem(728)};
   @media ${device.mobile} {
     padding: ${pixelToRem(12, 0, 0, 0)};
     text-align: center;
+    font: var(--text-2);
     max-width: ${pixelToRem(307)};
   }
 `;
@@ -192,7 +194,7 @@ export const FooterTextCopy = styled.p`
 
 
 export const ButtonForGoogle = styled.button<ButtonProps>`
-  width: ${({ fullWidth }) => (fullWidth ? "100%" : pixelToRem(200))};
+  width: ${({ fullWidth }) => (fullWidth ? "100%" : pixelToRem(240))};
   height: ${pixelToRem(40)};
   border: none;
   border-radius: ${pixelToRem(6)};
