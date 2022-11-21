@@ -178,7 +178,6 @@ fun ScheduleUpdateScreen(
                             Column(
                                 Modifier.height(400.dp)
                             ) {
-//            SearchInput()
                                 NayaBcardSwitchButtons(
                                     nayaTab = {
                                         NayaCardGridListForSchedule(context,
@@ -208,11 +207,11 @@ fun ScheduleUpdateScreen(
                                     }
                                 }
                             }
-                            PrimaryBigButton(text = "다른 방법으로 선택하기",
-                                onClick = {
-                                    memberType.value = -1 })
-                            Spacer(Modifier.height(20.dp))
                         }
+                        PrimaryBigButton(text = "다른 방법으로 선택하기",
+                            onClick = {
+                                memberType.value = -1 })
+                        Spacer(Modifier.height(20.dp))
                     }
                 }
             }
