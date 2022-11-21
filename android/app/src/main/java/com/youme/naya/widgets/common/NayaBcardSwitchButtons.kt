@@ -16,6 +16,7 @@ import com.youme.naya.R
 import com.youme.naya.constant.CardTabConstant
 import com.youme.naya.ui.theme.NeutralLightness
 
+
 private val TabContainerModifier = Modifier
     .fillMaxSize()
 
@@ -25,7 +26,6 @@ private val cardTabModifier = Modifier
 
 private val CardListModifier = Modifier
     .fillMaxSize()
-
 
 @Composable
 fun NayaBcardSwitchButtons(
