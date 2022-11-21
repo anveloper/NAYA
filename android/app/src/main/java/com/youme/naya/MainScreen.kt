@@ -349,6 +349,7 @@ fun RowScope.AddItem(
         selectedContentColor = PrimaryBlue,
         unselectedContentColor = NeutralLight,
         onClick = {
+            NayaTabStore.setCurrTabState("naya")
             if (screen.route.isNotEmpty()) {
                 navController.navigate(screen.route) {
                     popUpTo(navController.graph.findStartDestination().id)
