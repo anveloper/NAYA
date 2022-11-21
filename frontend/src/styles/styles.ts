@@ -210,12 +210,11 @@ export const CardsIllustration = styled.image`
   background-image: url("/images/app-cards.svg");
   background-repeat: no-repeat;
   background-size: cover; 
+  margin-top: ${pixelToRem(350)};
   right: 0;
-  top: ${pixelToRem(300)};
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(540)};
     height: ${pixelToRem(400)};
-    top: ${pixelToRem(400)};
   }
   @media (max-width: ${pixelToRem(1000)}) {
     position: relative;
@@ -266,7 +265,6 @@ export const TopBackground = styled.image`
   background-repeat: no-repeat;
   background-size: cover; 
   right: ${pixelToRem(20)};
-  top: ${pixelToRem(0)};
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(1000)};
     height: ${pixelToRem(850)};
