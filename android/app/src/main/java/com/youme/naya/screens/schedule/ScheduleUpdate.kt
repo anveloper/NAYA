@@ -157,6 +157,14 @@ fun ScheduleUpdateScreen(
                                     }
                                 },
                             )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            RegisterButton(
+                                text = "다른 방법으로 선택하기",
+                                onClick = {
+                                    memberType.value = -1
+                                },
+                                isPrimary = false,
+                            )
                             Spacer(modifier = Modifier.height(20.dp))
                         }
 
