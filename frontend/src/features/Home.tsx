@@ -43,17 +43,16 @@ const Home = () => {
           <CardsIllustration />
 
           <GoogleDownLoadTitle>구글 플레이 스토어에서 다운로드 하기</GoogleDownLoadTitle>
-          <DivButton>
-            <ButtonForGoogle
+          <ButtonForGoogle
             onClick={() => redireactApp("")}
+            style={{ position: "sticky", border: "none" }}
             >
                 <img
                   src={PLAY_IMG}
                   alt="Google Play Button"
                   className={styles.playBtn}
                 />
-            </ButtonForGoogle>
-          </DivButton>
+          </ButtonForGoogle>
         </Main>
       </Container>
 
