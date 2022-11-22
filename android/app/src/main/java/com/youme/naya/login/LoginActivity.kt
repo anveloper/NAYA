@@ -89,10 +89,10 @@ class LoginActivity : BaseActivity(TransitionMode.NONE) {
             return true;
         for (permission in permissionList) {
             if (checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
-                res = false;
                 requestPermissions(permissionList.toTypedArray(), 0)
             }
             Log.i("Permission Check", "$permission processing -> $res")
+            res = checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED;
         }
         return res;
     }
