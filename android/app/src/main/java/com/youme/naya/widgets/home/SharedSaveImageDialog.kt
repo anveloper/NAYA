@@ -83,7 +83,7 @@ fun SharedSaveImageDialog(
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
             } else {
-                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&isNuya=true")
+                navController.navigate("bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&path2=${imgPath}&isNuya=true&isSameImage=true")
             }
             setSaveImage()
         }
@@ -126,7 +126,6 @@ fun SharedSaveImageDialog(
             OutlinedBigButton(text = "취소") {
                 setSaveImage()
             }
-//            Text(text = sharedImageUrl)
         }
     })
 
