@@ -78,14 +78,15 @@ body{
   
   /* Fonts */
     --font-display: 800 ${pixelToRem(62)}/${pixelToRem(96)} "Pretendard-ExtraBold", sans-serif;
-    --font-heading-1: 700 ${pixelToRem(32)}/${pixelToRem(52)} "Pretendard-Bold", sans-serif;
+    --font-heading-1: 700 ${pixelToRem(52)}/${pixelToRem(52)} "Pretendard-ExtraBold", sans-serif;
+    --font-heading-1-1: 700 ${pixelToRem(30)}/${pixelToRem(52)} "Pretendard-Bold", sans-serif;
     --font-heading-2: 600 ${pixelToRem(32)}/${pixelToRem(
   52
 )} "Pretendard-Medium", sans-serif;
     --font-heading-3: 500 ${pixelToRem(28)}/${pixelToRem(
   24
 )} "Pretendard-SemiBold", sans-serif;
---font-mobile-heading-1: 800 ${pixelToRem(32)}/${pixelToRem(
+--font-mobile-heading-1: 800 ${pixelToRem(31)}/${pixelToRem(
   50
 )} "Pretendard-ExtraBold", sans-serif;
 --font-mobile-text-1: 500 ${pixelToRem(14)}/${pixelToRem(

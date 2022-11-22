@@ -48,7 +48,7 @@ export const Container = styled.div<GalleryFlexContainerProps>`
 export const Header = styled.div`
   display: flex;
   @media ${device.mobile} {
-    padding-bottom: ${pixelToRem(40)};
+    padding-bottom: ${pixelToRem(28)};
   }
 `;
 
@@ -132,6 +132,11 @@ export const SecondTitle = styled.p`
   color: var(--primary-dark);
   font: var(--font-display);
   padding-left: ${pixelToRem(12)};
+  @media (max-width: ${pixelToRem(2000)}) {
+    padding-left: ${pixelToRem(4)};
+    font: var(--font-heading-1);
+    text-align: center;
+  }
   @media ${device.mobile} {
     padding-left: ${pixelToRem(4)};
     font: var(--font-mobile-heading-1);
@@ -156,12 +161,14 @@ export const Subtitle = styled.p`
 
 export const GoogleDownLoadTitle = styled.p`
   padding-top: ${pixelToRem(200)};
+  margin-bottom: ${pixelToRem(20)};
   color: var(--neutral-light);
   font: var(--text-3);
   max-width: ${pixelToRem(728)};
   @media ${device.mobile} {
     padding: ${pixelToRem(12, 0, 0, 0)};
     text-align: center;
+    font: var(--text-2);
     max-width: ${pixelToRem(307)};
   }
 `;
@@ -192,7 +199,7 @@ export const FooterTextCopy = styled.p`
 
 
 export const ButtonForGoogle = styled.button<ButtonProps>`
-  width: ${({ fullWidth }) => (fullWidth ? "100%" : pixelToRem(200))};
+  width: ${({ fullWidth }) => (fullWidth ? "100%" : pixelToRem(240))};
   height: ${pixelToRem(40)};
   border: none;
   border-radius: ${pixelToRem(6)};
@@ -208,12 +215,11 @@ export const CardsIllustration = styled.image`
   background-image: url("/images/app-cards.svg");
   background-repeat: no-repeat;
   background-size: cover; 
+  margin-top: ${pixelToRem(350)};
   right: 0;
-  top: ${pixelToRem(400)};
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(540)};
     height: ${pixelToRem(400)};
-    top: ${pixelToRem(450)};
   }
   @media (max-width: ${pixelToRem(1000)}) {
     position: relative;
@@ -226,6 +232,7 @@ export const CardsIllustration = styled.image`
   @media ${device.mobile} {
     position: relative;
     order: 4;
+    margin-top: ${pixelToRem(0)};
     top: ${pixelToRem(30)};
     width: ${pixelToRem(400)};
     height: ${pixelToRem(300)};
@@ -243,7 +250,7 @@ export const PhoneIllustration = styled.image`
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(1000)};
     height: ${pixelToRem(850)};
-    top: ${pixelToRem(80)};
+    top: ${pixelToRem(0)};
   }
   @media (max-width: ${pixelToRem(1400)}) {
     display: none;
@@ -264,7 +271,6 @@ export const TopBackground = styled.image`
   background-repeat: no-repeat;
   background-size: cover; 
   right: ${pixelToRem(20)};
-  top: ${pixelToRem(0)};
   @media (max-width: ${pixelToRem(2000)}) {
     width: ${pixelToRem(1000)};
     height: ${pixelToRem(850)};
