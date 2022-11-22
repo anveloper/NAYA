@@ -3,6 +3,7 @@ package com.youme.naya.card
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,10 +48,11 @@ fun BusinessCardCreateDialog(
 
             if (ocrResult.isNullOrBlank()) {
                 Toast.makeText(context, "추출된 문자열이 없어요", Toast.LENGTH_SHORT).show()
+            } else {
+                navController.navigate(
+                    "bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&path2=${imgPath2}&isNuya=${isNuya}&isSameImage=${isSameImage}"
+                )
             }
-            navController.navigate(
-                "bCardCreateByCamera?result=${Uri.encode(ocrResult)}&path=${imgPath}&path2=${imgPath2}&isNuya=${isNuya}&isSameImage=${isSameImage}"
-            )
             onDismissRequest()
         }
     }
