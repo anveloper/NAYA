@@ -320,6 +320,7 @@ fun RegisterButton(
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit,
+    isPrimary: Boolean = true
 ) {
     Button(
         modifier = Modifier
@@ -329,8 +330,9 @@ fun RegisterButton(
         onClick = { onClick() },
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = PrimaryBlue,
-            contentColor = NeutralWhite,
+            backgroundColor = if (isPrimary) PrimaryBlue else PrimaryLight,
+            contentColor = if (isPrimary) NeutralWhite else PrimaryBlue,
+
         ),
         contentPadding = PaddingValues(),
     )
