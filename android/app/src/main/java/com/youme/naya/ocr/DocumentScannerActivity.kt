@@ -35,10 +35,12 @@ class DocumentScannerActivity : AppCompatActivity() {
             // an error happened
                 errorMessage ->
             Log.v("documentscannerlogs", errorMessage)
+            finish()
         },
         {
             // user canceled document scan
             Log.v("documentscannerlogs", "User canceled document scan")
+            finish()
         },
         ResponseType.IMAGE_FILE_PATH,
         true,
