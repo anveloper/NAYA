@@ -330,7 +330,7 @@ fun RegisterButton(
         onClick = { onClick() },
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = if (isPrimary) PrimaryBlue else NeutralLight,
+            backgroundColor = if (isPrimary) PrimaryBlue else PrimaryLight,
             contentColor = if (isPrimary) NeutralWhite else PrimaryBlue,
 
         ),
