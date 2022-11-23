@@ -23,6 +23,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.youme.naya.R
+import com.youme.naya.ui.theme.NeutralLight
 import com.youme.naya.ui.theme.NeutralWhite
 import com.youme.naya.ui.theme.PrimaryDark
 import com.youme.naya.ui.theme.fonts
@@ -68,13 +69,13 @@ fun IntroDialog(
                             fontSize = 20.sp,
                             color = PrimaryDark
                         )
-                        Spacer(Modifier.height(12.dp))
+                        Spacer(Modifier.height(16.dp))
                         Image(painterResource(introItem.image), null, Modifier.fillMaxWidth())
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(12.dp))
                         Text(
                             text = introItem.description,
                             fontFamily = fonts,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp,
                             color = PrimaryDark,
                             textAlign = TextAlign.Center
