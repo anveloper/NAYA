@@ -10,9 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
 import androidx.navigation.compose.rememberNavController
-import com.google.zxing.integration.android.IntentIntegrator.REQUEST_CODE
 import com.youme.naya.graphs.RootNavigationGraph
 import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.login.LoginViewModel
@@ -74,12 +72,7 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
                 Log.i("sharedImageUrl", sharedImageUrl)
             }
             if (introViewModel.isFirst.value != true) {
-                if (!checkPermission()) {
-                    Toast.makeText(this, "사용자에 의해 일부 권한이 수동으로 거부되었습니다.", Toast.LENGTH_SHORT)
-                        .show()
-                    Toast.makeText(this, "정상적인 이용이 제한될 수 있습니다.", Toast.LENGTH_SHORT).show()
-                    Toast.makeText(this, "설정에서 직접 권한을 해제해야합니다.", Toast.LENGTH_SHORT).show()
-                }
+                checkPermission()
             }
             AndroidTheme {
                 RootNavigationGraph(
@@ -105,7 +98,7 @@ class MainActivity : BaseActivity(TransitionMode.NONE) {
             return true;
         for (permission in permissionList) {
             if (checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
-                res = checkCallingOrSelfPermission(permission) == PackageManager.PERMISSION_DENIED;
+                res = false
                 requestPermissions(permissionList.toTypedArray(), 0)
             }
             Log.i("Permission Check", "$permission processing -> $res")
