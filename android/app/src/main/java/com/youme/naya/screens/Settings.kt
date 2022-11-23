@@ -15,7 +15,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -37,49 +40,76 @@ fun SettingsScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(NeutralWhite),
-        contentAlignment = Alignment.Center
     ) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp), Arrangement.spacedBy(8.dp),
-            Alignment.Start
-        ) {
-            SettingsText(
-                "About Naya",
-                24.sp,
-            )
-            Spacer(Modifier.height(16.dp))
-            TextButton(onClick = {
-                introViewModel.resetIsFirst()
-                introViewModel.loadIsFirst()
-            }, Modifier.fillMaxWidth()) {
-                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-                    SettingsText("도움말", 20.sp)
-                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+        Column() {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.7f)
+                    .padding(horizontal = 24.dp), Arrangement.spacedBy(8.dp),
+                Alignment.Start
+            ) {
+                SettingsText(
+                    "About Naya",
+                    style = Typography.h3,
+                    color = PrimaryDark,
+                    fontFamily = pico,
+                )
+                Spacer(Modifier.height(16.dp))
+                TextButton(onClick = {
+                    introViewModel.resetIsFirst()
+                    introViewModel.loadIsFirst()
+                }, Modifier.fillMaxWidth()) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        Arrangement.SpaceBetween,
+                        Alignment.CenterVertically
+                    ) {
+                        SettingsText("도움말", color = NeutralGray, style = Typography.h6, fonts)
+                        Icon(
+                            Icons.Outlined.ArrowForwardIos,
+                            null,
+                            Modifier.size(18.dp),
+                            NeutralLight
+                        )
+                    }
                 }
-            }
-            TextButton(onClick = {
-                setOpenPolicy(true)
-            }, Modifier.fillMaxWidth()) {
-                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-                    SettingsText("약관 및 개인정보 처리 동의", 20.sp)
-                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+                TextButton(onClick = {
+                    setOpenPolicy(true)
+                }, Modifier.fillMaxWidth()) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        Arrangement.SpaceBetween,
+                        Alignment.CenterVertically
+                    ) {
+                        SettingsText(
+                            "약관 및 개인정보 처리 동의",
+                            color = NeutralGray,
+                            style = Typography.h6,
+                            fonts
+                        )
+                        Icon(
+                            Icons.Outlined.ArrowForwardIos,
+                            null,
+                            Modifier.size(18.dp),
+                            NeutralLight
+                        )
+                    }
                 }
+//            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
+//                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+//                    SettingsText("앱버전", 20.sp)
+//                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+//                }
+//            }
+//            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
+//                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
+//                    SettingsText("팀원 소개", 20.sp)
+//                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
+//                }
+//            }
             }
-            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
-                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-                    SettingsText("앱버전", 20.sp)
-                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
-                }
-            }
-            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
-                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-                    SettingsText("팀원 소개", 20.sp)
-                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
-                }
-            }
-            Spacer(Modifier.height(160.dp))
+
             Column(Modifier.fillMaxWidth(), Arrangement.Center, Alignment.CenterHorizontally) {
                 Image(
                     painterResource(R.drawable.home_logo_text),
@@ -95,7 +125,9 @@ fun SettingsScreen(
                 )
             }
         }
-    }
+
+        }
+
     if (openPolicy) {
         AlertDialog(onDismissRequest = { setOpenPolicy(false) }, buttons = {
             Column(
@@ -180,14 +212,13 @@ fun SettingsScreen(
 
 
 @Composable
-fun SettingsText(content: String, fontSize: TextUnit) {
+fun SettingsText(content: String, color : Color, style: TextStyle, fontFamily: FontFamily?,) {
     Text(
         content,
         Modifier,
-        PrimaryDark,
-        fontSize,
-        FontStyle.Normal,
-        FontWeight.Bold,
-        fonts
+        style = style,
+        color = color,
+        fontFamily = fontFamily
+
     )
 }
