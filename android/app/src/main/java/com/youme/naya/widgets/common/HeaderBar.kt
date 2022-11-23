@@ -72,6 +72,10 @@ fun HeaderBar(
         "schedule" -> {
             logo = true
         }
+        "team" -> {
+            logo = false
+            title = "팀 소개"
+        }
     }
 
     TopAppBar(
