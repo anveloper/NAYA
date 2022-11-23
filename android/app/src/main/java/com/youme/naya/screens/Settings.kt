@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.youme.naya.R
 import com.youme.naya.intro.IntroViewModel
 import com.youme.naya.login.PermissionViewModel
@@ -31,6 +32,7 @@ import com.youme.naya.ui.theme.*
 
 @Composable
 fun SettingsScreen(
+    navController: NavHostController,
     introViewModel: IntroViewModel,
     permissionViewModel: PermissionViewModel
 ) {
@@ -96,15 +98,24 @@ fun SettingsScreen(
                         )
                     }
                 }
+                TextButton(
+                    onClick = { navController.navigate("team") },
+                    Modifier.fillMaxWidth()) {
+                    Row(Modifier.fillMaxWidth(),
+                        Arrangement.SpaceBetween,
+                        Alignment.CenterVertically) {
+                        SettingsText("Naya 팀 소개",
+                            color = NeutralGray,
+                            style = Typography.h6,
+                            fonts)
+                        Icon(Icons.Outlined.ArrowForwardIos, null,
+                            Modifier.size(18.dp),
+                            NeutralLight)
+                    }
+                }
 //            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
 //                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
 //                    SettingsText("앱버전", 20.sp)
-//                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
-//                }
-//            }
-//            TextButton(onClick = { /*TODO*/ }, Modifier.fillMaxWidth()) {
-//                Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween, Alignment.CenterVertically) {
-//                    SettingsText("팀원 소개", 20.sp)
 //                    Icon(Icons.Outlined.ArrowForwardIos, null, Modifier.size(24.dp), NeutralMetal)
 //                }
 //            }

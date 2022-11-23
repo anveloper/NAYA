@@ -113,6 +113,7 @@ fun MainScreen(
                 && currentDestination.toString() != "scheduleDetail/{scheduleId}"
                 && currentDestination.toString() != "scheduleEdit/{scheduleId}"
                 && currentDestination.toString() != "alarm"
+                && currentDestination.toString() != "team"
             ) {
                 FloatingActionButton(
                     onClick = {
@@ -188,6 +189,7 @@ fun MainScreen(
             if (currentDestination.toString() != "scheduleCreate" && currentDestination.toString() != "scheduleDetail/{scheduleId}"
                 && currentDestination.toString() != "scheduleEdit/{scheduleId}"
                 && currentDestination.toString() != "alarm"
+                && currentDestination.toString() != "team"
             ) {
                 BottomBar(navController = navController)
             }
