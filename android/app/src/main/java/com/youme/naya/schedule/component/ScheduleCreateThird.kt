@@ -166,8 +166,10 @@ fun ScheduleCreateThird(
                             "map",
                             modifier = Modifier.width(50.dp).height(50.dp)
                         )
-                        Text(text = "도로명 주소를 입력해보세요. \n " +
-                                "해당 주소의 위치를 지도로 만나볼 수 있어요!", color = NeutralGray, style = Typography.h6,
+                        Text(text = "도로명 주소/지번 주소를 입력해보세요. \n " +
+                                "해당 주소의 위치를 지도로 만나볼 수 있어요!",
+                            color = NeutralGray,
+                            style = Typography.body2,
                             textAlign = TextAlign.Center
                         )
 
