@@ -46,10 +46,13 @@ fun BottomNavGraph(
             ScheduleMainScreen(navController = navController)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            SettingsScreen(introViewModel, permissionViewModel)
+            SettingsScreen(navController = navController, introViewModel, permissionViewModel)
         }
         composable(route = BottomBarScreen.Alarm.route) {
             AlarmScreen(navController = navController)
+        }
+        composable(route = BottomBarScreen.Team.route) {
+            TeamScreen(navController = navController)
         }
         // Nuya 명함 생성 (직접 입력)
         composable(route = "bCardCreate") { entry ->
