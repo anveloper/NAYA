@@ -426,23 +426,31 @@
   - https://k7b104.p.ssafy.io/
 --------------------------
   
+# 7. 👀 세부화면
+------------------------------------------------------
   
+  ## 7-1  Naya 카드 커스텀 / 명함 인식 / 일정 관리
 
-# 7. 📁 설계 문서
+  ![나야 커스텀](./images/README/naya_custom.gif)
+  ![명함 인식](./images/README/naya_business.gif)
+  ![일정 관리](./images/README/naya_schedule.gif)
+
+
+# 8. 📁 설계 문서
 ------------------------------------------------------
     
-  ## 7-1. ERD
+  ## 8-1. ERD
 
   ![자율프로젝트](/uploads/8531fe82e018687735a6057553d96f2b/자율프로젝트.png)
 
 
-  ## 7-2. Design System
+  ## 8-2. Design System
 
   ![logo_dark](./images/README/styleguide.png)
 
   ![logo_dark](./images/README/component.png)
 
-  ## 7-3. Design
+  ## 8-3. Design
 
   ![logo_dark](./images/README/design.png)
 
@@ -453,10 +461,10 @@
 
 
 
-# 8. 🖊 Cooperation&Promises
+# 9. 🖊 Cooperation&Promises
 ------------------------------------------------------
   
-  ## 8-1. Tools
+  ## 9-1. Tools
 
     - Git
 
@@ -472,7 +480,7 @@
 
 
 
-# 9. ![Group_237632](/uploads/52a59d87dd297e72d341009deeb0e64b/Group_237632.png) 팀원 소개
+# 10. ![Group_237632](/uploads/52a59d87dd297e72d341009deeb0e64b/Group_237632.png) 팀원 소개
 ------------------------------------------------------
   ![logo_dark](./images/README/team.png)
   
