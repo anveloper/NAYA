@@ -4,7 +4,3 @@
 *.c linguist-detectable=false
 *.cmake linguist-detectable=false
 *.mk linguist-detectable=false
-
-/android/sdk/*.java linguist-detectable=false
-/android/opencv/*.java linguist-detectable=false
-/android/documentscanner/*.java linguist-detectable=false
