@@ -1,1 +1,2 @@
-*.hpp linguist-vendored
+*.hpp linguist-detectable=false
+*.cpp linguist-detectable=false
