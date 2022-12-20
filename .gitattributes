@@ -4,3 +4,4 @@
 *.c linguist-detectable=false
 *.cmake linguist-detectable=false
 *.mk linguist-detectable=false
+*.java linguist-detectable=false
