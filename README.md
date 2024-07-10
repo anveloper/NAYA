@@ -80,7 +80,7 @@
     spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     spring.datasource.url=jdbc:mysql://172.17.0.2:3306/naya?serverTimezone=UTC&characterEncoding=UTF-8
     spring.datasource.username=root
-    spring.datasource.password=eowjswkdbfb104
+    spring.datasource.password=PASSWORD
 
     #spring
     #spring.jpa.show-sql=true.jpa.database-platform=org.hibernate.dialect.MySql8Dialect
