@@ -7,35 +7,35 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:749939063940:android:fab772e735eff73e4b16d1",
+        "mobilesdk_app_id": "1:749939063940:android:APP_ID",
         "android_client_info": {
           "package_name": "com.youme.naya"
         }
       },
       "oauth_client": [
         {
-          "client_id": "749939063940-64opr5l5sa9vncou85103ldi9s9hiir3.apps.googleusercontent.com",
+          "client_id": "CLIENT_ID.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.youme.naya",
-            "certificate_hash": "4efdee5819082ff5d981c1885c26d7013578bf31"
+            "certificate_hash": "CERT_HASH"
           }
         },
         {
-          "client_id": "749939063940-8iq5sot9i95eqtbu2q6966f5ik6jmlmf.apps.googleusercontent.com",
+          "client_id": "CLIENT_ID.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCszdFoSH7gEHH5E-h4-lp-3aewLqoxTHM"
+          "current_key": "CURRENT_KEY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "749939063940-8iq5sot9i95eqtbu2q6966f5ik6jmlmf.apps.googleusercontent.com",
+              "client_id": "CLIENT_ID.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
